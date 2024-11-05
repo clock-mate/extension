@@ -5,9 +5,12 @@ import Settings from '../../common/utils/settings';
 import { DisplayFormat } from '../types/display';
 import OvertimeManager from '../utils/overtimeManager';
 
+/**
+ * The inserted display is an HTML-Element which is placed inside 
+ * of the header of the page. It shows the current information for
+ * the overtime. 
+ */
 export default class Inserted {
-    // ========== Inserted display ==========
-
     constructor(public overtimeManager: OvertimeManager) {}
 
     public async addInsertedDisplay(

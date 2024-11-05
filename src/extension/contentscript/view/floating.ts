@@ -4,9 +4,12 @@ import Common from './common';
 import Settings from '../../common/utils/settings';
 import { DisplayFormat } from '../types/display';
 
+/**
+ * The floating display is an HTML-Element which is floating above all other page
+ * content and not properly part of it. It should be used as an initial display while
+ * the page is loading.
+ */
 export default class Floating {
-    // ========== Floating display ==========
-
     public static async addFloatingDisplay(displayState: DisplayFormat) {
         if (!(await Settings.displayIsEnabled())) {
             return;
