@@ -6,20 +6,21 @@ import { DisplayFormat } from '../types/display';
 import OvertimeManager from '../utils/overtimeManager';
 
 /**
- * The inserted display is an HTML-Element which is placed inside 
+ * The inserted display is an HTML-Element which is placed inside
  * of the header of the page. It shows the current information for
- * the overtime. 
+ * the overtime.
  */
 export default class Inserted {
     constructor(public overtimeManager: OvertimeManager) {}
 
-    public async addInsertedDisplay(
-        headerBar: HTMLElement,
-        displayState: DisplayFormat
-    ) {
+    public async addInsertedDisplay(headerBar: HTMLElement, displayState: DisplayFormat) {
         if (!(await Settings.displayIsEnabled())) return;
 
-        const HTMLElements = Common.createInnerHTMLElements(displayState.text, displayState.loading, true);
+        const HTMLElements = Common.createInnerHTMLElements(
+            displayState.text,
+            displayState.loading,
+            true,
+        );
 
         headerBar.prepend(
             Common.createRichElement(

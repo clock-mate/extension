@@ -15,7 +15,7 @@ export default class SettingsSync {
 
     private async addOrRemoveDisplay(displayState: DisplayFormat, displayIsEnabled: boolean) {
         if (displayIsEnabled) {
-            this.view.renderDisplay(displayState)
+            this.view.renderDisplay(displayState);
             return;
         }
         View.removeDisplay();

@@ -5,7 +5,10 @@ import Settings from '../../common/utils/settings';
 import Floating from './floating';
 
 export default class View {
-    constructor(public inserted: Inserted, public headerBar?: HTMLElement) {}
+    constructor(
+        public inserted: Inserted,
+        public headerBar?: HTMLElement,
+    ) {}
 
     /**
      * Will add/update/change a display in the page with the given data. The function will
@@ -18,7 +21,8 @@ export default class View {
             View.removeDisplay();
             return;
         }
-        if (this.headerBar) { // inserted can be rendered
+        if (this.headerBar) {
+            // inserted can be rendered
             Floating.removeFloatingDisplay();
             this.renderInsertedDisplay(displayState, updateText);
         } else {

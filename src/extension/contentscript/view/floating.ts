@@ -15,7 +15,11 @@ export default class Floating {
             return;
         }
 
-        const HTMLElements = Common.createInnerHTMLElements(displayState.text, displayState.loading, false);
+        const HTMLElements = Common.createInnerHTMLElements(
+            displayState.text,
+            displayState.loading,
+            false,
+        );
 
         // main page element is the (almost) only one loaded when DOM is loaded
         const canvas =
