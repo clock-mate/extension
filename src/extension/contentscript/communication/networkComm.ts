@@ -1,55 +1,13 @@
-import * as browser from 'webextension-polyfill';
-import { Runtime } from 'webextension-polyfill';
-import { BackgroundCommand } from '../../common/enums/command';
-import { givenStrings } from './constants';
-import Formater from './format';
-import Navigation from './navigation';
+import { givenStrings } from '../utils/constants';
+import Formater from '../utils/format';
+import Navigation from '../utils/navigation';
 import { PageVariant } from '../enums/pageVariant';
-import { ErrorData } from '../../common/types/errorData';
-import { OvertimeData } from '../../common/types/overtimeData';
-import { isBackgroundResponse } from '../../common/types/backgroundResponse';
-import { EmployeeIdData } from '../../common/types/employeeIdData';
-import { MessageObject } from '../../common/types/messageObject';
 
-export default class Communication {
-    // =========== Communication with backend ===========
-    // ==================================================
-
-    private portToBackground: Runtime.Port | undefined;
+/**
+ * Takes care of any communication via the network. For example fetching data from APIs.
+ */
+export default class NetworkComm {
     private csrfToken: string | undefined;
-
-    /**
-     * Sends a message to the background script. The response from the background script will be returned.
-     * Depending on the command this will be a string with different content.
-     * @param command    the command to send to the background script
-     * @param content    the content to send to the background script
-     * @returns a response for the command
-     */
-    public async sendMsgToBackground(
-        command: BackgroundCommand,
-        content?: string,
-    ): Promise<OvertimeData | EmployeeIdData | ErrorData | undefined> {
-        return new Promise((resolve) => {
-            if (this.portToBackground == undefined) {
-                this.portToBackground = browser.runtime.connect(); // buid connection if not already established
-
-                this.portToBackground.onDisconnect.addListener(() => {
-                    // delete when connnection gets disconnected
-                    this.portToBackground = undefined;
-                });
-            }
-
-            // connection has been established
-            this.portToBackground.onMessage.addListener((response) => {
-                // check if the response is a response for this request
-                if (isBackgroundResponse(response) && response.command === command) {
-                    resolve(response.content);
-                }
-            });
-            const message: MessageObject = { command: command, content: content };
-            this.portToBackground.postMessage(message);
-        });
-    }
 
     /**
      * Gets the domain for the API to fetch the data from, based on the currently open page.
@@ -113,7 +71,7 @@ export default class Communication {
      */
     private async fetchCSRFToken() {
         const csrfResponse = await fetch(
-            new Request(Communication.getTimeSheetFetchURL(), {
+            new Request(NetworkComm.getTimeSheetFetchURL(), {
                 method: 'HEAD',
                 credentials: 'include',
                 headers: {
@@ -162,7 +120,7 @@ export default class Communication {
             '--batch--';
 
         const result = await fetch(
-            new Request(Communication.getTimeSheetFetchURL(), {
+            new Request(NetworkComm.getTimeSheetFetchURL(), {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -216,7 +174,7 @@ export default class Communication {
             '--batch--';
 
         const result = await fetch(
-            new Request(Communication.getEmployeeNumberFetchURL(), {
+            new Request(NetworkComm.getEmployeeNumberFetchURL(), {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -256,7 +214,7 @@ export default class Communication {
         }
 
         const result = await fetch(
-            Communication.getTimeStatementFetchURL(employeeNumber, startDate, endDate),
+            NetworkComm.getTimeStatementFetchURL(employeeNumber, startDate, endDate),
         );
 
         if (!result.ok) {

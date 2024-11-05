@@ -1,6 +1,7 @@
 import { BackgroundCommand } from '../../common/enums/command';
 import { isEmployeeIdData } from '../../common/types/employeeIdData';
-import Communication from './communication';
+import BackgroundComm from '../communication/backgroundComm';
+import NetworkComm from '../communication/networkComm';
 import { config, constStrings } from './constants';
 import DateManger from './dateManager';
 import Formater from './format';
@@ -9,7 +10,10 @@ import Formater from './format';
  * Takes care of fetching and handling a time statement (pdf file).
  */
 export default class TimeStatementManager {
-    public constructor(public communication: Communication) {}
+    public constructor(
+        public backgroundComm: BackgroundComm,
+        public networkComm: NetworkComm,
+    ) {}
 
     /**
      * Fetches a new time statement and necessary related data and sends the
@@ -31,13 +35,13 @@ export default class TimeStatementManager {
     private async fetchAndParseEmployeeId(): Promise<string> {
         let employeeData;
         try {
-            employeeData = await this.communication.fetchEmployeeId();
+            employeeData = await this.networkComm.fetchEmployeeId();
         } catch (e) {
             console.error(e);
             throw new Error(constStrings.errorMsgs.unableToContactAPI);
         }
 
-        const employeeIdResponse = await this.communication.sendMsgToBackground(
+        const employeeIdResponse = await this.backgroundComm.sendMsgToBackground(
             BackgroundCommand.ParseEmployeeId,
             employeeData,
         );
@@ -60,7 +64,7 @@ export default class TimeStatementManager {
     private async fetchAndSendTimeStatement(employeeId: string) {
         let rawTimeStatementData;
         try {
-            rawTimeStatementData = await this.communication.fetchTimeStatement(
+            rawTimeStatementData = await this.networkComm.fetchTimeStatement(
                 employeeId,
                 DateManger.calculateTimeStatementStartDate(config.monthsToCalculateManually),
                 DateManger.calcualteTimeStatementEndDate(config.monthsToCalculateManually),
@@ -70,7 +74,7 @@ export default class TimeStatementManager {
             throw new Error(constStrings.errorMsgs.unableToContactAPI);
         }
 
-        const timeStatementResponse = await this.communication.sendMsgToBackground(
+        const timeStatementResponse = await this.backgroundComm.sendMsgToBackground(
             BackgroundCommand.CompileTimeSatement,
             Formater.convertArrayBufferToBase64(rawTimeStatementData),
         );

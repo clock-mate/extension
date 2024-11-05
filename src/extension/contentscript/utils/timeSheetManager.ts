@@ -1,5 +1,6 @@
 import { BackgroundCommand } from '../../common/enums/command';
-import Communication from './communication';
+import BackgroundComm from '../communication/backgroundComm';
+import NetworkComm from '../communication/networkComm';
 import { config, constStrings } from './constants';
 import DateManger from './dateManager';
 import Formater from './format';
@@ -8,7 +9,10 @@ import Formater from './format';
  * Takes care of fetching and handling a time sheet (table of working times).
  */
 export default class TimeSheetManager {
-    public constructor(public communication: Communication) {}
+    public constructor(
+        public backgroundComm: BackgroundComm,
+        public networkComm: NetworkComm,
+    ) {}
 
     /**
      * Fetches a new time sheet and sends the time sheet to the
@@ -19,7 +23,7 @@ export default class TimeSheetManager {
     public async sendTimeSheetData() {
         let timeSheetData;
         try {
-            timeSheetData = await this.communication.fetchWorkingTimes(
+            timeSheetData = await this.networkComm.fetchWorkingTimes(
                 DateManger.calculateTimeSheetStartDate(config.monthsToCalculateManually),
                 DateManger.calculateTimeSheetEndDate(),
             );
@@ -28,7 +32,7 @@ export default class TimeSheetManager {
             throw new Error(constStrings.errorMsgs.unableToContactAPI);
         }
 
-        const timeSheetResponse = await this.communication.sendMsgToBackground(
+        const timeSheetResponse = await this.backgroundComm.sendMsgToBackground(
             BackgroundCommand.ParseTimeSheet,
             timeSheetData,
         );

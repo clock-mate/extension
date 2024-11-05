@@ -1,7 +1,8 @@
 import { config, constStrings } from './utils/constants';
 import View from './view/view';
 import Inserted from './view/inserted';
-import Communication from './utils/communication';
+import BackgroundComm from './communication/backgroundComm';
+import NetworkComm from './communication/networkComm';
 import Navigation from './utils/navigation';
 import Formater from './utils/format';
 import SettingsSync from './utils/settingsSync';
@@ -16,8 +17,9 @@ import OvertimeManager from './utils/overtimeManager';
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Main Events <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // ===== Start sending all requests =====
-    const communication = new Communication();
-    const overtimeManager = new OvertimeManager(communication)
+    const backgroundComm = new BackgroundComm();
+    const networkComm = new NetworkComm();
+    const overtimeManager = new OvertimeManager(backgroundComm, networkComm);
 
     const calculatedData = new StatusedPromise(overtimeManager.calculateNewOvertimeData());
 
@@ -26,7 +28,10 @@ import OvertimeManager from './utils/overtimeManager';
     await Navigation.waitForDOMContentLoaded();
 
     // ===== Add floating display =====
-    const displayState: DisplayFormat = { text: constStrings.prefixOvertime + constStrings.overtimeLoading, loading: true }
+    const displayState: DisplayFormat = {
+        text: constStrings.prefixOvertime + constStrings.overtimeLoading,
+        loading: true,
+    };
     const inserted = new Inserted(overtimeManager);
     const view = new View(inserted);
     view.renderDisplay(displayState); // render initial floating, loading display
@@ -75,7 +80,7 @@ async function updateDisplayOnChange(
 ) {
     const placeOrRemoveDisplay = async () => {
         if (Navigation.checkCorrectMenuIsOpen()) {
-            view.renderDisplay(displayState, false);             
+            view.renderDisplay(displayState, false);
         } else if (!Navigation.checkCorrectMenuIsOpen()) {
             // this will also be removed by Fiori but keep remove just in case this behaviour gets changed
             View.removeDisplay();

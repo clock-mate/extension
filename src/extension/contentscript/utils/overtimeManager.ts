@@ -5,7 +5,8 @@ import { updateDisplayState } from '../contentscript';
 import StatusedPromise from '../model/statusedPromise';
 import { DisplayFormat } from '../types/display';
 import View from '../view/view';
-import Communication from './communication';
+import BackgroundComm from '../communication/backgroundComm';
+import NetworkComm from '../communication/networkComm';
 import { constStrings } from './constants';
 import TimeSheetManager from './timeSheetManager';
 import TimeStatementManager from './timeStatementManager';
@@ -14,15 +15,22 @@ import Formater from './format';
 export default class OvertimeManager {
     public view: View | undefined;
 
-    constructor(public communication: Communication) {}
+    constructor(
+        public backgroundComm: BackgroundComm,
+        public networkComm: NetworkComm,
+    ) {}
 
     // fetches data and sends requests to background script, returns a displayable text in any case
     public async calculateNewOvertimeData(): Promise<OvertimeData | ErrorData> {
         try {
             const timeStatement = new TimeStatementManager(
-                this.communication,
+                this.backgroundComm,
+                this.networkComm,
             ).sendTimeStatementData();
-            const timeSheet = new TimeSheetManager(this.communication).sendTimeSheetData();
+            const timeSheet = new TimeSheetManager(
+                this.backgroundComm,
+                this.networkComm,
+            ).sendTimeSheetData();
 
             // wait until both requests finished before calculating total overtime
             await timeStatement;
@@ -47,7 +55,7 @@ export default class OvertimeManager {
     }
 
     public async getOvertimeData(): Promise<OvertimeData | ErrorData> {
-        const overtimeResponse = await this.communication.sendMsgToBackground(
+        const overtimeResponse = await this.backgroundComm.sendMsgToBackground(
             BackgroundCommand.GetOvertime,
         );
 
@@ -69,8 +77,10 @@ export default class OvertimeManager {
         calculatedData.promise.then(async () => {
             updateDisplayState(displayState, await Formater.getLatestDisplayFormat(calculatedData));
             if (this.view === undefined) {
-                console.error(`No view set in ${new OvertimeManager(this.communication).constructor.name}. ` +
-                'Unable to rerender display.')
+                console.error(
+                    `No view set in ${new OvertimeManager(this.backgroundComm, this.networkComm).constructor.name}. ` +
+                        'Unable to rerender display.',
+                );
                 View.removeDisplay();
                 return;
             }
