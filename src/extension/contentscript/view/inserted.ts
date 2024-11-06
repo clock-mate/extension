@@ -35,12 +35,7 @@ export default class Inserted {
                 ...HTMLElements, // spread syntax to expand array
             ),
         );
-        // readd reload event listener
-        const refreshIcon = document.getElementById(constStrings.refreshIconID);
-        if (!refreshIcon) return; // unable to add event listener
-        refreshIcon.addEventListener('click', () => {
-            this.overtimeManager.reloadOvertimeData(displayState);
-        });
+        this.registerReloadEventListener(displayState);
     }
 
     public static getInsertedDisplay(): HTMLElement | null {
@@ -53,4 +48,16 @@ export default class Inserted {
             previousInsertedDisplay.remove();
         }
     }
+
+    /**
+     * Registers the click event on the reload button of the inserted display.
+     */
+        private registerReloadEventListener(displayState: DisplayFormat) {
+            const refreshIcon = document.getElementById(constStrings.refreshIconID);
+            if (!refreshIcon) return; // unable to add event listener
+
+            refreshIcon.addEventListener('click', () => {
+                this.overtimeManager.reloadOvertimeData(displayState);
+            });
+        }
 }

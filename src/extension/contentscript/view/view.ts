@@ -6,6 +6,7 @@ import Floating from './floating';
 
 export default class View {
     constructor(
+        public floating: Floating,
         public inserted: Inserted,
         public headerBar?: HTMLElement,
     ) {}
@@ -43,7 +44,7 @@ export default class View {
 
     private renderFloatingDisplay(displayState: DisplayFormat, updateText: boolean) {
         if (Floating.getFloatingDisplay() === null) {
-            Floating.addFloatingDisplay(displayState);
+            this.floating.addFloatingDisplay(displayState);
         } else if (updateText) {
             View.updateDisplay(displayState);
         }

@@ -9,6 +9,7 @@ import SettingsSync from './utils/settingsSync';
 import StatusedPromise from './model/statusedPromise';
 import { DisplayFormat } from './types/display';
 import OvertimeManager from './utils/overtimeManager';
+import Floating from './view/floating';
 
 (async () => {
     'use strict';
@@ -28,22 +29,15 @@ import OvertimeManager from './utils/overtimeManager';
     await Navigation.waitForDOMContentLoaded();
 
     // ===== Add floating display =====
+    /** Used accross the whole content script to synchronize retrieved and displayed data. */
     const displayState: DisplayFormat = {
         text: constStrings.prefixOvertime + constStrings.overtimeLoading,
         loading: true,
     };
+    const floating = new Floating(overtimeManager);
     const inserted = new Inserted(overtimeManager);
-    const view = new View(inserted);
+    const view = new View(floating, inserted);
     view.renderDisplay(displayState); // render initial floating, loading display
-
-    // register button click for reload
-    overtimeManager.view = view;
-    const realoadBtn = document.getElementById(constStrings.buttonID);
-    if (realoadBtn) {
-        realoadBtn.addEventListener('click', () => {
-            overtimeManager.reloadOvertimeData(displayState);
-        });
-    }
 
     // ===== Register settings sync =====
     const settingsSync = new SettingsSync(view);

@@ -3,6 +3,7 @@ import Navigation from '../utils/navigation';
 import Common from './common';
 import Settings from '../../common/utils/settings';
 import { DisplayFormat } from '../types/display';
+import OvertimeManager from '../utils/overtimeManager';
 
 /**
  * The floating display is an HTML-Element which is floating above all other page
@@ -10,7 +11,9 @@ import { DisplayFormat } from '../types/display';
  * the page is loading.
  */
 export default class Floating {
-    public static async addFloatingDisplay(displayState: DisplayFormat) {
+    constructor(public overtimeManager: OvertimeManager) {}
+
+    public async addFloatingDisplay(displayState: DisplayFormat) {
         if (!(await Settings.displayIsEnabled())) {
             return;
         }
@@ -41,6 +44,7 @@ export default class Floating {
                 ...HTMLElements, // spread syntax to expand array
             ),
         );
+        this.registerReloadEventListener(displayState);
     }
 
     public static getFloatingDisplay(): HTMLElement | null {
@@ -50,5 +54,17 @@ export default class Floating {
     public static removeFloatingDisplay() {
         const oldDisplay = this.getFloatingDisplay();
         if (oldDisplay) oldDisplay.remove(); // delete the old display
+    }
+
+    /**
+     * Registers the click event on the reload button of the floating display.
+     */
+    private registerReloadEventListener(displayState: DisplayFormat) {
+        const refreshIcon = document.getElementById(constStrings.refreshIconID);
+        if (!refreshIcon) return; // unable to add event listener
+
+        refreshIcon.addEventListener('click', () => {
+            this.overtimeManager.reloadOvertimeData(displayState);
+        });
     }
 }
