@@ -45,6 +45,10 @@ import OvertimeManager from './utils/overtimeManager';
         });
     }
 
+    // ===== Register settings sync =====
+    const settingsSync = new SettingsSync(view);
+    settingsSync.updateDisplayOnDisplayEnabledChange(displayState);
+
     // ===== Register actions for promises resolving =====
     // update the display as soon as new data is available
     calculatedData.promise.then(async () => {
@@ -60,9 +64,6 @@ import OvertimeManager from './utils/overtimeManager';
         view.headerBar = headerBar;
         view.renderDisplay(displayState);
         updateDisplayOnChange(headerBar, displayState, view);
-
-        const settingsSync = new SettingsSync(view);
-        settingsSync.updateDisplayOnDisplayEnabledChange(displayState);
     } catch (e) {
         View.removeDisplay(); // TODO show error in popup
         console.error(e);
