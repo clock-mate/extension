@@ -1,7 +1,6 @@
 import { BackgroundCommand } from '../../common/enums/command';
 import { ErrorData, isErrorData } from '../../common/types/errorData';
 import { isOvertimeObject, OvertimeData } from '../../common/types/overtimeData';
-import { updateDisplayState } from '../contentscript';
 import StatusedPromise from '../model/statusedPromise';
 import { DisplayFormat } from '../types/display';
 import View from '../view/view';
@@ -75,7 +74,7 @@ export default class OvertimeManager {
 
         // == Register action for promise resolving ==
         calculatedData.promise.then(async () => {
-            updateDisplayState(displayState, await Formater.getLatestDisplayFormat(calculatedData));
+            Formater.updateDisplayState(displayState, await Formater.getLatestDisplayFormat(calculatedData));
             if (this.view === undefined) {
                 console.error(
                     `No view set in ${new OvertimeManager(this.backgroundComm, this.networkComm).constructor.name}. ` +

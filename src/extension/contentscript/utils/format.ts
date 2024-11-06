@@ -81,4 +81,15 @@ export default class Formater {
             throw new Error(data.error.message);
         }
     }
+
+    /**
+     * Takes the data from the newdisplay and inserts them into the display state.
+     * @param displayState    the variable to update the values of
+     * @param newDisplay      the new data
+     */
+    public static updateDisplayState(displayState: DisplayFormat, newDisplay: DisplayFormat) {
+        displayState.text = newDisplay.text;
+        displayState.loading = newDisplay.loading;
+    }
+    
 }

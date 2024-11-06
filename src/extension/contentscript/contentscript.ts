@@ -46,7 +46,7 @@ import Floating from './view/floating';
     // ===== Register actions for promises resolving =====
     // update the display as soon as new data is available
     calculatedData.promise.then(async () => {
-        updateDisplayState(displayState, await Formater.getLatestDisplayFormat(calculatedData));
+        Formater.updateDisplayState(displayState, await Formater.getLatestDisplayFormat(calculatedData));
         view.renderDisplay(displayState);
     });
 
@@ -96,9 +96,4 @@ async function updateDisplayOnChange(
         childList: true,
         subtree: true,
     });
-}
-
-export function updateDisplayState(displayState: DisplayFormat, newDisplay: DisplayFormat) {
-    displayState.text = newDisplay.text;
-    displayState.loading = newDisplay.loading;
 }
