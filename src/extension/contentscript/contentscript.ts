@@ -38,9 +38,9 @@ import OvertimeManager from './utils/overtimeManager';
 
     // register button click for reload
     overtimeManager.view = view;
-    const realodBtn = document.getElementById(constStrings.buttonID);
-    if (realodBtn) {
-        realodBtn.addEventListener('click', () => {
+    const realoadBtn = document.getElementById(constStrings.buttonID);
+    if (realoadBtn) {
+        realoadBtn.addEventListener('click', () => {
             overtimeManager.reloadOvertimeData(displayState);
         });
     }
