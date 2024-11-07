@@ -46,7 +46,10 @@ import Floating from './view/floating';
     // ===== Register actions for promises resolving =====
     // update the display as soon as new data is available
     calculatedData.promise.then(async () => {
-        Formater.updateDisplayState(displayState, await Formater.getLatestDisplayFormat(calculatedData));
+        Formater.updateDisplayState(
+            displayState,
+            await Formater.getLatestDisplayFormat(calculatedData),
+        );
         view.renderDisplay(displayState);
     });
 

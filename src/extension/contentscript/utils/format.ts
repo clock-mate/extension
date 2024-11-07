@@ -91,5 +91,4 @@ export default class Formater {
         displayState.text = newDisplay.text;
         displayState.loading = newDisplay.loading;
     }
-    
 }

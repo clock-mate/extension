@@ -74,7 +74,10 @@ export default class OvertimeManager {
 
         // == Register action for promise resolving ==
         calculatedData.promise.then(async () => {
-            Formater.updateDisplayState(displayState, await Formater.getLatestDisplayFormat(calculatedData));
+            Formater.updateDisplayState(
+                displayState,
+                await Formater.getLatestDisplayFormat(calculatedData),
+            );
             if (this.view === undefined) {
                 console.error(
                     `No view set in ${new OvertimeManager(this.backgroundComm, this.networkComm).constructor.name}. ` +

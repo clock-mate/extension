@@ -52,12 +52,12 @@ export default class Inserted {
     /**
      * Registers the click event on the reload button of the inserted display.
      */
-        private registerReloadEventListener(displayState: DisplayFormat) {
-            const refreshIcon = document.getElementById(constStrings.refreshIconID);
-            if (!refreshIcon) return; // unable to add event listener
+    private registerReloadEventListener(displayState: DisplayFormat) {
+        const refreshIcon = document.getElementById(constStrings.refreshIconID);
+        if (!refreshIcon) return; // unable to add event listener
 
-            refreshIcon.addEventListener('click', () => {
-                this.overtimeManager.reloadOvertimeData(displayState);
-            });
-        }
+        refreshIcon.addEventListener('click', () => {
+            this.overtimeManager.reloadOvertimeData(displayState);
+        });
+    }
 }
