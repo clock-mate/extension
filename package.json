@@ -28,24 +28,24 @@
   },
   "homepage": "https://github.com/NilsPvR/Gleitzeitkonto-Browser#readme",
   "devDependencies": {
-    "@eslint/js": "^9.12.0",
-    "@types/adm-zip": "^0.5.5",
+    "@eslint/js": "^9.14.0",
+    "@types/adm-zip": "^0.5.6",
     "@types/fs-extra": "^11.0.4",
     "@types/webextension-polyfill": "^0.12.1",
     "adm-zip": "^0.5.16",
     "esbuild": "^0.24.0",
-    "eslint": "^9.12.0",
+    "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-no-unsanitized": "^4.1.2",
     "fs-extra": "^11.2.0",
-    "globals": "^15.11.0",
+    "globals": "^15.12.0",
     "prettier": "3.3.3",
-    "sass": "^1.79.5",
+    "sass": "^1.80.6",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.9.0"
+    "typescript-eslint": "^8.13.0"
   },
   "dependencies": {
-    "pdfjs-dist": "^4.7.76",
+    "pdfjs-dist": "^4.8.69",
     "webextension-polyfill": "^0.12.0"
   }
 }
