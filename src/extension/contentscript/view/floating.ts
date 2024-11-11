@@ -21,7 +21,6 @@ export default class Floating {
         const HTMLElements = Common.createInnerHTMLElements(
             displayState.text,
             displayState.loading,
-            false,
         );
 
         // main page element is the (almost) only one loaded when DOM is loaded

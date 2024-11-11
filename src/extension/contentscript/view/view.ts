@@ -56,9 +56,6 @@ export default class View {
             document.getElementById(constStrings.floatingDisplayID); // get the display;
         if (currentDisplay) currentDisplay.classList.add(constStrings.cssClasses.loading);
 
-        const refreshIcon = document.getElementById(constStrings.refreshIconID);
-        if (refreshIcon) refreshIcon.style.animationPlayState = 'running';
-
         const refreshButton = document.getElementById(constStrings.buttonID);
         if (refreshButton) {
             // the only element having that id will be the button so casting is safe
@@ -71,9 +68,6 @@ export default class View {
             document.getElementById(constStrings.insertedDisplayID) ??
             document.getElementById(constStrings.floatingDisplayID); // get the display
         if (currentDisplay) currentDisplay.classList.remove(constStrings.cssClasses.loading);
-
-        const refreshIcon = document.getElementById(constStrings.refreshIconID);
-        if (refreshIcon) refreshIcon.style.animationPlayState = 'paused';
 
         const refreshButton = document.getElementById(constStrings.buttonID);
         if (refreshButton) {

@@ -19,7 +19,6 @@ export default class Inserted {
         const HTMLElements = Common.createInnerHTMLElements(
             displayState.text,
             displayState.loading,
-            true,
         );
 
         headerBar.prepend(

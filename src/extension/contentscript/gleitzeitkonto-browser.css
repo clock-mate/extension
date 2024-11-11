@@ -27,6 +27,11 @@
     animation-fill-mode: forwards;
     animation-iteration-count: infinite;
     animation-timing-function: cubic-bezier(0.2, 0.6, 0.8, 0.4);
+    animation-play-state: paused;
+}
+
+.loading #refresh-icon {
+    animation-play-state: running;
 }
 
 .reset-button {
@@ -48,6 +53,10 @@
     margin-right: 10px;
     transition: 0.2s;
     border-radius: 50%;
+}
+
+.inserted-display > .reload-button {
+    align-self: center;
 }
 
 .gleitzeitkonto-light > .reload-button {
