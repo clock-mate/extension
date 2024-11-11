@@ -37,9 +37,9 @@ export default class Floating {
                 {
                     class:
                         `${constStrings.cssClasses.floatingDisplay} ${Navigation.getPageVariant().toString().toLowerCase()} ` +
-                        Common.getLightingClassName(Common.getLightingMode()),
+                        Common.getLightingClassName(Common.getLightingMode()) +
+                        ` ${displayState.loading ? constStrings.cssClasses.loading : ''}`,
                     id: constStrings.floatingDisplayID,
-                    style: displayState.loading ? ' opacity: 0.5;' : '',
                 },
                 ...HTMLElements, // spread syntax to expand array
             ),

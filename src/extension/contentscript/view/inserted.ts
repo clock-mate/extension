@@ -28,9 +28,9 @@ export default class Inserted {
                 {
                     class:
                         `${constStrings.cssClasses.insertedDisplay} ${Navigation.getPageVariant().toString().toLowerCase()} ` +
-                        Common.getLightingClassName(Common.getLightingMode()),
+                        Common.getLightingClassName(Common.getLightingMode()) +
+                        ` ${displayState.loading ? constStrings.cssClasses.loading : ''}`,
                     id: constStrings.insertedDisplayID,
-                    style: displayState.loading ? ' opacity: 0.5;' : '',
                 },
                 ...HTMLElements, // spread syntax to expand array
             ),

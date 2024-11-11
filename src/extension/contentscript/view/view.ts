@@ -1,4 +1,4 @@
-import { config, constStrings } from '../utils/constants';
+import { constStrings } from '../utils/constants';
 import { DisplayFormat } from '../types/display';
 import Inserted from './inserted';
 import Settings from '../../common/utils/settings';
@@ -54,7 +54,7 @@ export default class View {
         const currentDisplay =
             document.getElementById(constStrings.insertedDisplayID) ??
             document.getElementById(constStrings.floatingDisplayID); // get the display;
-        if (currentDisplay) currentDisplay.style.opacity = config.loadingOpacity;
+        if (currentDisplay) currentDisplay.classList.add(constStrings.cssClasses.loading);
 
         const refreshIcon = document.getElementById(constStrings.refreshIconID);
         if (refreshIcon) refreshIcon.style.animationPlayState = 'running';
@@ -70,7 +70,7 @@ export default class View {
         const currentDisplay =
             document.getElementById(constStrings.insertedDisplayID) ??
             document.getElementById(constStrings.floatingDisplayID); // get the display
-        if (currentDisplay) currentDisplay.style.opacity = '';
+        if (currentDisplay) currentDisplay.classList.remove(constStrings.cssClasses.loading);
 
         const refreshIcon = document.getElementById(constStrings.refreshIconID);
         if (refreshIcon) refreshIcon.style.animationPlayState = 'paused';

@@ -11,7 +11,6 @@ export const config = {
     },
     maxPageloadingLoops: 120, // 1s * 120 = 2 minutes
     pageloadingTimeout: 1000, // 1 s
-    loadingOpacity: '0.5',
     monthsToCalculateManually: 3,
     timesheetEndDate: new Date(2999, 11, 31), // month is 0-indexed
 };
@@ -40,6 +39,7 @@ export const constStrings = {
         insertedDisplay: 'inserted-display',
         floatingDisplay: 'floating-display',
         button: 'reset-button reload-button',
+        loading: 'loading',
     },
 };
 
