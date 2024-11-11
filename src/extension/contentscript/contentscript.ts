@@ -10,6 +10,8 @@ import StatusedPromise from './model/statusedPromise';
 import { DisplayFormat } from './types/display';
 import OvertimeManager from './utils/overtimeManager';
 import Floating from './view/floating';
+import { ErrorData } from '../common/types/errorData';
+import { OvertimeData } from '../common/types/overtimeData';
 
 (async () => {
     'use strict';
@@ -22,7 +24,12 @@ import Floating from './view/floating';
     const networkComm = new NetworkComm();
     const overtimeManager = new OvertimeManager(backgroundComm, networkComm);
 
-    const calculatedData = new StatusedPromise(overtimeManager.calculateNewOvertimeData());
+    let calculatedData: StatusedPromise<Promise<OvertimeData | ErrorData>>;
+    if (NetworkComm.pageIsSupported()) {
+        calculatedData = new StatusedPromise(overtimeManager.calculateNewOvertimeData());
+    } else {
+        calculatedData = Formater.createUnsupportedPageData();
+    }
 
     // ===== Wait for correct page to be opened =====
     await Navigation.continuousMenucheck();

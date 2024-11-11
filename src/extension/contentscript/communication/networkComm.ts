@@ -10,23 +10,24 @@ export default class NetworkComm {
     private csrfToken: string | undefined;
 
     /**
-     * Gets the domain for the API to fetch the data from, based on the currently open page.
-     * The external URL for fetching data is different from the currently open page
-     * on some page variants.
+     * Checks if the currently open page is supported by the extension.
+     * @returns true if the page is supported
      */
-    private static getFetchDomain(): string {
+    public static pageIsSupported(): boolean {
         if (
             Navigation.getPageVariant() == PageVariant.Internal ||
-            window.location.origin.includes(givenStrings.externalURLInsert)
+            window.location.origin.includes(givenStrings.externalURLSupported)
         ) {
-            return window.location.origin;
+            return true;
         }
-        // user is on external page which is missing the URLInsert part
-        const fixedURLOrigin = window.location.origin.replace(
-            givenStrings.externalURLInsertAfter,
-            givenStrings.externalURLInsertAfter + givenStrings.externalURLInsert,
-        );
-        return fixedURLOrigin;
+        return false;
+    }
+
+    /**
+     * Gets the domain for the API to fetch the data from, based on the currently open page.
+     */
+    private static getFetchDomain(): string {
+        return window.location.origin;
     }
 
     /**

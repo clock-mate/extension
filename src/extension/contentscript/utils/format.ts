@@ -91,4 +91,12 @@ export default class Formater {
         displayState.text = newDisplay.text;
         displayState.loading = newDisplay.loading;
     }
+
+    public static createUnsupportedPageData(): StatusedPromise<Promise<ErrorData>> {
+        return new StatusedPromise(
+            new Promise<ErrorData>((resolve) => {
+                resolve({ error: { message: constStrings.errorMsgs.pageNotSupported } });
+            }),
+        );
+    }
 }
