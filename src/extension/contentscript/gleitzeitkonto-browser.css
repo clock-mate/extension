@@ -93,10 +93,6 @@
     line-height: 1;
 }
 
-.inserted-display.external {
-    margin-right: 0.5rem;
-}
-
 .floating-display {
     display: flex;
     width: revert;
