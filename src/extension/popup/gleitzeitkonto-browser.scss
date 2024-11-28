@@ -46,6 +46,12 @@ body {
     text-align: right;
 }
 
+.sourceCodeLink {
+    font-size: 0.9rem;
+    color: inherit;
+    font-style: italic;
+}
+
 .switch {
     --line: #505162;
     --dot: var(--gleitzeit-blue);
