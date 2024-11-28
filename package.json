@@ -1,13 +1,13 @@
 {
   "name": "Gleitzeitkonto-Browser",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Browser Erweiterung für Chromium und Firefox, welche erlaubt die Überstunden bzw. ein Gleitzeitkonto direkt in der Fiori-Zeiterfassung oder in der Erweiterung einzusehen.",
   "browser": "src/extension/contentscript/contentscript",
   "type": "module",
   "scripts": {
     "check-format": "prettier --check . && eslint && tsc -noEmit",
     "format": "prettier --write .",
-    "publish": "npm run transpileBuild && node scripts/publish-extension.js && npm run combineBrowserJS && npm run sass && node scripts/publish-extension-fix-manifests.js && npm run zipExtension",
+    "build": "npm run transpileBuild && node scripts/publish-extension.js && npm run combineBrowserJS && npm run sass && node scripts/publish-extension-fix-manifests.js && npm run zipExtension",
     "transpileBuild": "tsc --project tsconfig.build.json",
     "combineBrowserJS": "npm run combineWebWorkersJS && npm run combinePopupJS && npm run combineOffscreenJS && esbuild src/extension/contentscript/contentscript.ts --bundle --outfile=build/extension/contentscript/gleitzeitkonto-browser.js && esbuild src/extension/backgroundscript/backgroundscript.ts --bundle --outfile=build/extension/backgroundscript/backgroundscript.js",
     "combineBrowserJS-dev": "esbuild src/extension/contentscript/contentscript.ts --bundle --sourcemap --outfile=build/extension/contentscript/gleitzeitkonto-browser.js && esbuild src/extension/backgroundscript/backgroundscript.ts --bundle --sourcemap --outfile=build/extension/backgroundscript/backgroundscript.js",
@@ -28,23 +28,24 @@
   },
   "homepage": "https://github.com/NilsPvR/Gleitzeitkonto-Browser#readme",
   "devDependencies": {
-    "@eslint/js": "^9.9.1",
-    "@types/adm-zip": "^0.5.5",
+    "@eslint/js": "^9.15.0",
+    "@types/adm-zip": "^0.5.6",
     "@types/fs-extra": "^11.0.4",
-    "@types/webextension-polyfill": "^0.12.0",
-    "adm-zip": "^0.5.15",
-    "esbuild": "^0.23.1",
-    "eslint": "^9.9.1",
+    "@types/webextension-polyfill": "^0.12.1",
+    "adm-zip": "^0.5.16",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-no-unsanitized": "^4.1.2",
     "fs-extra": "^11.2.0",
-    "globals": "^15.9.0",
+    "globals": "^15.12.0",
     "prettier": "3.3.3",
-    "sass": "^1.77.8",
-    "typescript": "^5.5.4",
-    "typescript-eslint": "^8.2.0"
+    "sass": "^1.81.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.15.0"
   },
   "dependencies": {
-    "webextension-polyfill": "^0.12.0",
-    "pdfjs-dist": "^4.6.82"
+    "pdfjs-dist": "^4.8.69",
+    "webextension-polyfill": "^0.12.0"
   }
 }

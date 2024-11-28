@@ -11,7 +11,6 @@ export const config = {
     },
     maxPageloadingLoops: 120, // 1s * 120 = 2 minutes
     pageloadingTimeout: 1000, // 1 s
-    loadingOpacity: '0.5',
     monthsToCalculateManually: 3,
     timesheetEndDate: new Date(2999, 11, 31), // month is 0-indexed
 };
@@ -32,6 +31,7 @@ export const constStrings = {
         noData: 'Keine Daten erhalten.',
         unableToContactAPI: 'Nicht mehr eingeloggt. Bitte Seite neu laden!',
         unexpectedBackgroundResponse: 'Datenverarbeitung fehlgeschlagen.',
+        pageNotSupported: 'Diese Seite wird nicht unterstützt.',
     },
     cssClasses: {
         lightMode: 'gleitzeitkonto-light',
@@ -40,6 +40,7 @@ export const constStrings = {
         insertedDisplay: 'inserted-display',
         floatingDisplay: 'floating-display',
         button: 'reset-button reload-button',
+        loading: 'loading',
     },
 };
 
@@ -54,8 +55,6 @@ export const givenStrings = {
     employeeNumberURLPath: '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/$batch',
     timeStatementURLPathFormat:
         "/sap/opu/odata/sap/HCMFAB_MYFORMS_SRV/FormDisplaySet(EmployeeNumber='{employeeNumber}',FormType='SAP_INT_TIM_STM',ParametersValues='BEGDA%3D{startDate}%40%3BENDDA%3D{endDate}')/$value",
-    /** This parts needs to be inserted into the external URL when not present */
-    externalURLInsert: '-sapdelim-fesruntime',
-    /** The string after which the `externalURLInsert` needs to be inserted */
-    externalURLInsertAfter: 'xvixnuoa',
+    /** This part of the url indicates if the website is supported */
+    externalURLSupported: '-sapdelim-fesruntime',
 };

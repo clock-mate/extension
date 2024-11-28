@@ -1,7 +1,6 @@
 # Gleitzeitkonto-Browser - Anzeigen der Überstunden per Erweiterung
 
 Die Browser Erweiterung, die das aktuelle Gleitzeitkonto anzeigt. Man muss nicht mehr umständlich die Überstunden ausrechnen oder aus PDF-Datein ablesen. Es werden einfach im Fiori-Launchpad auf der Seite der Zeiterfassung die aktuellen Überstunden angezeigt.
-Alternativ: [Gleitzeitkonto-Desktop](https://github.com/julius-boettger/gleitzeitkonto-desktop)
 <br><br>
 *Das Gleitzeitkonto im Fiori-Launchpad:*
 <br>
@@ -35,4 +34,4 @@ In älteren Versionen musste zusätzlich ein Programm (CompanionApp) und Node.js
 Da die Browser Erweiterung Zugriff auf den Kontext von Fiori hat, kann diese auch Anfragen direkt an den Fiori-Server schicken. Es wird somit eine Anfrage geschickt, um die Arbeitszeiten abzufragen. Aus den Arbeitszeiten werden im Hintergrund die aktuellen Überstunden berechnet. Diese werden dann in der Erweiterung angezeigt.
 
 # Idee
-Das Gleitzeitkonto-Projekt (API, Desktop und Browser) ist entstanden, da es keine einfache Möglichkeit gab, die Überstunden einzusehen. Dies ist relevant, wenn man in manchen Wochen mehr als die geforderte Wochenstundenzahl arbeitet und in der anderen Woche entsprechend weniger arbeiten möchte.
+Das Gleitzeitkonto-Projekt (Browser sowie ehemalig API und Desktop) ist entstanden, da es keine einfache Möglichkeit gab, die Überstunden einzusehen. Dies ist relevant, wenn man in manchen Wochen mehr als die geforderte Wochenstundenzahl arbeitet und in der anderen Woche entsprechend weniger arbeiten möchte.

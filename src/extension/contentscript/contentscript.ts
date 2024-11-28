@@ -1,16 +1,17 @@
 import { config, constStrings } from './utils/constants';
 import View from './view/view';
-import Floating from './view/floating';
 import Inserted from './view/inserted';
-import Communication from './utils/communication';
+import BackgroundComm from './communication/backgroundComm';
+import NetworkComm from './communication/networkComm';
 import Navigation from './utils/navigation';
-import Data from './utils/format';
-import { AccountData, ErrorData } from './types/accountData';
-import SettingsSync from './utils/settingsSync';
-import { BackgroundCommand } from '../common/enums/command';
 import Formater from './utils/format';
-import DateManger from './utils/dateManager';
+import SettingsSync from './utils/settingsSync';
 import StatusedPromise from './model/statusedPromise';
+import { DisplayFormat } from './types/display';
+import OvertimeManager from './utils/overtimeManager';
+import Floating from './view/floating';
+import { ErrorData } from '../common/types/errorData';
+import { OvertimeData } from '../common/types/overtimeData';
 
 (async () => {
     'use strict';
@@ -19,29 +20,44 @@ import StatusedPromise from './model/statusedPromise';
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Main Events <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // ===== Start sending all requests =====
-    const communication = new Communication();
+    const backgroundComm = new BackgroundComm();
+    const networkComm = new NetworkComm();
+    const overtimeManager = new OvertimeManager(backgroundComm, networkComm);
 
-    const calculatedData = new StatusedPromise(calculateNewAccountData(communication));
+    let calculatedData: StatusedPromise<Promise<OvertimeData | ErrorData>>;
+    if (NetworkComm.pageIsSupported()) {
+        calculatedData = new StatusedPromise(overtimeManager.calculateNewOvertimeData());
+    } else {
+        calculatedData = Formater.createUnsupportedPageData();
+    }
 
     // ===== Wait for correct page to be opened =====
     await Navigation.continuousMenucheck();
     await Navigation.waitForDOMContentLoaded();
 
     // ===== Add floating display =====
-    Floating.addFloatingDisplay(constStrings.prefixOvertime + constStrings.overtimeLoading, true);
+    /** Used accross the whole content script to synchronize retrieved and displayed data. */
+    const displayState: DisplayFormat = {
+        text: constStrings.prefixOvertime + constStrings.overtimeLoading,
+        loading: true,
+    };
+    const floating = new Floating(overtimeManager);
+    const inserted = new Inserted(overtimeManager);
+    const view = new View(floating, inserted);
+    view.renderDisplay(displayState); // render initial floating, loading display
 
-    // register button click for reload
-    const realodBtn = document.getElementById(constStrings.buttonID);
-    if (realodBtn) {
-        realodBtn.addEventListener('click', () => {
-            realodAccountData(communication);
-        });
-    }
+    // ===== Register settings sync =====
+    const settingsSync = new SettingsSync(view);
+    settingsSync.updateDisplayOnDisplayEnabledChange(displayState);
 
     // ===== Register actions for promises resolving =====
     // update the display as soon as new data is available
     calculatedData.promise.then(async () => {
-        View.updateDisplay(await Data.getLatestDisplayFormat(calculatedData));
+        Formater.updateDisplayState(
+            displayState,
+            await Formater.getLatestDisplayFormat(calculatedData),
+        );
+        view.renderDisplay(displayState);
     });
 
     try {
@@ -49,13 +65,11 @@ import StatusedPromise from './model/statusedPromise';
             config.pageloadingTimeout,
             config.maxPageloadingLoops,
         );
-
-        updateInsertedDisplayOnChange(headerBar, calculatedData, communication);
-
-        const settingsSync = new SettingsSync(communication);
-        settingsSync.updateDisplayOnDisplayStateChange(headerBar);
+        view.headerBar = headerBar;
+        view.renderDisplay(displayState);
+        updateDisplayOnChange(headerBar, displayState, view);
     } catch (e) {
-        Floating.removeFloatingDisplay(); // TODO show error in popup
+        View.removeDisplay(); // TODO show error in popup
         console.error(e);
     }
 })();
@@ -64,175 +78,32 @@ import StatusedPromise from './model/statusedPromise';
 // =======================================================
 
 // update the display continuously for as long as the script is loaded
-// it is assumed that the page has already loaded completely
-async function updateInsertedDisplayOnChange(
+async function updateDisplayOnChange(
     headerBar: HTMLElement,
-    calculatedData: StatusedPromise<Promise<AccountData | ErrorData>>,
-    communication: Communication,
+    displayState: DisplayFormat,
+    view: View,
 ) {
-    const placeOrRemoveInsertedDisplay = async () => {
-        // when correct page is open and the display doesn't already exist
-        if (Navigation.checkCorrectMenuIsOpen() && !Inserted.getInsertedDisplay()) {
-            const latestDisplayFormat = await Data.getLatestDisplayFormat(calculatedData);
-            new Inserted(communication).addInsertedDisplay(
-                headerBar,
-                latestDisplayFormat.text,
-                latestDisplayFormat.loading,
-            );
+    const placeOrRemoveDisplay = async () => {
+        if (Navigation.checkCorrectMenuIsOpen()) {
+            view.renderDisplay(displayState, false);
         } else if (!Navigation.checkCorrectMenuIsOpen()) {
             // this will also be removed by Fiori but keep remove just in case this behaviour gets changed
-            Inserted.removeInsertedDisplay();
+            View.removeDisplay();
         }
     };
 
     window.addEventListener('hashchange', async () => {
-        await placeOrRemoveInsertedDisplay();
+        await placeOrRemoveDisplay();
     });
 
     // check if the HeaderBar is being manipulated -> Fiori does sometimes remove the inserted display
     const observer = new MutationObserver(async () => {
-        await placeOrRemoveInsertedDisplay();
+        await placeOrRemoveDisplay();
     });
-
-    // add the display to make sure the observer can actually observe something and the display isn't already removed
-    await placeOrRemoveInsertedDisplay();
-
     observer.observe(headerBar, {
         // config
         attributes: false,
         childList: true,
         subtree: true,
-    });
-}
-
-// fetches data and sends requests to background script, returns a displayable text in any case
-async function calculateNewAccountData(
-    communication: Communication,
-): Promise<AccountData | ErrorData> {
-    try {
-        const timeStatement = sendTimeStatementData(communication);
-        const timeSheet = sendTimeSheetData(communication);
-
-        // wait until both requests finished before calculating total overtime
-        await timeStatement;
-        await timeSheet;
-    } catch (e) {
-        if (typeof e !== 'object' || !e || !('message' in e) || typeof e.message !== 'string') {
-            // should never happen but in case we didn't catch an Error object but something else
-            console.error(e);
-            return {
-                error: {
-                    message: constStrings.errorMsgs.unknown,
-                },
-            };
-        }
-        return {
-            error: {
-                message: e.message,
-            },
-        };
-    }
-    return getAccountData(communication);
-}
-
-// throws a displayable error message in case anything goes wrong
-async function sendTimeStatementData(communication: Communication) {
-    // === Employee ID ===
-    let employeeData;
-    try {
-        employeeData = await communication.fetchEmployeeId();
-    } catch (e) {
-        console.error(e);
-        throw new Error(constStrings.errorMsgs.unableToContactAPI);
-    }
-
-    const employeeIdResponse = await communication.sendMsgToBackground(
-        BackgroundCommand.ParseEmployeeId,
-        employeeData,
-    );
-
-    Formater.checkForErrorMsg(employeeIdResponse);
-    if (
-        !('employeeId' in employeeIdResponse) ||
-        typeof employeeIdResponse.employeeId !== 'string'
-    ) {
-        console.error('Received response from background without employee ID');
-        throw new Error(constStrings.errorMsgs.unexpectedBackgroundResponse);
-    }
-
-    // === Time statement a.k.a. PDF file ===
-    let rawTimeStatementData;
-    try {
-        rawTimeStatementData = await communication.fetchTimeStatement(
-            employeeIdResponse.employeeId,
-            DateManger.calculateTimeStatementStartDate(config.monthsToCalculateManually),
-            DateManger.calcualteTimeStatementEndDate(config.monthsToCalculateManually),
-        );
-    } catch (e) {
-        console.error(e);
-        throw new Error(constStrings.errorMsgs.unableToContactAPI);
-    }
-
-    const timeStatementResponse = await communication.sendMsgToBackground(
-        BackgroundCommand.CompileTimeSatement,
-        Formater.convertArrayBufferToBase64(rawTimeStatementData),
-    );
-
-    Formater.checkForErrorMsg(timeStatementResponse);
-    // background only sends content if there is an error
-}
-
-// throws a displayable error message in case anything goes wrong
-async function sendTimeSheetData(communication: Communication) {
-    let timeSheetData;
-    try {
-        timeSheetData = await communication.fetchWorkingTimes(
-            DateManger.calculateTimeSheetStartDate(config.monthsToCalculateManually),
-            DateManger.calculateTimeSheetEndDate(),
-        );
-    } catch (e) {
-        console.error(e);
-        throw new Error(constStrings.errorMsgs.unableToContactAPI);
-    }
-
-    const timeSheetResponse = await communication.sendMsgToBackground(
-        BackgroundCommand.ParseTimeSheet,
-        timeSheetData,
-    );
-
-    Formater.checkForErrorMsg(timeSheetResponse);
-    // background only sends content if there is an error
-}
-
-export async function getAccountData(
-    communication: Communication,
-): Promise<AccountData | ErrorData> {
-    const overtimeResponse = await communication.sendMsgToBackground(BackgroundCommand.GetOvertime);
-
-    if (
-        'error' in overtimeResponse &&
-        typeof overtimeResponse.error == 'object' &&
-        overtimeResponse.error &&
-        'message' in overtimeResponse.error &&
-        typeof overtimeResponse.error.message == 'string'
-    ) {
-        return <ErrorData>overtimeResponse;
-    } else if ('accountString' in overtimeResponse) {
-        return <AccountData>overtimeResponse;
-    }
-
-    return { error: { message: constStrings.errorMsgs.unexpectedBackgroundResponse } };
-}
-
-// called from the reload btn, recalculates the overtime
-export function realodAccountData(communication: Communication) {
-    View.startLoading(); // start loading immediately
-
-    // == Start new request ==
-    const calculatedData = new StatusedPromise(calculateNewAccountData(communication));
-
-    // == Register action for promise resolving ==
-    calculatedData.promise.then(async () => {
-        View.updateDisplay(await Data.getLatestDisplayFormat(calculatedData));
     });
 }

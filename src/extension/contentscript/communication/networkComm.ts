@@ -1,73 +1,33 @@
-import * as browser from 'webextension-polyfill';
-import { Runtime } from 'webextension-polyfill';
-import { BackgroundCommand } from '../../common/enums/command';
-import { givenStrings } from './constants';
-import Formater from './format';
-import Navigation from './navigation';
+import { givenStrings } from '../utils/constants';
+import Formater from '../utils/format';
+import Navigation from '../utils/navigation';
 import { PageVariant } from '../enums/pageVariant';
 
-export default class Communication {
-    // =========== Communication with backend ===========
-    // ==================================================
-
-    private portToBackground: Runtime.Port | undefined;
+/**
+ * Takes care of any communication via the network. For example fetching data from APIs.
+ */
+export default class NetworkComm {
     private csrfToken: string | undefined;
 
     /**
-     * Sends a message to the background script. The response from the background script will be returned.
-     * Depending on the command this will be a string with different content.
-     * @param command    the command to send to the background script
-     * @param content    the content to send to the background script
-     * @returns a response for the command
+     * Checks if the currently open page is supported by the extension.
+     * @returns true if the page is supported
      */
-    public async sendMsgToBackground(
-        command: BackgroundCommand,
-        content?: string,
-    ): Promise<object> {
-        return new Promise((resolve) => {
-            if (this.portToBackground == undefined) {
-                this.portToBackground = browser.runtime.connect(); // buid connection if not already established
-
-                this.portToBackground.onDisconnect.addListener(() => {
-                    // delete when connnection gets disconnected
-                    this.portToBackground = undefined;
-                });
-            }
-
-            // connection has been established
-            this.portToBackground.onMessage.addListener((response) => {
-                // check if the response is a response for this request
-                if (
-                    response &&
-                    typeof response === 'object' &&
-                    'command' in response &&
-                    response.command === command
-                ) {
-                    resolve(response);
-                }
-            });
-            this.portToBackground.postMessage({ command: command, content: content });
-        });
+    public static pageIsSupported(): boolean {
+        if (
+            Navigation.getPageVariant() == PageVariant.Internal ||
+            window.location.origin.includes(givenStrings.externalURLSupported)
+        ) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Gets the domain for the API to fetch the data from, based on the currently open page.
-     * The external URL for fetching data is different from the currently open page
-     * on some page variants.
      */
     private static getFetchDomain(): string {
-        if (
-            Navigation.getPageVariant() == PageVariant.Internal ||
-            window.location.origin.includes(givenStrings.externalURLInsert)
-        ) {
-            return window.location.origin;
-        }
-        // user is on external page which is missing the URLInsert part
-        const fixedURLOrigin = window.location.origin.replace(
-            givenStrings.externalURLInsertAfter,
-            givenStrings.externalURLInsertAfter + givenStrings.externalURLInsert,
-        );
-        return fixedURLOrigin;
+        return window.location.origin;
     }
 
     /**
@@ -112,7 +72,7 @@ export default class Communication {
      */
     private async fetchCSRFToken() {
         const csrfResponse = await fetch(
-            new Request(Communication.getTimeSheetFetchURL(), {
+            new Request(NetworkComm.getTimeSheetFetchURL(), {
                 method: 'HEAD',
                 credentials: 'include',
                 headers: {
@@ -161,7 +121,7 @@ export default class Communication {
             '--batch--';
 
         const result = await fetch(
-            new Request(Communication.getTimeSheetFetchURL(), {
+            new Request(NetworkComm.getTimeSheetFetchURL(), {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -187,10 +147,10 @@ export default class Communication {
     }
 
     /**
-     * Contacts the API to get a response inclduing the employee id.
+     * Contacts the API to get a response including the employee id.
      * The response will be the data returned by the api. This data
      * contains the employee id but has to be formatted to be able to use it.
-     * @returns an unformatted response with the working times
+     * @returns an unformatted response with the employee id
      * @throws if a communication error with api occurs
      */
     public async fetchEmployeeId() {
@@ -215,7 +175,7 @@ export default class Communication {
             '--batch--';
 
         const result = await fetch(
-            new Request(Communication.getEmployeeNumberFetchURL(), {
+            new Request(NetworkComm.getEmployeeNumberFetchURL(), {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -255,7 +215,7 @@ export default class Communication {
         }
 
         const result = await fetch(
-            Communication.getTimeStatementFetchURL(employeeNumber, startDate, endDate),
+            NetworkComm.getTimeStatementFetchURL(employeeNumber, startDate, endDate),
         );
 
         if (!result.ok) {

@@ -32,18 +32,15 @@ export default class Common {
      * based on given parameters.
      * @param displayText   the text to place inside of the display
      * @param loading       if true show a loading animation and disable button
-     * @param inserted      if true style according to inserted display
      * @returns an array of HTML elements: first element is a button, second element is a heading
      */
     public static createInnerHTMLElements(
         displayText: string,
         loading: boolean,
-        inserted: boolean,
     ): [HTMLElement, HTMLElement] {
         const refreshImage = this.createRichElement('img', {
             id: constStrings.refreshIconID,
             src: this.getRefreshIconURL(),
-            style: `animation-play-state: ${loading ? 'running;' : 'paused;'}`,
         });
 
         const button = this.createRichElement(
@@ -51,7 +48,6 @@ export default class Common {
             {
                 id: constStrings.buttonID,
                 class: constStrings.cssClasses.button,
-                style: inserted ? 'align-self: center;' : '',
                 disabled: loading ? 'true' : 'false',
             },
             refreshImage,
@@ -106,7 +102,7 @@ export default class Common {
      * Get the URL for the refresh icon based on the current LightingMode (light/dark) of the page.
      * @returns the URL
      */
-    static getRefreshIconURL(): string {
+    private static getRefreshIconURL(): string {
         if (this.getLightingMode() == LightingMode.Light) {
             return browser.runtime.getURL('./assets/refresh-light.svg');
         } else {

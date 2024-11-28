@@ -1,46 +1,43 @@
 import browser from 'webextension-polyfill';
-import Inserted from '../view/inserted';
-import { getAccountData } from '../contentscript';
-import Communication from './communication';
-import Data from './format';
-import StatusedPromise from '../model/statusedPromise';
+import { DisplayFormat } from '../types/display';
 import View from '../view/view';
 
 export default class SettingsSync {
-    constructor(public communication: Communication) {}
+    constructor(public view: View) {}
 
-    public updateDisplayOnDisplayStateChange(headerBar: HTMLElement) {
+    public updateDisplayOnDisplayEnabledChange(displayState: DisplayFormat) {
         browser.storage.local.onChanged.addListener((changes: browser.Storage.StorageChange) => {
-            if (
-                'displayIsEnabled' in changes &&
-                changes.displayIsEnabled &&
-                typeof changes.displayIsEnabled == 'object' &&
-                'newValue' in changes.displayIsEnabled &&
-                typeof changes.displayIsEnabled.newValue === 'boolean'
-            ) {
-                this.addOrRemoveDisplay(headerBar, changes.displayIsEnabled.newValue);
+            if (isDisplayEnabledChange(changes)) {
+                this.addOrRemoveDisplay(displayState, changes.displayIsEnabled.newValue);
             }
         });
     }
 
-    private async addOrRemoveDisplay(headerBar: HTMLElement, displayIsEnabled: boolean) {
+    private async addOrRemoveDisplay(displayState: DisplayFormat, displayIsEnabled: boolean) {
         if (displayIsEnabled) {
-            const accountData = new StatusedPromise(getAccountData(this.communication));
-            const latestDisplayFormat = await Data.getLatestDisplayFormat(accountData);
-
-            new Inserted(this.communication).addInsertedDisplay(
-                headerBar,
-                latestDisplayFormat.text,
-                latestDisplayFormat.loading,
-            );
-
-            // update the display as soon as new data is available
-            accountData.promise.then(async () => {
-                'updated';
-                View.updateDisplay(await Data.getLatestDisplayFormat(accountData));
-            });
+            this.view.renderDisplay(displayState);
             return;
         }
-        Inserted.removeInsertedDisplay();
+        View.removeDisplay();
     }
+}
+
+interface DisplayEnabledChange {
+    displayIsEnabled: {
+        newValue: boolean;
+    };
+}
+
+function isDisplayEnabledChange(
+    displayEnabledChange: unknown,
+): displayEnabledChange is DisplayEnabledChange {
+    return (
+        typeof displayEnabledChange === 'object' &&
+        displayEnabledChange !== null &&
+        'displayIsEnabled' in displayEnabledChange &&
+        displayEnabledChange.displayIsEnabled !== null &&
+        typeof displayEnabledChange.displayIsEnabled == 'object' &&
+        'newValue' in displayEnabledChange.displayIsEnabled &&
+        typeof displayEnabledChange.displayIsEnabled.newValue === 'boolean'
+    );
 }
