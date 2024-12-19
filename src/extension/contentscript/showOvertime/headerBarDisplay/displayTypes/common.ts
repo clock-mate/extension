@@ -1,6 +1,8 @@
 import browser from 'webextension-polyfill';
-import { constStrings, givenStrings } from '../../utils/constants';
-import { LightingMode } from '../../enums/lightingMode';
+import { ERROR_MSGS } from '../../../common/constants';
+import { LightingMode } from '../../../common/enums/lightingMode';
+import { BUTTON_ID, CSS_CLASSES } from '../../constants';
+import { HEADER_ID, REFRESH_ICON_ID } from '../constants';
 
 export default class Common {
     /**
@@ -39,15 +41,15 @@ export default class Common {
         loading: boolean,
     ): [HTMLElement, HTMLElement] {
         const refreshImage = this.createRichElement('img', {
-            id: constStrings.refreshIconID,
+            id: REFRESH_ICON_ID,
             src: this.getRefreshIconURL(),
         });
 
         const button = this.createRichElement(
             'button',
             {
-                id: constStrings.buttonID,
-                class: constStrings.cssClasses.button,
+                id: BUTTON_ID,
+                class: CSS_CLASSES.BUTTON,
                 disabled: loading ? 'true' : 'false',
             },
             refreshImage,
@@ -55,8 +57,8 @@ export default class Common {
 
         const headline = this.createRichElement(
             'h3',
-            { class: constStrings.cssClasses.displayLine },
-            displayText ?? constStrings.errorMsgs.unknown,
+            { class: CSS_CLASSES.DISPLAY_LINE },
+            displayText ?? ERROR_MSGS.UNKNOWN,
         );
 
         return [button, headline];
@@ -68,7 +70,7 @@ export default class Common {
      */
     public static getLightingMode(): LightingMode {
         const header =
-            document.getElementById(givenStrings.headerID) ??
+            document.getElementById(HEADER_ID) ??
             document.getElementsByTagName('body')[0];
         if (!header) return LightingMode.Light; // default to lightmode if header not available
 
@@ -94,8 +96,8 @@ export default class Common {
      * @param lightingMode    the current lighting mode of the page
      */
     public static getLightingClassName(lightingMode: LightingMode): string {
-        if (lightingMode == LightingMode.Light) return constStrings.cssClasses.lightMode;
-        return constStrings.cssClasses.darkMode;
+        if (lightingMode == LightingMode.Light) return CSS_CLASSES.LIGHT_MODE;
+        return CSS_CLASSES.DARK_MODE;
     }
 
     /**

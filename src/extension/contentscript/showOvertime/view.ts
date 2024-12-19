@@ -1,8 +1,7 @@
-import { constStrings } from '../utils/constants';
-import { DisplayFormat } from '../types/display';
-import Inserted from './inserted';
 import Settings from '../../common/utils/settings';
-import Floating from './floating';
+import { DisplayFormat } from '../common/types/display';
+import { Inserted, Floating } from './headerBarDisplay/';
+import { BUTTON_ID, CSS_CLASSES, FLOATING_DISPLAY_ID, INSERTED_DISPLAY_ID } from './constants';
 
 export default class View {
     constructor(
@@ -52,11 +51,11 @@ export default class View {
 
     public static startLoading() {
         const currentDisplay =
-            document.getElementById(constStrings.insertedDisplayID) ??
-            document.getElementById(constStrings.floatingDisplayID); // get the display;
-        if (currentDisplay) currentDisplay.classList.add(constStrings.cssClasses.loading);
+            document.getElementById(INSERTED_DISPLAY_ID) ??
+            document.getElementById(FLOATING_DISPLAY_ID); // get the display;
+        if (currentDisplay) currentDisplay.classList.add(CSS_CLASSES.LOADING);
 
-        const refreshButton = document.getElementById(constStrings.buttonID);
+        const refreshButton = document.getElementById(BUTTON_ID);
         if (refreshButton) {
             // the only element having that id will be the button so casting is safe
             (refreshButton as HTMLButtonElement).disabled = true;
@@ -65,11 +64,11 @@ export default class View {
 
     public static stopLoading() {
         const currentDisplay =
-            document.getElementById(constStrings.insertedDisplayID) ??
-            document.getElementById(constStrings.floatingDisplayID); // get the display
-        if (currentDisplay) currentDisplay.classList.remove(constStrings.cssClasses.loading);
+            document.getElementById(INSERTED_DISPLAY_ID) ??
+            document.getElementById(FLOATING_DISPLAY_ID); // get the display
+        if (currentDisplay) currentDisplay.classList.remove(CSS_CLASSES.LOADING);
 
-        const refreshButton = document.getElementById(constStrings.buttonID);
+        const refreshButton = document.getElementById(BUTTON_ID);
         if (refreshButton) {
             // the only element having that id will be the button so casting is safe
             (refreshButton as HTMLButtonElement).disabled = false;
@@ -91,7 +90,7 @@ export default class View {
 
     public static async updateDisplayText(displayText: Promise<string> | string) {
         const text = await displayText;
-        const displayList = document.getElementsByClassName(constStrings.cssClasses.displayLine);
+        const displayList = document.getElementsByClassName(CSS_CLASSES.DISPLAY_LINE);
         if (!displayList) return;
 
         const display = displayList.item(0);

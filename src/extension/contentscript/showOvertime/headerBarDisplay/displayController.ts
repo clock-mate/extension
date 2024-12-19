@@ -1,6 +1,6 @@
-import { DisplayFormat } from '../../types/display';
-import Navigation from '../../utils/navigation';
-import View from '../showOvertime';
+import { DisplayFormat } from '../../common/types/display';
+import Navigation from '../../common/utils/navigation';
+import View from '../view';
 
 export default class DisplayController {
     private observer: MutationObserver;
@@ -38,7 +38,7 @@ export default class DisplayController {
 
     private placeOrRemoveDisplay = async () => {
         if (Navigation.checkCorrectMenuIsOpen()) {
-            view.renderDisplay(displayState, false);
+            this.view.renderDisplay(this.displayState, false);
         } else if (!Navigation.checkCorrectMenuIsOpen()) {
             // this will also be removed by Fiori but keep remove just in case this behaviour gets changed
             View.removeDisplay();

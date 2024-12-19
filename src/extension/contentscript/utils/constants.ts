@@ -16,31 +16,22 @@ export const config = {
 };
 
 export const constStrings = {
-    floatingDisplayID: 'gleitzeitkonto-canvas-headline',
-    insertedDisplayID: 'gleitzeitkonto-display',
+
     cssID: 'gleitzeitkonto-css',
-    buttonID: 'gleitzeitkonto-reload-button',
-    refreshIconID: 'refresh-icon',
+
+
 
 
     
-    cssClasses: {
-        lightMode: 'gleitzeitkonto-light',
-        darkMode: 'gleitzeitkonto-dark',
-        displayLine: 'gleitzeit-display-line',
-        insertedDisplay: 'inserted-display',
-        floatingDisplay: 'floating-display',
-        button: 'reset-button reload-button',
-        loading: 'loading',
-    },
+
 };
 
 /** Strings defined by external third parties, e.g. Fiori */
 export const givenStrings = {
 
-    mainPageElement1: 'shellLayout',
-    mainPageElement2: 'canvas',
-    headerID: 'shell-header',
+
+   
+
     
     timeSheetURLPath: '/sap/opu/odata/sap/HCM_TIMESHEET_MAN_SRV/$batch?sap-client=300',
     employeeNumberURLPath: '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/$batch',
