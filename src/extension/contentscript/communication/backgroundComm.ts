@@ -1,10 +1,10 @@
 import * as browser from 'webextension-polyfill';
 import { BackgroundCommand } from '../../common/enums/command';
-import { EmployeeIdData } from '../../common/types/employeeIdData';
-import { OvertimeData } from '../../common/types/overtimeData';
-import { ErrorData } from '../../common/types/errorData';
 import { isBackgroundResponse } from '../../common/types/backgroundResponse';
+import { EmployeeIdData } from '../../common/types/employeeIdData';
+import { ErrorData } from '../../common/types/errorData';
 import { MessageObject } from '../../common/types/messageObject';
+import { OvertimeData } from '../../common/types/overtimeData';
 
 /**
  * Takes care of communication with the background script.
