@@ -73,37 +73,3 @@ import { OvertimeData } from '../common/types/overtimeData';
         console.error(e);
     }
 })();
-
-// ============ Main action taking functions =============
-// =======================================================
-
-// update the display continuously for as long as the script is loaded
-async function updateDisplayOnChange(
-    headerBar: HTMLElement,
-    displayState: DisplayFormat,
-    view: View,
-) {
-    const placeOrRemoveDisplay = async () => {
-        if (Navigation.checkCorrectMenuIsOpen()) {
-            view.renderDisplay(displayState, false);
-        } else if (!Navigation.checkCorrectMenuIsOpen()) {
-            // this will also be removed by Fiori but keep remove just in case this behaviour gets changed
-            View.removeDisplay();
-        }
-    };
-
-    window.addEventListener('hashchange', async () => {
-        await placeOrRemoveDisplay();
-    });
-
-    // check if the HeaderBar is being manipulated -> Fiori does sometimes remove the inserted display
-    const observer = new MutationObserver(async () => {
-        await placeOrRemoveDisplay();
-    });
-    observer.observe(headerBar, {
-        // config
-        attributes: false,
-        childList: true,
-        subtree: true,
-    });
-}
