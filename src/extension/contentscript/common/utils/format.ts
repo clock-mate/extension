@@ -1,3 +1,9 @@
+import { ErrorData, isErrorData } from "../../../common/types/errorData";
+import { isOvertimeObject, OvertimeData } from "../../../common/types/overtimeData";
+import { DISPLAY_TEXTS, ERROR_MSGS } from "../constants";
+import StatusedPromise from "../models/statusedPromise";
+import { DisplayFormat } from "../types/display";
+
 export default class Formater {
 
     /**
@@ -8,13 +14,13 @@ export default class Formater {
      */
     private static formatDisplayText(data: OvertimeData | ErrorData): string {
         if (isOvertimeObject(data)) {
-            return constStrings.prefixOvertime + data.overtimeText;
+            return DISPLAY_TEXTS.PREFIX_OVERTIME + data.overtimeText;
         }
         if (isErrorData(data)) {
-            return constStrings.prefixError + data.error.message;
+            return DISPLAY_TEXTS.PREFIX_ERROR + data.error.message;
         } else {
             // no Data
-            return constStrings.prefixOvertime + constStrings.errorMsgs.noData;
+            return DISPLAY_TEXTS.PREFIX_OVERTIME + ERROR_MSGS.NO_DATA;
         }
     }
 
@@ -34,7 +40,7 @@ export default class Formater {
         }
         // no data to show
         return {
-            text: constStrings.prefixOvertime + constStrings.overtimeLoading,
+            text: DISPLAY_TEXTS.PREFIX_OVERTIME + DISPLAY_TEXTS.OVERTIME_LOADING,
             loading: true,
         };
     }
@@ -52,7 +58,7 @@ export default class Formater {
     public static createUnsupportedPageData(): StatusedPromise<Promise<ErrorData>> {
         return new StatusedPromise(
             new Promise<ErrorData>((resolve) => {
-                resolve({ error: { message: constStrings.errorMsgs.pageNotSupported } });
+                resolve({ error: { message: ERROR_MSGS.PAGE_NOT_SUPPORTED } });
             }),
         );
     }

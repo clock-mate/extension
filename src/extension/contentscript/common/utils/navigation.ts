@@ -1,8 +1,12 @@
-import url from '../url.json';
+import url from '../../url.json';
+import { ERROR_MSGS } from '../constants';
 import { PageVariant } from '../enums/pageVariant';
-import { constStrings, givenStrings } from './constants';
+
 
 export default class Navigation {
+    private static readonly HEADER_END_ID = 'shell-header-hdr-end';
+    private static readonly GLEITZEIT_HASH = '#btccatstime-create';
+
     // ========== Checking and waiting for correct page ===========
     // ============================================================
 
@@ -41,7 +45,7 @@ export default class Navigation {
             // -> this is determined by checking if the headerbar of the page is available
             const checkPageLoaded = setInterval(async () => {
                 loops++;
-                const headerBar = document.getElementById(givenStrings.headerEndID); // the conatiner in which to place the inserted display
+                const headerBar = document.getElementById(this.HEADER_END_ID); // the conatiner in which to place the inserted display
 
                 if (headerBar) {
                     clearInterval(checkPageLoaded);
@@ -49,7 +53,7 @@ export default class Navigation {
                 } else if (loops > maxChecks) {
                     // page loaded too long
                     clearInterval(checkPageLoaded);
-                    reject(constStrings.errorMsgs.pageloadingtimeExceeded);
+                    reject(ERROR_MSGS.PAGE_LOADING_TIME_EXCEEDED);
                 }
             }, timeout); // will be limited to min. 1000 when tab not focused
         });
@@ -61,7 +65,7 @@ export default class Navigation {
      * @returns    true if the user in on "Meine Zeiterfassung" page
      */
     public static checkCorrectMenuIsOpen(): boolean {
-        if (window.location.hash.startsWith(givenStrings.gleitzeitHash)) {
+        if (window.location.hash.startsWith(this.GLEITZEIT_HASH)) {
             return true;
         }
         return false;

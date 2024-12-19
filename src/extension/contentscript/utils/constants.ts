@@ -21,18 +21,9 @@ export const constStrings = {
     cssID: 'gleitzeitkonto-css',
     buttonID: 'gleitzeitkonto-reload-button',
     refreshIconID: 'refresh-icon',
-    prefixOvertime: 'Gleitzeitkonto: ',
-    prefixError: 'Fehler: ',
-    overtimeLoading: 'Loading...',
-    // prettier-ignore
-    errorMsgs: {
-        pageloadingtimeExceeded: 'Die Seite hat zu lange geladen. Das Gleitzeitkonto kann nicht angezeigt werden.',
-        unknown: 'Unbekannter Fehler.',
-        noData: 'Keine Daten erhalten.',
-        unableToContactAPI: 'Nicht mehr eingeloggt. Bitte Seite neu laden!',
-        unexpectedBackgroundResponse: 'Datenverarbeitung fehlgeschlagen.',
-        pageNotSupported: 'Diese Seite wird nicht unterstützt.',
-    },
+
+
+    
     cssClasses: {
         lightMode: 'gleitzeitkonto-light',
         darkMode: 'gleitzeitkonto-dark',
@@ -46,11 +37,11 @@ export const constStrings = {
 
 /** Strings defined by external third parties, e.g. Fiori */
 export const givenStrings = {
-    gleitzeitHash: '#btccatstime-create',
+
     mainPageElement1: 'shellLayout',
     mainPageElement2: 'canvas',
     headerID: 'shell-header',
-    headerEndID: 'shell-header-hdr-end',
+    
     timeSheetURLPath: '/sap/opu/odata/sap/HCM_TIMESHEET_MAN_SRV/$batch?sap-client=300',
     employeeNumberURLPath: '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/$batch',
     timeStatementURLPathFormat:
