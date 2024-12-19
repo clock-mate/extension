@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
-import { constStrings, givenStrings } from '../utils/constants';
-import { LightingMode } from '../enums/lightingMode';
+import { constStrings, givenStrings } from '../../utils/constants';
+import { LightingMode } from '../../enums/lightingMode';
 
 export default class Common {
     /**
