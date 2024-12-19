@@ -4,7 +4,7 @@ import NetworkComm from '../communication/networkComm';
 import { config, constStrings } from './constants';
 import DateManger from './dateManager';
 import Formater from './format';
-import SimpleManager from '../_common/interfaces/simpleManager';
+import SimpleManager from '../common/interfaces/simpleManager';
 
 /**
  * Takes care of fetching and handling a time sheet (table of working times).

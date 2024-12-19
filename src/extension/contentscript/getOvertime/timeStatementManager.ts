@@ -1,6 +1,6 @@
 import { BackgroundCommand } from '../../common/enums/command';
 import { isEmployeeIdData } from '../../common/types/employeeIdData';
-import SimpleManager from '../_common/interfaces/simpleManager';
+import SimpleManager from '../common/interfaces/simpleManager';
 import BackgroundComm from '../communication/backgroundComm';
 import NetworkComm from '../communication/networkComm';
 import { config, constStrings } from './constants';

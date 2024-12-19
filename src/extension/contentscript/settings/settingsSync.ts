@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import { DisplayFormat } from '../types/display';
 import View from '../view/view';
-import SimpleManager from '../_common/interfaces/simpleManager';
+import SimpleManager from '../common/interfaces/simpleManager';
 
 export default class SettingsSync implements SimpleManager {
     constructor(public view: View, private displayState: DisplayFormat) {}
