@@ -1,1 +1,1 @@
-export { default } from './backgroundComm';
+export { default as BackgroundComm } from './backgroundComm';
