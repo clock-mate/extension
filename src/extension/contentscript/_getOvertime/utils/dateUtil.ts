@@ -1,6 +1,6 @@
 import { config } from './constants';
 
-export default class DateManger {
+export default class DateUtil {
     /**
      * Calculates the start date to use for the time statement. Will be the
      * first day of the month from the given amount of months ago.
