@@ -1,5 +1,5 @@
-import Formater from '../utils/format';
 import FetchURL from './fetchUrl';
+import Formater from './utils/format';
 
 
 /**

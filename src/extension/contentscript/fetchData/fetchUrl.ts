@@ -1,9 +1,16 @@
-import Navigation from '../utils/navigation';
-import { PageVariant } from '../enums/pageVariant';
-import { givenStrings } from '../utils/constants';
-import Formater from '../utils/format';
+import { PageVariant } from '../common/enums/pageVariant';
+import Navigation from '../common/utils/navigation';
+import Formater from './utils/format';
 
 export default class FetchURL {
+    
+    private static readonly TIMESHEET_URL_PATH = '/sap/opu/odata/sap/HCM_TIMESHEET_MAN_SRV/$batch?sap-client=300';
+    private static readonly EMPLOYEE_NUMBER_URL_PATH = '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/$batch';
+    private static readonly TIMESTATEMENT_URL_PATH_FORMAT 
+        = "/sap/opu/odata/sap/HCMFAB_MYFORMS_SRV/FormDisplaySet(EmployeeNumber='{employeeNumber}',FormType='SAP_INT_TIM_STM',ParametersValues='BEGDA%3D{startDate}%40%3BENDDA%3D{endDate}')/$value";
+    /** This part of the url indicates if the website is supported */
+    private static readonly EXTERNAL_URL_SUPPORTED = '-sapdelim-fesruntime';
+
     /**
          * Checks if the currently open page is supported by the extension.
          * @returns true if the page is supported
@@ -11,7 +18,7 @@ export default class FetchURL {
         public static pageIsSupported(): boolean {
             if (
                 Navigation.getPageVariant() == PageVariant.Internal ||
-                window.location.origin.includes(givenStrings.externalURLSupported)
+                window.location.origin.includes(this.EXTERNAL_URL_SUPPORTED)
             ) {
                 return true;
             }
@@ -30,11 +37,11 @@ export default class FetchURL {
          * @returns the URL to fetch the API
          */
         public static getTimeSheetFetchURL(): string {
-            return this.getFetchDomain() + givenStrings.timeSheetURLPath;
+            return this.getFetchDomain() + this.TIMESHEET_URL_PATH;
         }
     
         public static getEmployeeNumberFetchURL(): string {
-            return this.getFetchDomain() + givenStrings.employeeNumberURLPath;
+            return this.getFetchDomain() + this.EMPLOYEE_NUMBER_URL_PATH;
         }
     
         /**
@@ -52,7 +59,7 @@ export default class FetchURL {
         ): string {
             return (
                 this.getFetchDomain() +
-                givenStrings.timeStatementURLPathFormat
+                this.TIMESTATEMENT_URL_PATH_FORMAT
                     .replace('{employeeNumber}', employeeNumber)
                     .replace('{startDate}', Formater.formatDateToYYYYMMDD(startDate))
                     .replace('{endDate}', Formater.formatDateToYYYYMMDD(endDate))
