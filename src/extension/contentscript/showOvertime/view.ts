@@ -1,14 +1,22 @@
 import Settings from '../../common/utils/settings';
 import { DisplayFormat } from '../common/types/display';
-import { Inserted, Floating } from './headerBarDisplay/';
+import { OvertimeManager } from '../getOvertime';
 import { BUTTON_ID, CSS_CLASSES, FLOATING_DISPLAY_ID, INSERTED_DISPLAY_ID } from './constants';
+import { Floating, Inserted, ReloadHandler } from './headerBarDisplay/';
 
 export default class View {
+    private floating: Floating;
+    private inserted: Inserted;
+
     constructor(
-        public floating: Floating,
-        public inserted: Inserted,
+        overtimeManager: OvertimeManager,
+        displayState: DisplayFormat,
         public headerBar?: HTMLElement,
-    ) {}
+    ) {
+        const reloadHandler = new ReloadHandler(displayState, overtimeManager.reloadOvertimeData);
+        this.floating = new Floating(reloadHandler);
+        this.inserted = new Inserted(reloadHandler);
+    }
 
     /**
      * Will add/update/change a display in the page with the given data. The function will
