@@ -1,17 +1,18 @@
-import { config, constStrings } from './utils/constants';
-import View from './view/view';
-import Inserted from './view/inserted';
-import BackgroundComm from './communication/backgroundComm';
-import NetworkComm from './communication/networkComm';
-import Navigation from './utils/navigation';
-import Formater from './utils/format';
-import SettingsSync from './utils/settingsSync';
-import StatusedPromise from './model/statusedPromise';
-import { DisplayFormat } from './types/display';
-import OvertimeManager from './utils/overtimeManager';
-import Floating from './view/floating';
 import { ErrorData } from '../common/types/errorData';
 import { OvertimeData } from '../common/types/overtimeData';
+import config from './common/config.json';
+import { DISPLAY_TEXTS } from './common/constants';
+import StatusedPromise from './common/models/statusedPromise';
+import { DisplayFormat } from './common/types/display';
+import Formater from './common/utils/format';
+import Navigation from './common/utils/navigation';
+import { BackgroundComm } from './communication/';
+import { FetchData } from './fetchData';
+import FetchURL from './fetchData/fetchUrl';
+import { OvertimeManager } from './getOvertime';
+import { SettingsSync } from './settingsSync';
+import { View } from './showOvertime';
+import { DisplayManager } from './showOvertime/headerBarDisplay';
 
 (async () => {
     'use strict';
@@ -19,13 +20,13 @@ import { OvertimeData } from '../common/types/overtimeData';
     /* ==========================================================================================
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Main Events <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
-    // ===== Start sending all requests =====
+    // ===== Initialize communication and fetch data =====
     const backgroundComm = new BackgroundComm();
-    const networkComm = new NetworkComm();
-    const overtimeManager = new OvertimeManager(backgroundComm, networkComm);
+    const fetchData = new FetchData();
+    const overtimeManager = new OvertimeManager(backgroundComm, fetchData);
 
     let calculatedData: StatusedPromise<Promise<OvertimeData | ErrorData>>;
-    if (NetworkComm.pageIsSupported()) {
+    if (FetchURL.pageIsSupported()) {
         calculatedData = new StatusedPromise(overtimeManager.calculateNewOvertimeData());
     } else {
         calculatedData = Formater.createUnsupportedPageData();
@@ -35,20 +36,18 @@ import { OvertimeData } from '../common/types/overtimeData';
     await Navigation.continuousMenucheck();
     await Navigation.waitForDOMContentLoaded();
 
-    // ===== Add floating display =====
-    /** Used accross the whole content script to synchronize retrieved and displayed data. */
+    // ===== Add display =====
+    /** Used accross the whole contentscript to synchronize retrieved and displayed data. */
     const displayState: DisplayFormat = {
-        text: constStrings.prefixOvertime + constStrings.overtimeLoading,
+        text: DISPLAY_TEXTS.PREFIX_OVERTIME + DISPLAY_TEXTS.OVERTIME_LOADING,
         loading: true,
     };
-    const floating = new Floating(overtimeManager);
-    const inserted = new Inserted(overtimeManager);
-    const view = new View(floating, inserted);
-    view.renderDisplay(displayState); // render initial floating, loading display
+    const view = new View(overtimeManager, displayState);
+    view.renderDisplay(displayState); // render initial, loading display
 
     // ===== Register settings sync =====
-    const settingsSync = new SettingsSync(view);
-    settingsSync.updateDisplayOnDisplayEnabledChange(displayState);
+    const settingsSync = new SettingsSync(view, displayState);
+    settingsSync.updateDisplayOnDisplayEnabledChange();
 
     // ===== Register actions for promises resolving =====
     // update the display as soon as new data is available
@@ -60,6 +59,7 @@ import { OvertimeData } from '../common/types/overtimeData';
         view.renderDisplay(displayState);
     });
 
+    // ===== Update display when the site changes =====
     try {
         const headerBar = await Navigation.waitForPageLoad(
             config.pageloadingTimeout,
@@ -67,7 +67,7 @@ import { OvertimeData } from '../common/types/overtimeData';
         );
         view.headerBar = headerBar;
         view.renderDisplay(displayState);
-        updateDisplayOnChange(headerBar, displayState, view);
+        new DisplayManager(displayState, headerBar, view);
     } catch (e) {
         View.removeDisplay(); // TODO show error in popup
         console.error(e);
