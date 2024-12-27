@@ -1,4 +1,4 @@
-import { config } from './constants';
+import config from '../../common/config.json';
 
 export default class DateUtil {
     /**
@@ -32,6 +32,6 @@ export default class DateUtil {
      * Calculates the end date to use for the time statement.
      */
     public static calculateTimeSheetEndDate(): Date {
-        return config.timesheetEndDate;
+        return new Date(config.timesheetEndDate);
     }
 }

@@ -1,4 +1,4 @@
-import { ErrorData, isErrorData } from '../../common/types/errorData';
+import { isErrorData } from '../../../common/types/errorData';
 
 export default class Formater {
     public static convertArrayBufferToBase64(buffer: ArrayBuffer): string {

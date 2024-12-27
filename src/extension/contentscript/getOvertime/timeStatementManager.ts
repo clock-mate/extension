@@ -1,11 +1,12 @@
 import { BackgroundCommand } from '../../common/enums/command';
 import { isEmployeeIdData } from '../../common/types/employeeIdData';
+import config from '../common/config.json';
+import { ERROR_MSGS } from '../common/constants';
 import SimpleManager from '../common/interfaces/simpleManager';
-import BackgroundComm from '../communication/backgroundComm';
-import NetworkComm from '../communication/networkComm';
-import { config, constStrings } from './constants';
-import DateManger from './dateManager';
-import Formater from './format';
+import { BackgroundComm } from '../communication';
+import { FetchData } from '../fetchData';
+import DateManger from './utils/dateUtil';
+import Formater from './utils/format';
 
 /**
  * Takes care of fetching and handling a time statement (pdf file).
@@ -13,7 +14,7 @@ import Formater from './format';
 export default class TimeStatementManager implements SimpleManager {
     public constructor(
         public backgroundComm: BackgroundComm,
-        public networkComm: NetworkComm,
+        public networkComm: FetchData,
     ) {}
 
     public initialize() {
@@ -43,7 +44,7 @@ export default class TimeStatementManager implements SimpleManager {
             employeeData = await this.networkComm.fetchEmployeeId();
         } catch (e) {
             console.error(e);
-            throw new Error(constStrings.errorMsgs.unableToContactAPI);
+            throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
         }
 
         const employeeIdResponse = await this.backgroundComm.sendMsgToBackground(
@@ -54,7 +55,7 @@ export default class TimeStatementManager implements SimpleManager {
         Formater.throwIfErrorMessage(employeeIdResponse);
         if (!isEmployeeIdData(employeeIdResponse)) {
             console.error('Received response from background without employee ID');
-            throw new Error(constStrings.errorMsgs.unexpectedBackgroundResponse);
+            throw new Error(ERROR_MSGS.UNEXPECTED_BACKGROUND_RESPONSE);
         }
 
         return employeeIdResponse.employeeId;
@@ -76,7 +77,7 @@ export default class TimeStatementManager implements SimpleManager {
             );
         } catch (e) {
             console.error(e);
-            throw new Error(constStrings.errorMsgs.unableToContactAPI);
+            throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
         }
 
         const timeStatementResponse = await this.backgroundComm.sendMsgToBackground(

@@ -1,22 +1,21 @@
 import { BackgroundCommand } from '../../common/enums/command';
 import { ErrorData, isErrorData } from '../../common/types/errorData';
 import { isOvertimeObject, OvertimeData } from '../../common/types/overtimeData';
-import StatusedPromise from '../model/statusedPromise';
-import { DisplayFormat } from '../types/display';
-import View from '../view/view';
-import BackgroundComm from '../communication/backgroundComm';
-import NetworkComm from '../communication/networkComm';
-import { constStrings } from './constants';
-import TimeSheetManager from './timeSheetManager';
-import TimeStatementManager from './timeStatementManager';
-import Formater from './format';
+import { ERROR_MSGS } from '../common/constants';
+import StatusedPromise from '../common/models/statusedPromise';
+import { DisplayFormat } from '../common/types/display';
+import Formater from '../common/utils/format';
+import { BackgroundComm } from '../communication';
+import { FetchData } from '../fetchData';
+import { View } from '../showOvertime';
+import { TimeSheetManager, TimeStatementManager } from './';
 
 export default class OvertimeManager {
     public view: View | undefined;
 
     constructor(
         public backgroundComm: BackgroundComm,
-        public networkComm: NetworkComm,
+        public fetchData: FetchData,
     ) {}
 
     // fetches data and sends requests to background script, returns a displayable text in any case
@@ -24,12 +23,12 @@ export default class OvertimeManager {
         try {
             const timeStatement = new TimeStatementManager(
                 this.backgroundComm,
-                this.networkComm,
-            ).sendTimeStatementData();
+                this.fetchData,
+            ).performAction();
             const timeSheet = new TimeSheetManager(
                 this.backgroundComm,
-                this.networkComm,
-            ).sendTimeSheetData();
+                this.fetchData,
+            ).performAction();
 
             // wait until both requests finished before calculating total overtime
             await timeStatement;
@@ -40,7 +39,7 @@ export default class OvertimeManager {
                 console.error(e);
                 return {
                     error: {
-                        message: constStrings.errorMsgs.unknown,
+                        message: ERROR_MSGS.UNKNOWN,
                     },
                 };
             }
@@ -53,13 +52,13 @@ export default class OvertimeManager {
         return this.getOvertimeData();
     }
 
-    public async getOvertimeData(): Promise<OvertimeData | ErrorData> {
+    private async getOvertimeData(): Promise<OvertimeData | ErrorData> {
         const overtimeResponse = await this.backgroundComm.sendMsgToBackground(
             BackgroundCommand.GetOvertime,
         );
 
         if (!isOvertimeObject(overtimeResponse) && !isErrorData(overtimeResponse)) {
-            return { error: { message: constStrings.errorMsgs.unexpectedBackgroundResponse } };
+            return { error: { message: ERROR_MSGS.UNEXPECTED_BACKGROUND_RESPONSE } };
         }
         return overtimeResponse;
     }
@@ -80,7 +79,7 @@ export default class OvertimeManager {
             );
             if (this.view === undefined) {
                 console.error(
-                    `No view set in ${new OvertimeManager(this.backgroundComm, this.networkComm).constructor.name}. ` +
+                    `No view set in ${new OvertimeManager(this.backgroundComm, this.fetchData).constructor.name}. ` +
                         'Unable to rerender display.',
                 );
                 View.removeDisplay();
