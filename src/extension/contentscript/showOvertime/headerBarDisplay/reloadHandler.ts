@@ -1,10 +1,11 @@
 import { DisplayFormat } from '../../common/types/display';
+import OvertimeManager from '../../getOvertime/overtimeManager';
 import { REFRESH_ICON_ID } from './constants';
 
 export default class ReloadHandler {
     constructor(
+        private overtimeManager: OvertimeManager,
         private displayState: DisplayFormat,
-        private reloadCallback: (displayState: DisplayFormat) => void,
     ) {}
 
     /**
@@ -15,7 +16,7 @@ export default class ReloadHandler {
         if (!refreshIcon) return; // unable to add event listener
 
         refreshIcon.addEventListener('click', () => {
-            this.reloadCallback(this.displayState);
+            this.overtimeManager.reloadOvertimeData(this.displayState);
         });
     }
 }
