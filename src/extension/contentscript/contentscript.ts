@@ -67,8 +67,10 @@ import { DisplayManager } from './showOvertime/headerBarDisplay';
             config.maxPageloadingLoops,
         );
         view.headerBar = headerBar;
-        view.renderDisplay(displayState);
-        new DisplayManager(displayState, headerBar, view);
+
+        const displayManager = new DisplayManager(displayState, headerBar, view);
+        displayManager.initialize();
+        displayManager.performAction();
     } catch (e) {
         View.removeDisplay(); // TODO show error in popup
         console.error(e);
