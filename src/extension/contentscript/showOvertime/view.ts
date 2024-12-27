@@ -13,7 +13,7 @@ export default class View {
         displayState: DisplayFormat,
         public headerBar?: HTMLElement,
     ) {
-        const reloadHandler = new ReloadHandler(displayState, overtimeManager.reloadOvertimeData);
+        const reloadHandler = new ReloadHandler(overtimeManager, displayState);
         this.floating = new Floating(reloadHandler);
         this.inserted = new Inserted(reloadHandler);
     }
