@@ -2,7 +2,6 @@ import url from '../../url.json';
 import { ERROR_MSGS } from '../constants';
 import { PageVariant } from '../enums/pageVariant';
 
-
 export default class Navigation {
     private static readonly HEADER_END_ID = 'shell-header-hdr-end';
     private static readonly GLEITZEIT_HASH = '#btccatstime-create';

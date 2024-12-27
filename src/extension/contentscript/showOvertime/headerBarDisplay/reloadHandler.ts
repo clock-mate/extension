@@ -1,8 +1,7 @@
-import { DisplayFormat } from "../../common/types/display";
-import { REFRESH_ICON_ID } from "./constants";
+import { DisplayFormat } from '../../common/types/display';
+import { REFRESH_ICON_ID } from './constants';
 
 export default class ReloadHandler {
-
     constructor(
         private displayState: DisplayFormat,
         private reloadCallback: (displayState: DisplayFormat) => void,
@@ -20,4 +19,3 @@ export default class ReloadHandler {
         });
     }
 }
-

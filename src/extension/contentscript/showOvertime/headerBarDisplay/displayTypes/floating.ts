@@ -12,7 +12,7 @@ import Common from './common';
  */
 export default class Floating {
     private static readonly MAIN_PAGE_ELEMENT_1 = 'shellLayout';
-    private static readonly  MAIN_PAGE_ELEMENT_2 = 'canvas';
+    private static readonly MAIN_PAGE_ELEMENT_2 = 'canvas';
 
     constructor(private reloadHandler: ReloadHandler) {}
 
@@ -57,6 +57,4 @@ export default class Floating {
         const oldDisplay = this.getFloatingDisplay();
         if (oldDisplay) oldDisplay.remove(); // delete the old display
     }
-
-
 }

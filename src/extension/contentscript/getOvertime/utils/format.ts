@@ -10,7 +10,7 @@ export default class Formater {
 
         return btoa(binaryString);
     }
-    
+
     /**
      * @throws if the given object implements the `ErrorData` interface with the contained message
      */

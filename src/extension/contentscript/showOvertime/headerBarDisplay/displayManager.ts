@@ -9,7 +9,7 @@ export default class DisplayManager implements SimpleManager {
     constructor(
         private displayState: DisplayFormat,
         private headerBar: HTMLElement,
-        private view: View
+        private view: View,
     ) {
         this.observer = new MutationObserver(() => this.placeOrRemoveDisplay());
     }
@@ -46,5 +46,5 @@ export default class DisplayManager implements SimpleManager {
             // this will also be removed by Fiori but keep remove just in case this behaviour gets changed
             View.removeDisplay();
         }
-    };
+    }
 }

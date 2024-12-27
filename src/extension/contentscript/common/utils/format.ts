@@ -1,11 +1,10 @@
-import { ErrorData, isErrorData } from "../../../common/types/errorData";
-import { isOvertimeObject, OvertimeData } from "../../../common/types/overtimeData";
-import { DISPLAY_TEXTS, ERROR_MSGS } from "../constants";
-import StatusedPromise from "../models/statusedPromise";
-import { DisplayFormat } from "../types/display";
+import { ErrorData, isErrorData } from '../../../common/types/errorData';
+import { isOvertimeObject, OvertimeData } from '../../../common/types/overtimeData';
+import { DISPLAY_TEXTS, ERROR_MSGS } from '../constants';
+import StatusedPromise from '../models/statusedPromise';
+import { DisplayFormat } from '../types/display';
 
 export default class Formater {
-
     /**
      * Format the given OvertimeData to a string which can be displayed. If an ErrorData object is provided
      * the error message will be formatted. If the given obj is invalid a special error message will be returned.

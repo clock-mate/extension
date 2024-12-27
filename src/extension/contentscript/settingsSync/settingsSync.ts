@@ -4,8 +4,10 @@ import { DisplayFormat } from '../common/types/display';
 import { View } from '../showOvertime';
 
 export default class SettingsSync implements SimpleManager {
-    constructor(public view: View, private displayState: DisplayFormat) {}
-
+    constructor(
+        public view: View,
+        private displayState: DisplayFormat,
+    ) {}
 
     public initialize() {
         return;

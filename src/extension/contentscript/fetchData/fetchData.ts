@@ -1,7 +1,6 @@
 import FetchURL from './fetchUrl';
 import Formater from './utils/format';
 
-
 /**
  * Takes care of any communication via the network. For example fetching data from APIs.
  */

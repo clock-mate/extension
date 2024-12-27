@@ -16,7 +16,6 @@ export default class TimeSheetManager implements SimpleManager {
         public fetchData: FetchData,
     ) {}
 
-
     public initialize() {
         return;
     }
@@ -30,7 +29,6 @@ export default class TimeSheetManager implements SimpleManager {
     public performAction() {
         return this.sendTimeSheetData();
     }
-
 
     private async sendTimeSheetData() {
         let timeSheetData;

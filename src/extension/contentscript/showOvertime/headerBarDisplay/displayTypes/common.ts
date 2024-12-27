@@ -70,8 +70,7 @@ export default class Common {
      */
     public static getLightingMode(): LightingMode {
         const header =
-            document.getElementById(HEADER_ID) ??
-            document.getElementsByTagName('body')[0];
+            document.getElementById(HEADER_ID) ?? document.getElementsByTagName('body')[0];
         if (!header) return LightingMode.Light; // default to lightmode if header not available
 
         // the rgb value of the header, is normally either white or dark grey/black
