@@ -1,8 +1,9 @@
+import SimpleManager from '../../common/interfaces/simpleManager';
 import { DisplayFormat } from '../../common/types/display';
 import Navigation from '../../common/utils/navigation';
 import View from '../view';
 
-export default class DisplayController {
+export default class DisplayManager implements SimpleManager {
     private observer: MutationObserver;
 
     constructor(
@@ -14,7 +15,12 @@ export default class DisplayController {
     }
 
     public initialize() {
-        // liste for hash changes (URL navigation)
+        // perform the initial display setup
+        this.placeOrRemoveDisplay();
+    }
+
+    public async performAction() {
+        // listen for hash changes (URL navigation)
         window.addEventListener('hashchange', () => this.placeOrRemoveDisplay());
 
         // check if the HeaderBar is being manipulated -> Fiori does sometimes remove the inserted display
@@ -25,18 +31,15 @@ export default class DisplayController {
             childList: true,
             subtree: true,
         });
-
-        // perform the initial display setup
-        this.placeOrRemoveDisplay();
     }
 
     // stop observing / clean up
-    public disconnect(): void {
+    public disconnect() {
         window.removeEventListener('hashchange', () => this.placeOrRemoveDisplay());
         this.observer.disconnect();
     }
 
-    private placeOrRemoveDisplay = async () => {
+    private placeOrRemoveDisplay() {
         if (Navigation.checkCorrectMenuIsOpen()) {
             this.view.renderDisplay(this.displayState, false);
         } else if (!Navigation.checkCorrectMenuIsOpen()) {
