@@ -43,6 +43,7 @@ import { DisplayManager } from './showOvertime/headerBarDisplay';
         loading: true,
     };
     const view = new View(overtimeManager, displayState);
+    overtimeManager.view = view;
     view.renderDisplay(displayState); // render initial, loading display
 
     // ===== Register settings sync =====
