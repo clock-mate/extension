@@ -1,5 +1,5 @@
-import { OffscreenCommand } from './enums/offscreenCommand';
-import { OffscreenTarget } from './enums/offscreenTarget';
+import { OffscreenCommand } from '../enums/offscreenCommand';
+import { OffscreenTarget } from '../enums/offscreenTarget';
 // disable this rule since a type checking on the chrome variable would not make much sense
 // we just don't have any types for Chromium specific features
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

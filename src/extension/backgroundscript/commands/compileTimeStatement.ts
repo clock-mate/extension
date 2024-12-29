@@ -1,13 +1,13 @@
 import { BackgroundCommand } from '../../common/enums/command';
 import { Communication } from '../communication';
-import CompatabilityLayer from '../workers/chromium/compatabilityLayer';
+import { CompatabilityLayer } from '../workers';
 
 
 // paths are not relative but start at the extension folder (build output)
 const TIME_STATEMENT_WORKER_FILE = 'backgroundscript/webWorker/timeStatementWorker.js';
 
 export async function saveOvertimeFromPDF(communication: Communication, message: object) {
-    const timeStatementWorker = await CompatabilityLayer.CreateWorker(TIME_STATEMENT_WORKER_FILE);
+    const timeStatementWorker = await CompatabilityLayer.createWorker(TIME_STATEMENT_WORKER_FILE);
 
     timeStatementWorker.onmessage = (workerMessage: MessageEvent) => {
         checkForOvertime(

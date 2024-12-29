@@ -1,13 +1,13 @@
 import { BackgroundCommand } from '../../common/enums/command';
-import { Communication } from '../communication';
-import CompatabilityLayer from '../workers/chromium/compatabilityLayer';
 import ErrorHandling from '../common/utils/errorHandling';
+import { Communication } from '../communication';
+import { CompatabilityLayer } from '../workers';
 
 // paths are not relative but start at the extension folder (build output)
 const EMPLOYEE_ID_WORKER_FILE = 'backgroundscript/webWorker/employeeIdWorker.js';
 
 export async function sendBackEmployeeId(communication: Communication, message: object) {
-    const employeeIdWorker = await CompatabilityLayer.CreateWorker(EMPLOYEE_ID_WORKER_FILE);
+    const employeeIdWorker = await CompatabilityLayer.createWorker(EMPLOYEE_ID_WORKER_FILE);
 
     employeeIdWorker.onmessage = (workerMessage: MessageEvent) => {
         ErrorHandling.printPossibleError(workerMessage.data);
