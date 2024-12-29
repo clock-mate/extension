@@ -51,7 +51,7 @@ import { extname } from 'path';
 
         // copy Chromium specific files only to Chromium output
         fs.copyFileSync(
-            'src/extension/backgroundscript/chromium/offscreen.html',
+            'src/extension/backgroundscript/workers/chromium/offScreenDocument/offscreen.html',
             './build/extension-chromium/backgroundscript/chromium/offscreen.html',
         );
 
