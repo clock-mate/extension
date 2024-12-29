@@ -1,4 +1,4 @@
-import { OffscreenCommand } from '../../backgroundscript/enums/offscreenCommand';
+import { OffscreenCommand } from '../../backgroundscript/workers/chromium/enums/offscreenCommand';
 import { BackgroundCommand } from '../enums/command';
 
 /**
