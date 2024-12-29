@@ -1,10 +1,10 @@
 import * as pdfjsLib from 'pdfjs-dist';
-import { givenStrings } from './constants';
+import { givenStrings } from '../utils/constants';
 
 // path is relative to the worker which calls the pdf manager -> timeStatementWorker
 pdfjsLib.GlobalWorkerOptions.workerSrc = '../pdf.worker.min.mjs';
 
-export default class PDFManager {
+export default class PDFAggregator {
     public static async compilePDF(message: MessageEvent): Promise<pdfjsLib.PDFDocumentProxy> {
         if (!('content' in message.data) || typeof message.data.content !== 'string') {
             throw new Error('No message or no content received from the content script');
