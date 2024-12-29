@@ -104,14 +104,5 @@ function checkForOvertime(
     communication.postCsMessage(command);
 }
 
-/**
- * Checks if the the given data has the `originalError` attribute and prints it.
- */
-function printPossibleError(data: object) {
-    if ('originalError' in data) {
-        console.error(data.originalError);
-    }
-}
-
 // listen for connection opening from the content script
 browser.runtime.onConnect.addListener(connectedToContentScript);
