@@ -1,7 +1,7 @@
 import { constStrings } from '../utils/constants';
 import Metadata from './metadata';
 
-export default class TimeData_Result {
+export default class EmployeeData_Result {
     public constructor(
         public metadata: Metadata,
         public applicationId: string,
@@ -22,7 +22,7 @@ export default class TimeData_Result {
         public useOnbehalfBackendSearch: boolean,
     ) {}
 
-    public static fromObject(obj: object): TimeData_Result {
+    public static fromObject(obj: object): EmployeeData_Result {
         if (
             !('__metadata' in obj) ||
             !obj.__metadata ||
@@ -62,7 +62,7 @@ export default class TimeData_Result {
             throw new Error(constStrings.internalErrorMsgs.unableToParseObj);
         }
 
-        return new TimeData_Result(
+        return new EmployeeData_Result(
             Metadata.fromObject(obj.__metadata),
             obj.ApplicationId,
             obj.EmployeePicMaxFilesize,
