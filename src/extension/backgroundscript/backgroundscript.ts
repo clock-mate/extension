@@ -43,14 +43,6 @@ function connectedToContentScript(port: browser.Runtime.Port) {
     });
 }
 
-function sendBackUnknownCmdError(communication: Communication) {
-    // explicitly break the messaging contract since, there is no command to send back
-    communication.portToCs.postMessage({
-        error: {
-            message: constStrings.errorMsgs.invalidCommand,
-        },
-    });
-}
 
 /**
  * Makes multiple checks on the MessageEvent data and calls the callback function with the overtime.

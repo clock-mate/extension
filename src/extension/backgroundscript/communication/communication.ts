@@ -9,6 +9,16 @@ export default class Communication {
     public constructor(public portToCs: browser.Runtime.Port) {}
 
     /**
+     * Posts a message to the content script.
+     * @param command   the command to send to the content script
+     * @param data      the data to send to the content script
+     */
+    public postCsMessage(command: BackgroundCommand, data?: OvertimeData | ErrorData) {
+        const message: BackgroundResponse = { command: command, content: data };
+        this.portToCs.postMessage(message);
+    }
+
+    /**
      * Posts a message with an error message. The error message is for unexpected worker errors.
      * @param command    the command to send along side the error message
      */
@@ -19,14 +29,13 @@ export default class Communication {
         };
         this.portToCs.postMessage(message);
     }
-
-    /**
-     * Posts a message to the content script.
-     * @param command   the command to send to the content script
-     * @param data      the data to send to the content script
-     */
-    public postCsMessage(command: BackgroundCommand, data?: OvertimeData | ErrorData) {
-        const message: BackgroundResponse = { command: command, content: data };
-        this.portToCs.postMessage(message);
+    
+    public sendBackUnknownCmdError() {
+        // explicitly break the messaging contract since, there is no command to send back
+        this.portToCs.postMessage({
+            error: {
+                message: constStrings.errorMsgs.invalidCommand,
+            },
+        });
     }
 }
