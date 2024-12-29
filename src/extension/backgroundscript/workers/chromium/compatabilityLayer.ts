@@ -39,7 +39,7 @@ export default class CompatabilityLayer {
      * since the `chrome` variable will be used.
      * @see https://developer.chrome.com/docs/extensions/reference/api/offscreen#maintain_the_lifecycle_of_an_offscreen_document
      */
-    public static async setupOffscreenDocument(path: string) {
+    private static async setupOffscreenDocument(path: string) {
         // check all windows controlled by the service worker to see if one
         // of them is the offscreen document with the given path
         const offscreenUrl = browser.runtime.getURL(path);
