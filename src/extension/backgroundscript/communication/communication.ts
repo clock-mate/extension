@@ -1,9 +1,9 @@
 import browser from 'webextension-polyfill';
 import { BackgroundCommand } from '../../common/enums/command';
-import { constStrings } from '../utils/constants';
 import { OvertimeData } from '../../common/types/overtimeData';
 import { ErrorData } from '../../common/types/errorData';
 import { BackgroundResponse } from '../../common/types/backgroundResponse';
+import { ERROR_MSGS } from '../common/constants';
 
 export default class Communication {
     public constructor(public portToCs: browser.Runtime.Port) {}
@@ -25,7 +25,7 @@ export default class Communication {
     public postWorkerError(command: BackgroundCommand) {
         const message: BackgroundResponse = {
             command: command,
-            content: { error: { message: constStrings.errorMsgs.unexpectedWorkerError } },
+            content: { error: { message: ERROR_MSGS.UNEXPECTED_WORKER_ERROR } },
         };
         this.portToCs.postMessage(message);
     }
@@ -34,7 +34,7 @@ export default class Communication {
         // explicitly break the messaging contract since, there is no command to send back
         this.portToCs.postMessage({
             error: {
-                message: constStrings.errorMsgs.invalidCommand,
+                message: ERROR_MSGS.INVALID_COMMAND,
             },
         });
     }

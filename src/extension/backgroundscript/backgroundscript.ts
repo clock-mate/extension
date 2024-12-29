@@ -1,26 +1,24 @@
 import browser from 'webextension-polyfill';
 import { BackgroundCommand } from '../common/enums/command';
-import Formater from './utils/format';
-import { constStrings } from './utils/constants';
-import StorageManager from '../common/utils/storageManager';
-import Communication from './communication/communication';
-import CompatabilityLayer from './chromium/compatabilityLayer';
-import { isMessageObject } from '../common/types/messageObject';
 import { isErrorData } from '../common/types/errorData';
+import { isMessageObject } from '../common/types/messageObject';
 import { saveOvertimeFromPDF, saveOvertimeFromTimeSheet, sendBackEmployeeId, sendBackOvertime } from './commands';
+import { ERROR_MSGS } from './common/constants';
+import ErrorHandling from './common/utils/errorHandling';
+import Communication from './communication/communication';
 
 function connectedToContentScript(port: browser.Runtime.Port) {
     if (port.sender?.id !== browser.runtime.id) {
         // sender id is not the one of this extension
         // invalid id, incoming request might be malicious
-        console.error(constStrings.errorMsgs.invalidRequest);
+        console.error(ERROR_MSGS.INVALID_REQUEST);
         port.disconnect();
         return;
     }
     const communication = new Communication(port);
     communication.portToCs.onMessage.addListener((message) => {
         if (!isMessageObject(message)) {
-            sendBackUnknownCmdError(communication);
+            communication.sendBackUnknownCmdError();
             return;
         }
         switch (message.command) {
@@ -37,7 +35,7 @@ function connectedToContentScript(port: browser.Runtime.Port) {
                 sendBackOvertime(communication);
                 break;
             default:
-                sendBackUnknownCmdError(communication);
+                communication.sendBackUnknownCmdError();
                 break;
         }
     });
@@ -55,8 +53,9 @@ function connectedToContentScript(port: browser.Runtime.Port) {
  * @param command          the command to send as a response on the port
  * @param callback         will be called once the overtime was found in the MessageEvent data
  * @TODO reevaluate if this message/communication can't use the message object type
+ * @TODO refactor
  */
-function checkForOvertime(
+export function checkForOvertime(
     communication: Communication,
     message: MessageEvent,
     command: BackgroundCommand,
@@ -67,7 +66,7 @@ function checkForOvertime(
     if (isErrorData(receivedData)) {
         // an error was caught, forward the message
         communication.postCsMessage(command, receivedData);
-        printPossibleError(receivedData);
+        ErrorHandling.printPossibleError(receivedData);
         return;
     }
     if (typeof receivedData === 'object' && receivedData !== null && 'action' in receivedData) {

@@ -1,4 +1,4 @@
-import { constStrings } from '../utils/constants';
+import { INTERNAL_ERROR_MSGS } from '../constants';
 import Metadata from './metadata';
 
 export default class TimeData_Result {
@@ -41,7 +41,7 @@ export default class TimeData_Result {
             !('EndDate' in obj) ||
             typeof obj.EndDate !== 'string'
         ) {
-            throw new Error(constStrings.internalErrorMsgs.unableToParseObj);
+            throw new Error(INTERNAL_ERROR_MSGS.UNABLE_TO_PARSE_OBJ);
         }
         return new TimeData_Result(
             Metadata.fromObject(obj.__metadata),

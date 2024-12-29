@@ -1,4 +1,4 @@
-import { constStrings } from '../utils/constants';
+import { INTERNAL_ERROR_MSGS } from '../constants';
 import Metadata from './metadata';
 
 export default class EmployeeData_Result {
@@ -59,7 +59,7 @@ export default class EmployeeData_Result {
             !('UseOnbehalfBackendSearch' in obj) ||
             typeof obj.UseOnbehalfBackendSearch !== 'boolean'
         ) {
-            throw new Error(constStrings.internalErrorMsgs.unableToParseObj);
+            throw new Error(INTERNAL_ERROR_MSGS.UNABLE_TO_PARSE_OBJ);
         }
 
         return new EmployeeData_Result(

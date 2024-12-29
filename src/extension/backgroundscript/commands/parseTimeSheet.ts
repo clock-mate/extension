@@ -1,3 +1,6 @@
+import { BackgroundCommand } from '../../common/enums/command';
+import StorageManager from '../../common/utils/storageManager';
+import { checkForOvertime } from '../backgroundscript';
 import { Communication } from '../communication';
 import { CompatabilityLayer } from '../workers';
 

@@ -1,4 +1,4 @@
-import { constStrings } from '../utils/constants';
+import { INTERNAL_ERROR_MSGS } from '../constants';
 import Result from './timeData_Result';
 
 export default class TimeData_Data {
@@ -6,7 +6,7 @@ export default class TimeData_Data {
 
     public static fromObject(obj: object): TimeData_Data {
         if (!('results' in obj) || !Array.isArray(obj.results)) {
-            throw new Error(constStrings.internalErrorMsgs.unableToParseObj);
+            throw new Error(INTERNAL_ERROR_MSGS.UNABLE_TO_PARSE_OBJ);
         }
         return new TimeData_Data(obj.results.map((result: object) => Result.fromObject(result)));
     }

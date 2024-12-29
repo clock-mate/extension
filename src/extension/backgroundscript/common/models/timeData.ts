@@ -1,4 +1,4 @@
-import { constStrings } from '../utils/constants';
+import { INTERNAL_ERROR_MSGS } from '../constants';
 import Data from './timeData_Data';
 
 export default class TimeData {
@@ -6,7 +6,7 @@ export default class TimeData {
 
     public static fromObject(obj: object): TimeData {
         if (!('d' in obj) || !obj.d) {
-            throw new Error(constStrings.internalErrorMsgs.unableToParseObj);
+            throw new Error(INTERNAL_ERROR_MSGS.UNABLE_TO_PARSE_OBJ);
         }
         return new TimeData(Data.fromObject(obj.d));
     }

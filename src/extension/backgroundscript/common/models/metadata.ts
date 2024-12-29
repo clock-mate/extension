@@ -1,4 +1,4 @@
-import { constStrings } from '../utils/constants';
+import { INTERNAL_ERROR_MSGS } from "../constants";
 
 export default class Metadata {
     public constructor(
@@ -16,7 +16,7 @@ export default class Metadata {
             !('type' in obj) ||
             typeof obj.type !== 'string'
         ) {
-            throw new Error(constStrings.internalErrorMsgs.unableToParseObj);
+            throw new Error(INTERNAL_ERROR_MSGS.UNABLE_TO_PARSE_OBJ);
         }
         return new Metadata(obj.id, obj.uri, obj.type);
     }

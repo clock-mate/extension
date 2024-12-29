@@ -1,12 +1,15 @@
-import { BackgroundCommand } from '../../common/enums/command';
-import TimeData from '../model/timeData';
-import { config, constStrings } from '../utils/constants';
+import { BackgroundCommand } from '../../../common/enums/command';
+import { TimeSheetAggregator } from '../../aggregateData';
+import { CalculateOvertime } from '../../calculateOvertime';
+import config from '../../common/config.json';
+import { ERROR_MSGS } from '../../common/constants';
+import TimeData from '../../common/models/timeData';
 import Formater from '../utils/format';
-import WorkingTimes from '../utils/workingTimes';
 
 function saveOvertimeFromTimeSheet(message: MessageEvent) {
     // TODO load publicHolidays from settings
-    const controller = new WorkingTimes(config.publicHolidays);
+    const timeSheetAggregator = new TimeSheetAggregator();
+    const overtimeCalculator = new CalculateOvertime(config.publicHolidays);
 
     try {
         if (!('content' in message.data) || typeof message.data.content !== 'string') {
@@ -15,17 +18,17 @@ function saveOvertimeFromTimeSheet(message: MessageEvent) {
         const jsonObject = Formater.getJSONFromAPIData(message.data.content);
         const timeData = TimeData.fromObject(jsonObject);
 
-        controller.timeElements = controller.parseTimeDataToTimeElements(timeData);
+        timeSheetAggregator.timeElements = timeSheetAggregator.parseTimeDataToTimeElements(timeData);
     } catch (e) {
         postMessage({
             command: BackgroundCommand.ParseTimeSheet,
-            error: { message: constStrings.errorMsgs.unableToParseData },
+            error: { message: ERROR_MSGS.UNABLE_TO_PARSE_DATA },
             originalError: e,
         });
         return;
     }
 
-    const overtimeInMinutes = controller.calculateOvertime(controller.timeElements);
+    const overtimeInMinutes = overtimeCalculator.calculateOvertime(timeSheetAggregator.timeElements);
 
     postMessage({
         // send overtime to backgroundscript since worker has no access to storage api

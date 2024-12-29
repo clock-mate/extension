@@ -1,3 +1,8 @@
+import TimeData from '../common/models/timeData';
+import TimeData_Result from '../common/models/timeData_Result';
+import TimeElement from '../common/models/timeElement';
+import DateUtil from './utils/dateUtil';
+
 export default class TimeSheetAggregator {
     /** The inner arrays represent days. The TimeElements in the inner arrays have the
      * same starting day.*/
@@ -60,7 +65,7 @@ export default class TimeSheetAggregator {
         // a previous element exists
         const previousDay: TimeElement[] = this.timeElements[this.timeElements.length - 1];
         const previousElement = previousDay[0];
-        if (Formater.isSameDay(previousElement.startDate, currentElement.startDate)) {
+        if (DateUtil.isSameDay(previousElement.startDate, currentElement.startDate)) {
             previousDay.push(currentElement);
             return;
         }
@@ -82,8 +87,8 @@ export default class TimeSheetAggregator {
         attendanceType: string,
     ): TimeElement {
         return new TimeElement(
-            Formater.getDateFromDateAndTime(Formater.getDateFromYYYYMMDD(date), startTime),
-            new Date(Formater.getDateFromDateAndTime(Formater.getDateFromYYYYMMDD(date), endTime)),
+            DateUtil.getDateFromDateAndTime(DateUtil.getDateFromYYYYMMDD(date), startTime),
+            new Date(DateUtil.getDateFromDateAndTime(DateUtil.getDateFromYYYYMMDD(date), endTime)),
             Number(attendanceType),
         );
     }

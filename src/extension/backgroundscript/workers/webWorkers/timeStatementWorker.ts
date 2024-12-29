@@ -1,18 +1,18 @@
+import { BackgroundCommand } from '../../../common/enums/command';
+import { PDFAggregator } from '../../aggregateData';
+import { ERROR_MSGS } from '../../common/constants';
 import Formater from '../utils/format';
-import PDFManager from '../utils/pdfManager';
-import { BackgroundCommand } from '../../common/enums/command';
-import { constStrings } from '../utils/constants';
 
 async function saveOvertimeFromPDF(message: MessageEvent) {
     let overtime;
     try {
-        const pdfDocument = await PDFManager.compilePDF(message);
-        const overtimeString = await PDFManager.getOvertimeFromPDF(pdfDocument);
+        const pdfDocument = await PDFAggregator.compilePDF(message);
+        const overtimeString = await PDFAggregator.getOvertimeFromPDF(pdfDocument);
         overtime = Formater.getNumberFromString(overtimeString);
     } catch (e) {
         postMessage({
             command: BackgroundCommand.CompileTimeSatement,
-            error: { message: constStrings.errorMsgs.unableToParseData },
+            error: { message: ERROR_MSGS.UNABLE_TO_PARSE_DATA },
             originalError: e,
         });
         return;

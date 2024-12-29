@@ -1,6 +1,8 @@
 import { BackgroundCommand } from '../../common/enums/command';
+import StorageManager from '../../common/utils/storageManager';
+import { ERROR_MSGS } from '../common/constants';
+import Formater from '../common/utils/format';
 import { Communication } from '../communication';
-
 
 /**
  * Calculate the total overtime and send it back to the content script. Sends an error message
@@ -20,7 +22,7 @@ export async function sendBackOvertime(communication: Communication) {
         console.error(e);
         communication.postCsMessage(BackgroundCommand.GetOvertime, {
             error: {
-                message: constStrings.errorMsgs.unableToParseData,
+                message: ERROR_MSGS.UNABLE_TO_PARSE_DATA,
             },
         });
         return;

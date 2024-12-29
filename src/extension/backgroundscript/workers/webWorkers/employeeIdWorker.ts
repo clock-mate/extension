@@ -1,5 +1,5 @@
-import EmployeeData from '../model/employeeData';
-import { constStrings } from '../utils/constants';
+import { ERROR_MSGS } from '../../common/constants';
+import EmployeeData from '../../common/models/employeeData';
 import Formater from '../utils/format';
 
 async function sendBackEmployeeId(message: MessageEvent) {
@@ -17,7 +17,7 @@ async function sendBackEmployeeId(message: MessageEvent) {
         }
     } catch (e) {
         postMessage({
-            error: { message: constStrings.errorMsgs.unableToParseData },
+            error: { message: ERROR_MSGS.UNABLE_TO_PARSE_DATA },
             originalError: e,
         });
         return;
