@@ -29,7 +29,7 @@ export default class Communication {
         };
         this.portToCs.postMessage(message);
     }
-    
+
     public sendBackUnknownCmdError() {
         // explicitly break the messaging contract since, there is no command to send back
         this.portToCs.postMessage({

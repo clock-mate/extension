@@ -5,7 +5,6 @@ import DateUtil from './utils/dateUtil';
 export default class overtimeCalculator {
     private static readonly FLEXDAY_ATTENDANCE_TYPE: 9003;
 
-
     /** The days which are considered holidays */
     publicHolidays: SimplePublicHoliday[];
 

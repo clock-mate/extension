@@ -23,7 +23,7 @@ export default class DateUtil {
      * Checks whether or not the provided Date objects reference the same day while
      * ignoring the time.
      * @returns true if both Date objects reference the same day
-    */
+     */
     public static isSameDay(date1: Date, date2: Date) {
         return (
             date1.getFullYear() === date2.getFullYear() &&

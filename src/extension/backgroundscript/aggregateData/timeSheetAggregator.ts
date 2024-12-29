@@ -45,7 +45,6 @@ export default class TimeSheetAggregator {
         return this.timeElements;
     }
 
-
     /**
      * Saves the provided data as a TimeElement in the attribute `timeElements`. The created element
      * is sorted into the array structure.

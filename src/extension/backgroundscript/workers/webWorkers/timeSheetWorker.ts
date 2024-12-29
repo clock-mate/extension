@@ -18,7 +18,8 @@ function saveOvertimeFromTimeSheet(message: MessageEvent) {
         const jsonObject = Formater.getJSONFromAPIData(message.data.content);
         const timeData = TimeData.fromObject(jsonObject);
 
-        timeSheetAggregator.timeElements = timeSheetAggregator.parseTimeDataToTimeElements(timeData);
+        timeSheetAggregator.timeElements =
+            timeSheetAggregator.parseTimeDataToTimeElements(timeData);
     } catch (e) {
         postMessage({
             command: BackgroundCommand.ParseTimeSheet,
@@ -28,7 +29,9 @@ function saveOvertimeFromTimeSheet(message: MessageEvent) {
         return;
     }
 
-    const overtimeInMinutes = overtimeCalculator.calculateOvertime(timeSheetAggregator.timeElements);
+    const overtimeInMinutes = overtimeCalculator.calculateOvertime(
+        timeSheetAggregator.timeElements,
+    );
 
     postMessage({
         // send overtime to backgroundscript since worker has no access to storage api

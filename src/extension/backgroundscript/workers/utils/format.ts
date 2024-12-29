@@ -16,7 +16,7 @@ export default class Formater {
      * @param data    the unformatted API data holding the expected JSON
      * @returns the retreived JSON object
      * @throws if the data can't be parsed for any reason
-    */
+     */
     public static getJSONFromAPIData(data: string): object {
         const startIndex = data.indexOf(this.JSON_START_STRING);
         if (startIndex === -1) {
@@ -58,7 +58,7 @@ export default class Formater {
      * Takes the hours and calculates the minutes rounded to the nearest 5 min.
      * @param hours the hours to convert, may be floating point, e.g.: 1.57
      * @returns integer minutes, e.g.: 95
-    */
+     */
     public static roundHoursToNearest5Minutes(hours: number): number {
         const minutes = hours * 60;
         return Math.round(minutes / 5) * 5;

@@ -1,4 +1,4 @@
-import { INTERNAL_ERROR_MSGS } from "../constants";
+import { INTERNAL_ERROR_MSGS } from '../constants';
 
 export default class Metadata {
     public constructor(

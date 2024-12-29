@@ -2,7 +2,12 @@ import browser from 'webextension-polyfill';
 import { BackgroundCommand } from '../common/enums/command';
 import { isErrorData } from '../common/types/errorData';
 import { isMessageObject } from '../common/types/messageObject';
-import { saveOvertimeFromPDF, saveOvertimeFromTimeSheet, sendBackEmployeeId, sendBackOvertime } from './commands';
+import {
+    saveOvertimeFromPDF,
+    saveOvertimeFromTimeSheet,
+    sendBackEmployeeId,
+    sendBackOvertime,
+} from './commands';
 import { ERROR_MSGS } from './common/constants';
 import ErrorHandling from './common/utils/errorHandling';
 import Communication from './communication/communication';
@@ -40,7 +45,6 @@ function connectedToContentScript(port: browser.Runtime.Port) {
         }
     });
 }
-
 
 /**
  * Makes multiple checks on the MessageEvent data and calls the callback function with the overtime.

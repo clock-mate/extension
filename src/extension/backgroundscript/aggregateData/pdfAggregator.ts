@@ -17,7 +17,6 @@ export default class PDFAggregator {
         de: 'Über-/Unterdeckung',
     };
 
-
     public static async compilePDF(message: MessageEvent): Promise<pdfjsLib.PDFDocumentProxy> {
         if (!('content' in message.data) || typeof message.data.content !== 'string') {
             throw new Error('No message or no content received from the content script');
@@ -40,10 +39,7 @@ export default class PDFAggregator {
             for (let i = 0; i < textContent.items.length; i++) {
                 const item = textContent.items[i];
                 if (!('str' in item)) continue;
-                if (
-                    item.str !== this.OVERTIME_STRING.de &&
-                    item.str !== this.OVERTIME_STRING.en
-                ) {
+                if (item.str !== this.OVERTIME_STRING.de && item.str !== this.OVERTIME_STRING.en) {
                     continue;
                 }
 

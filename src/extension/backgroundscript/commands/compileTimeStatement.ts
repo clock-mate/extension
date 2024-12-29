@@ -4,7 +4,6 @@ import { checkForOvertime } from '../backgroundscript';
 import { Communication } from '../communication';
 import { CompatabilityLayer } from '../workers';
 
-
 // paths are not relative but start at the extension folder (build output)
 const TIME_STATEMENT_WORKER_FILE = 'backgroundscript/webWorker/timeStatementWorker.js';
 

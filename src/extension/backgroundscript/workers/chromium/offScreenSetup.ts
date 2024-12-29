@@ -4,7 +4,6 @@ import browser from 'webextension-polyfill';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const chrome: any;
 
-
 /**
  * Allows easy usage of workers in Firefox and Chromium browsers.
  */
@@ -44,4 +43,3 @@ export default class OffScreenSetup {
         }
     }
 }
-
