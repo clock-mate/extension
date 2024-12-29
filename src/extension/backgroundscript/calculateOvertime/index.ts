@@ -1,1 +1,1 @@
-export { default as CalculateOvertime } from './calculateOvertime';
+export { default as OvertimeCalculator } from './overtimeCalculator';

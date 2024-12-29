@@ -1,6 +1,6 @@
 import { BackgroundCommand } from '../../../common/enums/command';
 import { TimeSheetAggregator } from '../../aggregateData';
-import { CalculateOvertime } from '../../calculateOvertime';
+import { OvertimeCalculator } from '../../calculateOvertime';
 import config from '../../common/config.json';
 import { ERROR_MSGS } from '../../common/constants';
 import TimeData from '../../common/models/timeData';
@@ -9,7 +9,7 @@ import Formater from '../utils/format';
 function saveOvertimeFromTimeSheet(message: MessageEvent) {
     // TODO load publicHolidays from settings
     const timeSheetAggregator = new TimeSheetAggregator();
-    const overtimeCalculator = new CalculateOvertime(config.publicHolidays);
+    const overtimeCalculator = new OvertimeCalculator(config.publicHolidays);
 
     try {
         if (!('content' in message.data) || typeof message.data.content !== 'string') {

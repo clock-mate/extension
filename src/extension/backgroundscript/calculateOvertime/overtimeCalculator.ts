@@ -2,7 +2,7 @@ import TimeElement from '../common/models/timeElement';
 import { SimplePublicHoliday } from '../common/types/publicHoliday';
 import DateUtil from './utils/dateUtil';
 
-export default class CalculateOvertime {
+export default class overtimeCalculator {
     private static readonly FLEXDAY_ATTENDANCE_TYPE: 9003;
 
 
@@ -53,7 +53,7 @@ export default class CalculateOvertime {
 
         timeElements.forEach((timeElement) => {
             const minutes = DateUtil.getMinutesBetween(timeElement.startDate, timeElement.endDate);
-            if (timeElement.attendanceType === CalculateOvertime.FLEXDAY_ATTENDANCE_TYPE) {
+            if (timeElement.attendanceType === overtimeCalculator.FLEXDAY_ATTENDANCE_TYPE) {
                 // flexday entries should be ignored since these are not actual working times
                 return;
             }
