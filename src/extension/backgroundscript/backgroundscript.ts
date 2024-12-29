@@ -3,7 +3,7 @@ import { BackgroundCommand } from '../common/enums/command';
 import Formater from './utils/format';
 import { constStrings } from './utils/constants';
 import StorageManager from '../common/utils/storageManager';
-import Communication from './utils/communication';
+import Communication from './communication/communication';
 import CompatabilityLayer from './chromium/compatabilityLayer';
 import { isMessageObject } from '../common/types/messageObject';
 import { isErrorData } from '../common/types/errorData';

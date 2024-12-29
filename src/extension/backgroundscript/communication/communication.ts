@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 import { BackgroundCommand } from '../../common/enums/command';
-import { constStrings } from './constants';
+import { constStrings } from '../utils/constants';
 import { OvertimeData } from '../../common/types/overtimeData';
 import { ErrorData } from '../../common/types/errorData';
 import { BackgroundResponse } from '../../common/types/backgroundResponse';
