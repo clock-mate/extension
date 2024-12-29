@@ -1,25 +1,37 @@
 export default class Formater {
-    
     /**
-     * Formats the given minutes into a human readable string of hours and minutes.
-     * For example 80 -> 1h 20min
-     * @param minutes can be positive or negative
-     * @returns the formatted time string
+     * The start of the JSON for the working times. The JSON is expected to start with
+     * an object 'd' holding an object 'results' which holds an array.
      */
-    public static minutesToTimeString(minutes: number): string {
-        const remainingMinutes = Math.abs(minutes) % 60;
-        const wholeHours = (Math.abs(minutes) - remainingMinutes) / 60;
+    private static readonly JSON_START_STRING: '{"d":{"results":[';
+    /**
+     * The end of the JSON for the working times. The JSON is expected to end with
+     * closing the previously openend array and objects, followed by a newline (CRLF).
+     */
+    private static readonly JSON_END_STRING: ']}}\r\n';
 
-        let result = minutes < 0 ? '-' : '';
-        if (wholeHours > 0) {
-            result += wholeHours + 'h';
-            if (remainingMinutes > 0) {
-                result += ' ';
-            } else {
-                return result;
-            }
+    /**
+     * Retreives the JSON object inside the API data. Unecessary extra inforamtion
+     * is removed and the JSON extracted.
+     * @param data    the unformatted API data holding the expected JSON
+     * @returns the retreived JSON object
+     * @throws if the data can't be parsed for any reason
+    */
+    public static getJSONFromAPIData(data: string): object {
+        const startIndex = data.indexOf(this.JSON_START_STRING);
+        if (startIndex === -1) {
+            throw new Error('Unable to find start of JSON');
         }
-        return result + remainingMinutes + 'min';
+
+        const endIndex = data.indexOf(this.JSON_END_STRING);
+        if (endIndex === -1) {
+            throw new Error('Unable to find end of JSON');
+        }
+
+        // + length to include the closing brackets
+        const jsonString = data.slice(startIndex, endIndex + this.JSON_END_STRING.length);
+
+        return JSON.parse(jsonString);
     }
 
     /**
