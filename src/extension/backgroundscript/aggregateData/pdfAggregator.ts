@@ -55,8 +55,8 @@ export default class PDFAggregator {
                     );
                 }
                 if (
-                    overtimeItem.str === this.OVERTIME_STRING.de ||
-                    overtimeItem.str === this.OVERTIME_STRING.en
+                    overtimeItem.str === this.NEXT_ITEM_STRING.de ||
+                    overtimeItem.str === this.NEXT_ITEM_STRING.en
                 ) {
                     // no overtime available for time period (e.g. new employee) -> assume 0 as overtime
                     return '0';
