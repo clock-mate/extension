@@ -1,0 +1,23 @@
+import CompatabilityLayer from '../workers/chromium/compatabilityLayer';
+import { Communication } from '../communication';
+
+// paths are not relative but start at the extension folder (build output)
+const TIME_SHEET_WORKER_FILE = 'backgroundscript/webWorker/timeSheetWorker.js';
+
+export async function saveOvertimeFromTimeSheet(communication: Communication, message: object) {
+    const timeSheetWorker = await CompatabilityLayer.CreateWorker(TIME_SHEET_WORKER_FILE);
+
+    timeSheetWorker.onmessage = (workerMessage: MessageEvent) => {
+        checkForOvertime(
+            communication,
+            workerMessage,
+            BackgroundCommand.ParseTimeSheet,
+            (overtime: number) => StorageManager.saveTimeSheetOvertime(overtime),
+        );
+    };
+    timeSheetWorker.onerror = (error: ErrorEvent) => {
+        console.error('Worker error:', error.message, error.filename, error.lineno, error.colno);
+        communication.postWorkerError(BackgroundCommand.ParseTimeSheet);
+    };
+    timeSheetWorker.postMessage(message);
+}

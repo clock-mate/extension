@@ -7,11 +7,7 @@ import Communication from './communication/communication';
 import CompatabilityLayer from './chromium/compatabilityLayer';
 import { isMessageObject } from '../common/types/messageObject';
 import { isErrorData } from '../common/types/errorData';
-
-// paths are not relative but start at the extension folder (build output)
-const TIME_STATEMENT_WORKER_FILE = 'backgroundscript/webWorker/timeStatementWorker.js';
-const TIME_SHEET_WORKER_FILE = 'backgroundscript/webWorker/timeSheetWorker.js';
-const EMPLOYEE_ID_WORKER_FILE = 'backgroundscript/webWorker/employeeIdWorker.js';
+import { saveOvertimeFromPDF, saveOvertimeFromTimeSheet, sendBackEmployeeId, sendBackOvertime } from './commands';
 
 function connectedToContentScript(port: browser.Runtime.Port) {
     if (port.sender?.id !== browser.runtime.id) {
@@ -45,85 +41,6 @@ function connectedToContentScript(port: browser.Runtime.Port) {
                 break;
         }
     });
-}
-
-/**
- * Calculate the total overtime and send it back to the content script. Sends an error message
- * if overtime can't be calculated.
- */
-async function sendBackOvertime(communication: Communication) {
-    let totalOvertime;
-    try {
-        const timeSheetOvertime = Number(await StorageManager.getTimeSheetOvertime());
-        const timeStatementOvertime = Number(await StorageManager.getTimeStatementOvertime());
-        if (Number.isNaN(timeSheetOvertime) || Number.isNaN(timeStatementOvertime)) {
-            throw new Error('Overtime in storage is not a number');
-        }
-
-        totalOvertime = timeSheetOvertime + timeStatementOvertime;
-    } catch (e) {
-        console.error(e);
-        communication.postCsMessage(BackgroundCommand.GetOvertime, {
-            error: {
-                message: constStrings.errorMsgs.unableToParseData,
-            },
-        });
-        return;
-    }
-
-    communication.postCsMessage(BackgroundCommand.GetOvertime, {
-        overtimeText: Formater.minutesToTimeString(totalOvertime),
-    });
-}
-
-async function saveOvertimeFromTimeSheet(communication: Communication, message: object) {
-    const timeSheetWorker = await CompatabilityLayer.CreateWorker(TIME_SHEET_WORKER_FILE);
-
-    timeSheetWorker.onmessage = (workerMessage: MessageEvent) => {
-        checkForOvertime(
-            communication,
-            workerMessage,
-            BackgroundCommand.ParseTimeSheet,
-            (overtime: number) => StorageManager.saveTimeSheetOvertime(overtime),
-        );
-    };
-    timeSheetWorker.onerror = (error: ErrorEvent) => {
-        console.error('Worker error:', error.message, error.filename, error.lineno, error.colno);
-        communication.postWorkerError(BackgroundCommand.ParseTimeSheet);
-    };
-    timeSheetWorker.postMessage(message);
-}
-
-async function sendBackEmployeeId(communication: Communication, message: object) {
-    const employeeIdWorker = await CompatabilityLayer.CreateWorker(EMPLOYEE_ID_WORKER_FILE);
-
-    employeeIdWorker.onmessage = (workerMessage: MessageEvent) => {
-        printPossibleError(workerMessage.data);
-        communication.postCsMessage(BackgroundCommand.ParseEmployeeId, workerMessage.data);
-    };
-    employeeIdWorker.onerror = (error: ErrorEvent) => {
-        console.error('Worker error:', error.message, error.filename, error.lineno, error.colno);
-        communication.postWorkerError(BackgroundCommand.ParseEmployeeId);
-    };
-    employeeIdWorker.postMessage(message);
-}
-
-async function saveOvertimeFromPDF(communication: Communication, message: object) {
-    const timeStatementWorker = await CompatabilityLayer.CreateWorker(TIME_STATEMENT_WORKER_FILE);
-
-    timeStatementWorker.onmessage = (workerMessage: MessageEvent) => {
-        checkForOvertime(
-            communication,
-            workerMessage,
-            BackgroundCommand.CompileTimeSatement,
-            (overtime: number) => StorageManager.saveTimeStatementOvertime(overtime),
-        );
-    };
-    timeStatementWorker.onerror = (error: ErrorEvent) => {
-        console.error('Worker error:', error.message, error.filename, error.lineno, error.colno);
-        communication.postWorkerError(BackgroundCommand.CompileTimeSatement);
-    };
-    timeStatementWorker.postMessage(message);
 }
 
 function sendBackUnknownCmdError(communication: Communication) {
