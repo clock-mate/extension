@@ -1,4 +1,7 @@
 export default class CalculateOvertime {
+    private static readonly FLEXDAY_ATTENDANCE_TYPE: 9003;
+
+
     /** The days which are considered holidays */
     publicHolidays: SimplePublicHoliday[];
 
@@ -46,7 +49,7 @@ export default class CalculateOvertime {
 
         timeElements.forEach((timeElement) => {
             const minutes = Formater.getMinutesBetween(timeElement.startDate, timeElement.endDate);
-            if (timeElement.attendanceType === givenStrings.flexDayAttendanceType) {
+            if (timeElement.attendanceType === CalculateOvertime.FLEXDAY_ATTENDANCE_TYPE) {
                 // flexday entries should be ignored since these are not actual working times
                 return;
             }

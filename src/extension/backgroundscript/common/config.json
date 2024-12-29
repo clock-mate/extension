@@ -1,0 +1,6 @@
+{
+    "publicHolidays": [
+        { "_comment":  "Christmas Eve", "day": 24, "month": 11, "freeTimeFactor": 0.5 },
+        { "_comment": "New Year's Eve", "day": 31, "month": 11, "freeTimeFactor": 0.5 }
+    ]
+}

@@ -1,10 +1,23 @@
 import * as pdfjsLib from 'pdfjs-dist';
-import { givenStrings } from '../utils/constants';
 
 // path is relative to the worker which calls the pdf manager -> timeStatementWorker
 pdfjsLib.GlobalWorkerOptions.workerSrc = '../pdf.worker.min.mjs';
 
 export default class PDFAggregator {
+    private static readonly OVERTIME_STRING = {
+        en: 'Total Flextime Balance',
+        de: 'GLZ-Saldo aktuell',
+    };
+    /**
+     * When the fetched pdf document does not have a value for overtime (e.g. no working times available for fetched period)
+     * this is the string of the next entry.
+     */
+    private static readonly NEXT_ITEM_STRING = {
+        en: 'Overtime Remuneration',
+        de: 'Über-/Unterdeckung',
+    };
+
+
     public static async compilePDF(message: MessageEvent): Promise<pdfjsLib.PDFDocumentProxy> {
         if (!('content' in message.data) || typeof message.data.content !== 'string') {
             throw new Error('No message or no content received from the content script');
@@ -28,8 +41,8 @@ export default class PDFAggregator {
                 const item = textContent.items[i];
                 if (!('str' in item)) continue;
                 if (
-                    item.str !== givenStrings.pdfOvertimeString.de &&
-                    item.str !== givenStrings.pdfOvertimeString.en
+                    item.str !== this.OVERTIME_STRING.de &&
+                    item.str !== this.OVERTIME_STRING.en
                 ) {
                     continue;
                 }
@@ -42,8 +55,8 @@ export default class PDFAggregator {
                     );
                 }
                 if (
-                    overtimeItem.str === givenStrings.pdfNextItemString.de ||
-                    overtimeItem.str === givenStrings.pdfNextItemString.en
+                    overtimeItem.str === this.OVERTIME_STRING.de ||
+                    overtimeItem.str === this.OVERTIME_STRING.en
                 ) {
                     // no overtime available for time period (e.g. new employee) -> assume 0 as overtime
                     return '0';
