@@ -3,12 +3,12 @@ export default class Formater {
      * The start of the JSON for the working times. The JSON is expected to start with
      * an object 'd' holding an object 'results' which holds an array.
      */
-    private static readonly JSON_START_STRING: '{"d":{"results":[';
+    private static readonly JSON_START_STRING = '{"d":{"results":[';
     /**
      * The end of the JSON for the working times. The JSON is expected to end with
      * closing the previously openend array and objects, followed by a newline (CRLF).
      */
-    private static readonly JSON_END_STRING: ']}}\r\n';
+    private static readonly JSON_END_STRING = ']}}\r\n';
 
     /**
      * Retreives the JSON object inside the API data. Unecessary extra inforamtion
