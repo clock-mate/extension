@@ -2,7 +2,7 @@ import AdmZip from 'adm-zip';
 
 async function createFirefoxZip() {
     const zip = new AdmZip();
-    const outputFile = './build/gleitzeitkonto-browser-zip/gleitzeitkonto-browser-firefox.zip';
+    const outputFile = './build/clockmate-zip/clockmate-firefox.zip';
 
     try {
         zip.addLocalFolder('./build/extension');
@@ -15,7 +15,7 @@ async function createFirefoxZip() {
 
 async function createChromiumZip() {
     const zip = new AdmZip();
-    const outputFile = './build/gleitzeitkonto-browser-zip/gleitzeitkonto-browser-chromium.zip';
+    const outputFile = './build/clockmate-zip/clockmate-chromium.zip';
 
     try {
         zip.addLocalFolder('./build/extension-chromium');

@@ -1,7 +1,7 @@
 {
-  "name": "Gleitzeitkonto-Browser",
+  "name": "clockmate",
   "version": "3.1.2",
-  "description": "Browser Erweiterung für Chromium und Firefox, welche erlaubt die Überstunden bzw. ein Gleitzeitkonto direkt in der Fiori-Zeiterfassung oder in der Erweiterung einzusehen.",
+  "description": "Browser Erweiterung für Chromium und Firefox, welche die Überstunden bzw. ein Gleitzeitkonto direkt in der Fiori-Zeiterfassung anzeigt.",
   "browser": "src/extension/contentscript/contentscript",
   "type": "module",
   "scripts": {
@@ -9,24 +9,24 @@
     "format": "prettier --write .",
     "build": "npm run transpileBuild && node scripts/publish-extension.js && npm run combineBrowserJS && npm run sass && node scripts/publish-extension-fix-manifests.js && npm run zipExtension",
     "transpileBuild": "tsc --project tsconfig.build.json",
-    "combineBrowserJS": "npm run combineWebWorkersJS && npm run combinePopupJS && npm run combineOffscreenJS && esbuild src/extension/contentscript/contentscript.ts --bundle --outfile=build/extension/contentscript/gleitzeitkonto-browser.js && esbuild src/extension/backgroundscript/backgroundscript.ts --bundle --outfile=build/extension/backgroundscript/backgroundscript.js",
-    "combineBrowserJS-dev": "esbuild src/extension/contentscript/contentscript.ts --bundle --sourcemap --outfile=build/extension/contentscript/gleitzeitkonto-browser.js && esbuild src/extension/backgroundscript/backgroundscript.ts --bundle --sourcemap --outfile=build/extension/backgroundscript/backgroundscript.js",
+    "combineBrowserJS": "npm run combineWebWorkersJS && npm run combinePopupJS && npm run combineOffscreenJS && esbuild src/extension/contentscript/contentscript.ts --bundle --outfile=build/extension/contentscript/clockmate.js && esbuild src/extension/backgroundscript/backgroundscript.ts --bundle --outfile=build/extension/backgroundscript/backgroundscript.js",
+    "combineBrowserJS-dev": "esbuild src/extension/contentscript/contentscript.ts --bundle --sourcemap --outfile=build/extension/contentscript/clockmate.js && esbuild src/extension/backgroundscript/backgroundscript.ts --bundle --sourcemap --outfile=build/extension/backgroundscript/backgroundscript.js",
     "combineWebWorkersJS": "esbuild src/extension/backgroundscript/workers/webWorkers/timeStatementWorker.ts --bundle --minify --outfile=build/extension/backgroundscript/webWorker/timeStatementWorker.js && esbuild src/extension/backgroundscript/workers/webWorkers/timeSheetWorker.ts --bundle --outfile=build/extension/backgroundscript/webWorker/timeSheetWorker.js && esbuild src/extension/backgroundscript/workers/webWorkers/employeeIdWorker.ts --bundle --outfile=build/extension/backgroundscript/webWorker/employeeIdWorker.js",
     "combinePopupJS": "esbuild src/extension/popup/popupscript.ts --bundle --outfile=build/extension/popup/popupscript.js",
     "combineOffscreenJS": "esbuild src/extension/backgroundscript/workers/chromium/offScreenDocument/offscreen.ts --bundle --outfile=build/extension-chromium/backgroundscript/chromium/offscreen.js",
     "zipExtension": "node scripts/zip-extensions.js",
-    "sass": "sass --no-source-map --style=compressed src/extension/popup/gleitzeitkonto-browser.scss:build/extension/popup/gleitzeitkonto-browser.css"
+    "sass": "sass --no-source-map --style=compressed src/extension/popup/clockmate.scss:build/extension/popup/clockmate.css"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NilsPvR/Gleitzeitkonto-Browser.git"
+    "url": "git+https://github.com/clock-mate/extension.git"
   },
   "author": "NilsPvR",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/NilsPvR/Gleitzeitkonto-Browser/issues"
+    "url": "https://github.com/clock-mate/extension/issues"
   },
-  "homepage": "https://github.com/NilsPvR/Gleitzeitkonto-Browser#readme",
+  "homepage": "https://github.com/clock-mate/extension#readme",
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@types/adm-zip": "^0.5.7",

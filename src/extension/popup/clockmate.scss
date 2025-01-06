@@ -10,15 +10,15 @@
     --sekundaer-3: #9ccaf1;
     --sekundaer-4: #cee4f8;
 
-    // gleitzeitkonto colors
-    --gleitzeit-blue: #00aab4;
-    --gleitzeit-grey: #222222;
+    // clockmate colors
+    --clockmate-blue: #00aab4;
+    --clockmate-grey: #222222;
 }
 
 html,
 body {
     width: 400px;
-    background-color: var(--gleitzeit-grey);
+    background-color: var(--clockmate-grey);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -29,7 +29,7 @@ body {
     text-align: center;
     font-size: 1.5em;
     overflow-wrap: break-word;
-    color: var(--gleitzeit-blue);
+    color: var(--clockmate-blue);
 }
 
 .center {
@@ -55,7 +55,7 @@ body {
 
 .switch {
     --line: #505162;
-    --dot: var(--gleitzeit-blue);
+    --dot: var(--clockmate-blue);
     --circle: #9ea0be;
     --duration: 0.3s;
     --text: #9ea0be;

@@ -16,8 +16,8 @@ import { extname } from 'path';
         if (fs.existsSync('./build/extension/backgroundscript/backgroundscript.js.map')) {
             fs.rmSync('./build/extension/backgroundscript/backgroundscript.js.map');
         }
-        if (fs.existsSync('./build/extension/contentscript/gleitzeitkonto-browser.js.map')) {
-            fs.rmSync('./build/extension/contentscript/gleitzeitkonto-browser.js.map');
+        if (fs.existsSync('./build/extension/contentscript/clockmate.js.map')) {
+            fs.rmSync('./build/extension/contentscript/clockmate.js.map');
         }
 
         // create folders
@@ -35,8 +35,8 @@ import { extname } from 'path';
 
         // copy necessary files
         fs.copyFileSync(
-            './src/extension/contentscript/gleitzeitkonto-browser.css',
-            './build/extension/contentscript/gleitzeitkonto-browser.css',
+            './src/extension/contentscript/clockmate.css',
+            './build/extension/contentscript/clockmate.css',
         );
         fs.copyFileSync('./src/extension/manifest.json', './build/extension/manifest.json');
         fs.copyFileSync(
@@ -55,8 +55,8 @@ import { extname } from 'path';
             './build/extension-chromium/backgroundscript/chromium/offscreen.html',
         );
 
-        if (!fs.existsSync('./build/gleitzeitkonto-browser-zip')) {
-            fs.mkdirSync('./build/gleitzeitkonto-browser-zip'); // create folder
+        if (!fs.existsSync('./build/clockmate-zip')) {
+            fs.mkdirSync('./build/clockmate-zip'); // create folder
         }
 
         console.log('\x1b[32m%s\x1b[0m', 'Copied extension folder succesfully!');
