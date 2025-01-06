@@ -33,19 +33,19 @@
     "@types/fs-extra": "^11.0.4",
     "@types/webextension-polyfill": "^0.12.1",
     "adm-zip": "^0.5.16",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.24.2",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-no-unsanitized": "^4.1.2",
     "fs-extra": "^11.2.0",
     "globals": "^15.14.0",
     "prettier": "3.4.2",
-    "sass": "^1.83.0",
+    "sass": "^1.83.1",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.18.1"
+    "typescript-eslint": "^8.19.0"
   },
   "dependencies": {
-    "pdfjs-dist": "^4.9.155",
+    "pdfjs-dist": "^4.10.38",
     "webextension-polyfill": "^0.12.0"
   }
 }
