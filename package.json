@@ -15,7 +15,7 @@
     "bundleExtension:popup": "esbuild src/extension/popup/popupscript.ts --bundle --outfile=build/extension/popup/popupscript.js && npm run bundleExtension:popup:sass",
     "bundleExtension:popup:sass": "sass --no-source-map --style=compressed src/extension/popup/clockmate.scss:build/extension/popup/clockmate.css",
     "bundleExtension:offscreen": "esbuild src/extension/backgroundscript/workers/chromium/offScreenDocument/offscreen.ts --bundle --outfile=build/extension-chromium/backgroundscript/chromium/offscreen.js",
-    "bundleExtension:settings": "ejs src/extension/settings/index.ejs -o build/extension/settings/settings.html",
+    "bundleExtension:settings": "ejs src/extension/settings/index.ejs -o build/extension/settings/settings.html && npx @tailwindcss/cli --input src/extension/settings/settings.css --output build/extension/settings/settings.css --minify",
     "zipExtensions": "node scripts/build-zip-extensions.js"
   },
   "repository": {
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/clock-mate/extension#readme",
   "devDependencies": {
     "@eslint/js": "^9.18.0",
+    "@tailwindcss/cli": "^4.0.0-beta.9",
     "@types/adm-zip": "^0.5.7",
     "@types/fs-extra": "^11.0.4",
     "@types/webextension-polyfill": "^0.12.1",
@@ -48,6 +49,7 @@
   },
   "dependencies": {
     "pdfjs-dist": "^4.10.38",
+    "tailwindcss": "^4.0.0-beta.9",
     "webextension-polyfill": "^0.12.0"
   }
 }
