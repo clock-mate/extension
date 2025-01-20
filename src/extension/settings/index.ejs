@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="settings.css">
     <title>Clockmate Einstellungen</title>
 </head>
-<body>
-    <h1>My Buttons</h1>
+<body class="scheme-light dark:scheme-dark bg-white dark:bg-black text-black dark:text-white">
+    <h1 class="flex ">My Buttons</h1>
     <%- include('snippets/button', { text: 'Button 1' }) %>
     <%- include('snippets/button', { text: 'Button 2' }) %>
+
+    <script src="settings.js"></script>
 </body>
 </html>
