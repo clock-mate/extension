@@ -32,6 +32,11 @@ import { extname } from 'path';
                 recursive: true,
             });
         }
+        if (!fs.existsSync('./build/extension/settings')) {
+            fs.mkdirSync('./build/extension/settings', {
+                recursive: true,
+            });
+        }
 
         // copy necessary files
         fs.copyFileSync(
