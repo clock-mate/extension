@@ -60,7 +60,7 @@
                 aria-description="Das Gleitzeitkonto oben im Header anzeigen"
             >
                 <%- include('radio-input', { name: 'overtime-position', value:
-                'overtime-position-top'}) %>
+                'overtime-position-top', checked: true }) %>
                 <img
                     class="w-full dark:hidden"
                     src="/assets/settings/display-top-header-light.png"
@@ -78,7 +78,7 @@
                 aria-description="Das Gleitzeitkonto unten im Balken anzeigen"
             >
                 <%- include('radio-input', { name: 'overtime-position', value:
-                'overtime-position-bottom'}) %>
+                'overtime-position-bottom', checked: false }) %>
                 <img
                     class="w-full dark:hidden"
                     src="/assets/settings/display-bottom-bar-light.png"
