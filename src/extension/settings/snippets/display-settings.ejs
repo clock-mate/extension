@@ -62,8 +62,13 @@
                 <%- include('radio-input', { name: 'overtime-position', value:
                 'overtime-position-top'}) %>
                 <img
-                    class="w-full"
-                    src="/assets/settings/display-top-header.png"
+                    class="w-full dark:hidden"
+                    src="/assets/settings/display-top-header-light.png"
+                    alt="Screenshot vom Gleitzeitkonto oben im Header"
+                />
+                <img
+                    class="hidden w-full dark:block"
+                    src="/assets/settings/display-top-header-dark.png"
                     alt="Screenshot vom Gleitzeitkonto oben im Header"
                 />
             </label>
@@ -75,8 +80,13 @@
                 <%- include('radio-input', { name: 'overtime-position', value:
                 'overtime-position-bottom'}) %>
                 <img
-                    class="w-full"
-                    src="/assets/settings/display-bottom-bar.png"
+                    class="w-full dark:hidden"
+                    src="/assets/settings/display-bottom-bar-light.png"
+                    alt="Screenshot vom Gleitzeitkonto unten im Balken"
+                />
+                <img
+                    class="hidden w-full dark:block"
+                    src="/assets/settings/display-bottom-bar-dark.png"
                     alt="Screenshot vom Gleitzeitkonto unten im Balken"
                 />
             </label>
