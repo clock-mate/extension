@@ -1,6 +1,19 @@
 <h2 class="my-4 p-2 text-2xl">Berechnung</h2>
 <div class="ms-5">
     <!-- prettier-ignore -->
-    <%- include('checkbox', { id: 'round-5-min', label: 'Auf 5 min runden',
-        description: 'Das Gleitzeitkonto wird auf 5 min gerundet angezeigt' }) %>
+    <%- include('checkbox-wrapper', { id: 'round-5-min', label: 'Auf 5 min runden',
+        description: 'Das Gleitzeitkonto wird auf 5 min gerundet angezeigt',
+        checked: false }) %>
+    <div class="m-2"></div>
+    <!-- prettier-ignore -->
+    <%- include('checkbox-wrapper', { id: 'half-public-holidays', label: 'Halbe Feiertage brücksichtigen',
+        description: 'Bei der Berechnung werden die ausgewählten Tage als halbe Feitertage gerechnet. Bei 8 Std. pro Tag somit 4 Std. Feiertag.',
+        checked: true }) %>
+    <div class="ms-5 mt-2">
+        <%- include('checkbox-wrapper', { id: 'half-public-holiday-24-dec', label: '24.12',
+        description: '', checked: true}) %>
+        <div class="m-1"></div>
+        <%- include('checkbox-wrapper', { id: 'half-public-holiday-31-dec', label: '31.12',
+        description: '', checked: true}) %>
+    </div>
 </div>

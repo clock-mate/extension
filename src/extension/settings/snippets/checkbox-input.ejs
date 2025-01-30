@@ -1,0 +1,20 @@
+<%# Prettier throws errors if ejs is used inside a tag. Therefore duplicate the code here. %>
+<!-- prettier-ignore -->
+<% if(checked) { %>
+<input
+    id="<%= id %>"
+    aria-describedby="<%= id %>-description"
+    name="<%= id %>"
+    type="checkbox"
+    checked
+    class="checked:border-clockmate-blue checked:bg-clockmate-blue indeterminate:border-clockmate-blue indeterminate:bg-clockmate-blue focus-visible:outline-clockmate-blue col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white focus-visible:outline-2 focus-visible:outline-offset-2 disabled:border-gray-500 disabled:bg-gray-300 forced-colors:appearance-auto"
+/>
+<% } else { %>
+<input
+    id="<%= id %>"
+    aria-describedby="<%= id %>-description"
+    name="<%= id %>"
+    type="checkbox"
+    class="checked:border-clockmate-blue checked:bg-clockmate-blue indeterminate:border-clockmate-blue indeterminate:bg-clockmate-blue focus-visible:outline-clockmate-blue col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white focus-visible:outline-2 focus-visible:outline-offset-2 disabled:border-gray-500 disabled:bg-gray-300 forced-colors:appearance-auto"
+/>
+<% } %>
