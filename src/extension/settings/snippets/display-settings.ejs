@@ -1,14 +1,15 @@
 <h2 class="my-4 p-2 text-2xl">Anzeige</h2>
 <div class="ms-5 gap-x-4">
     <label class="mb-2 text-lg">Anzeigen auf:</label>
-    <div class="group">
+    <div class="group ms-3">
+        <p class="text-sm/6 text-gray-700 dark:text-gray-400">Wähle auf welchen Seiten das Gleitzeitkonto angezeigt werden soll.</p>
         <row
             class="group mt-1 flex items-center space-x-2 rounded-sm border-2 border-rose-700 p-2 has-[.page-item]:border-gray-400"
         >
             <div
                 class="page-item inline-flex items-center gap-x-2 rounded-sm bg-gray-800/10 px-3 py-2 text-sm font-semibold shadow-xs dark:bg-gray-50/10"
             >
-                Zeiterfassung
+                Meine Zeiterfassung
                 
                 <button
                     type="button"
@@ -67,24 +68,28 @@
     </div>
     <div class="mt-4">
         <label class="text-lg">Bevorzugte Position:</label>
-        <div class="mt-2 space-y-2">
+        <div class="ms-3 mt-2 space-y-4">
             <label
                 class="flex items-center space-x-1"
                 aria-label="Oben"
-                aria-description="Das Gleitzeitkonto oben im Header anzeigen"
+                aria-description="Das Gleitzeitkonto oben im in der Seiten-Navigation anzeigen"
             >
                 <%- include('radio-input', { name: 'overtime-position', value:
                 'overtime-position-top', checked: true }) %>
-                <img
-                    class="w-full dark:hidden"
-                    src="/assets/settings/display-top-header-light.png"
-                    alt="Screenshot vom Gleitzeitkonto oben im Header"
-                />
-                <img
-                    class="hidden w-full dark:block"
-                    src="/assets/settings/display-top-header-dark.png"
-                    alt="Screenshot vom Gleitzeitkonto oben im Header"
-                />
+                <div class="flex flex-col">
+                    <p class="text-sm/6 text-center">Oben in der Seiten-Navigation</p>
+                    <img
+                        class=" dark:hidden"
+                        src="/assets/settings/display-top-header-light.png"
+                        alt="Screenshot vom Gleitzeitkonto oben im Header"
+                    />
+                    <img
+                        class="hidden  dark:block"
+                        src="/assets/settings/display-top-header-dark.png"
+                        alt="Screenshot vom Gleitzeitkonto oben im Header"
+                    />
+                </div>
+
             </label>
             <label
                 class="flex items-center space-x-1"
@@ -93,16 +98,19 @@
             >
                 <%- include('radio-input', { name: 'overtime-position', value:
                 'overtime-position-bottom', checked: false }) %>
-                <img
-                    class="w-full dark:hidden"
-                    src="/assets/settings/display-bottom-bar-light.png"
-                    alt="Screenshot vom Gleitzeitkonto unten im Balken"
-                />
-                <img
-                    class="hidden w-full dark:block"
-                    src="/assets/settings/display-bottom-bar-dark.png"
-                    alt="Screenshot vom Gleitzeitkonto unten im Balken"
-                />
+                <div class="flex flex-col text-center">
+                    <p class="text-sm/6">Unten im Balken</p>
+                    <img
+                        class="w-full dark:hidden"
+                        src="/assets/settings/display-bottom-bar-light.png"
+                        alt="Screenshot vom Gleitzeitkonto unten im Balken"
+                    />
+                    <img
+                        class="hidden w-full dark:block"
+                        src="/assets/settings/display-bottom-bar-dark.png"
+                        alt="Screenshot vom Gleitzeitkonto unten im Balken"
+                    />
+                </div>
             </label>
         </div>
     </div>
