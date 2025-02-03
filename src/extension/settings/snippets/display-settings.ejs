@@ -2,7 +2,9 @@
 <div class="ms-5 gap-x-4">
     <label class="mb-2 text-lg">Anzeigen auf:</label>
     <div class="group ms-3">
-        <p class="text-sm/6 text-gray-700 dark:text-gray-400">Wähle auf welchen Seiten das Gleitzeitkonto angezeigt werden soll.</p>
+        <p class="text-sm/6 text-gray-700 dark:text-gray-400">
+            Wähle auf welchen Seiten das Gleitzeitkonto angezeigt werden soll.
+        </p>
         <row
             class="group mt-1 flex items-center space-x-2 rounded-sm border-2 border-rose-700 p-2 has-[.page-item]:border-gray-400"
         >
@@ -10,10 +12,10 @@
                 class="page-item inline-flex items-center gap-x-2 rounded-sm bg-gray-800/10 px-3 py-2 text-sm font-semibold shadow-xs dark:bg-gray-50/10"
             >
                 Meine Zeiterfassung
-                
+
                 <button
                     type="button"
-                    class="rounded-md hover:bg-gray-800/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800/10 active:bg-gray-800/20 dark:hover:bg-gray-50/10 dark:active:bg-gray-50/15 dark:focus-visible:outline-gray-50/10"
+                    class="rounded-md hover:bg-gray-800/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800/10 active:bg-gray-800/20 dark:hover:bg-gray-50/10 dark:focus-visible:outline-gray-50/10 dark:active:bg-gray-50/15"
                 >
                     <!-- xmark icon from https://iconoir.com/ -->
                     <svg
@@ -38,7 +40,7 @@
             </div>
             <button
                 type="button"
-                class="flex items-center gap-x-2 rounded-xl px-3 py-2 text-sm font-semibold hover:bg-gray-800/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800/10 active:bg-gray-800/15 dark:hover:bg-gray-50/10 dark:active:bg-gray-50/15 dark:focus-visible:outline-gray-50/10"
+                class="flex items-center gap-x-2 rounded-xl px-3 py-2 text-sm font-semibold hover:bg-gray-800/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800/10 active:bg-gray-800/15 dark:hover:bg-gray-50/10 dark:focus-visible:outline-gray-50/10 dark:active:bg-gray-50/15"
             >
                 Seite hinzufügen
                 <!-- plus -->
@@ -77,19 +79,18 @@
                 <%- include('radio-input', { name: 'overtime-position', value:
                 'overtime-position-top', checked: true }) %>
                 <div class="flex flex-col">
-                    <p class="text-sm/6 text-center">Oben in der Seiten-Navigation</p>
+                    <p class="text-center text-sm/6">Oben in der Seiten-Navigation</p>
                     <img
-                        class=" dark:hidden"
+                        class="dark:hidden"
                         src="/assets/settings/display-top-header-light.png"
                         alt="Screenshot vom Gleitzeitkonto oben im Header"
                     />
                     <img
-                        class="hidden  dark:block"
+                        class="hidden dark:block"
                         src="/assets/settings/display-top-header-dark.png"
                         alt="Screenshot vom Gleitzeitkonto oben im Header"
                     />
                 </div>
-
             </label>
             <label
                 class="flex items-center space-x-1"
