@@ -1,0 +1,56 @@
+<h2 class="my-4 p-2 text-2xl">Benachrichtigungen</h2>
+<div class="ms-5 mb-10">
+    <div class="bg-clockmate-blue/50 mb-2 flex items-center space-x-4 rounded-sm p-4 shadow-sm">
+        <!-- info-circle-solid icon from https://iconoir.com/ -->
+        <svg
+            class="shrink-0 text-gray-800 dark:text-gray-100"
+            width="35px"
+            height="35px"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            color="#000000"
+            stroke-width="1.5"
+        >
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12ZM12 10.75C12.4142 10.75 12.75 11.0858 12.75 11.5V16.5C12.75 16.9142 12.4142 17.25 12 17.25C11.5858 17.25 11.25 16.9142 11.25 16.5V11.5C11.25 11.0858 11.5858 10.75 12 10.75ZM12.5675 8.00075C12.8446 7.69287 12.8196 7.21865 12.5117 6.94156C12.2038 6.66446 11.7296 6.68942 11.4525 6.99731L11.4425 7.00842C11.1654 7.3163 11.1904 7.79052 11.4983 8.06761C11.8062 8.34471 12.2804 8.31975 12.5575 8.01186L12.5675 8.00075Z"
+            ></path>
+        </svg>
+        <div class="text-md/5 flex flex-col items-start text-gray-800 dark:text-gray-100">
+            <p>
+                Clockmate hilft dir nicht nur bei der Berechnung der Überstunden, sondern kann dir
+                auch Benachrichtigungen schicken, wenn du deine Zeiten noch nicht freigegeben hast.
+            </p>
+            <button
+                class="underline underline-offset-2 hover:text-gray-700 dark:hover:text-gray-300"
+            >
+                So funktionierts
+            </button>
+        </div>
+    </div>
+    <form class="mt-10">
+        <div class="relative mt-3 mb-5">
+            <label
+                for="mail"
+                class="dark:bg-clockmate-grey absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-sm font-medium"
+                >E-Mail</label
+            >
+            <input
+                type="email"
+                name="mail"
+                id="mail"
+                aria-label="Email"
+                placeholder="clockmate@pm.me"
+                class="focus:outline-clockmate-blue block w-full rounded-md px-3 py-2 text-sm outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6 md:w-1/2"
+            />
+        </div>
+
+        <%- include('checkbox-wrapper', { id: 'accept-data-privacy', label: `Ich akzeptiere die
+        <button class="underline underline-offset-2 hover:text-gray-600 dark:hover:text-gray-500">
+            Datenschutzerklärung</button
+        >`, description: `Keine Sorge, Clockmate verwendet deine E-Mail Adresse nur, um dir
+        Benachrichtigungen zu senden.`, checked: false }) %>
+    </form>
+</div>
