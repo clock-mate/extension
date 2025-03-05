@@ -4,7 +4,7 @@
 # Project building folder and files
 /build
 scripts/*.js
-
+.direnv
 
 # Secrets
 src/extension/contentscript/url.json
