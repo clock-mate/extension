@@ -5,6 +5,7 @@
 /build
 scripts/*.js
 .direnv
+result
 
 # Secrets
 src/extension/contentscript/url.json
