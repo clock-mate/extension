@@ -16,4 +16,25 @@
         <%- include('../elements/checkbox-wrapper', { id: 'half-public-holiday-31-dec', label:
         '31.12', description: '', checked: true}) %>
     </div>
+    <form>
+        <label
+            for="monthsback"
+            class="dark:bg-clockmate-grey absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-sm font-medium"
+            >Monate</label
+        >
+        <input
+            type="number"
+            name="monthsback"
+            id="monthsback"
+            aria-label="Monate zurück"
+            placeholder="3"
+            min="1"
+            max="12"
+            class="focus:outline-clockmate-blue block w-0.5 rounded-md px-3 py-2 text-sm outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6 md:w-1/2"
+        />
+        <button type="submit">
+    </form>
+    <div class="relative mt-3 mb-5">
+        
+    </div>
 </div>
