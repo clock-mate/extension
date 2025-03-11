@@ -15,7 +15,7 @@
     "bundleExtension:popup": "esbuild src/extension/popup/popupscript.ts --bundle --outfile=build/extension/popup/popupscript.js && npm run bundleExtension:popup:sass",
     "bundleExtension:popup:sass": "sass --no-source-map --style=compressed src/extension/popup/clockmate.scss:build/extension/popup/clockmate.css",
     "bundleExtension:offscreen": "esbuild src/extension/backgroundscript/workers/chromium/offScreenDocument/offscreen.ts --bundle --outfile=build/extension-chromium/backgroundscript/chromium/offscreen.js",
-    "bundleExtension:settings": "ejs src/extension/settings/index.ejs -o build/extension/settings/settings.html && npx @tailwindcss/cli --input src/extension/settings/settings.css --output build/extension/settings/settings.css --minify",
+    "bundleExtension:settings": "ejs src/extension/settings/index.ejs -o build/extension/settings/settings.html && ejs src/extension/settings/privacy-policy.ejs -o build/extension/settings/privacy-policy.html && npx @tailwindcss/cli --input src/extension/settings/settings.css --output build/extension/settings/settings.css --minify && esbuild src/extension/settings/settings.ts --bundle --outfile=build/extension/settings/settings.js",
     "zipExtensions": "node scripts/build-zip-extensions.js"
   },
   "repository": {
