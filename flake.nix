@@ -61,7 +61,7 @@
                     pname = manifest.name;
                     inherit (manifest) version;
                     addonId = manifest.browser_specific_settings.gecko.id;
-                    url = "https://github.com/clock-mate/extension/releases/download/v${version}/Gleitzeitkonto-Browser-firefox.xpi";
+                    url = "https://github.com/clock-mate/extension/releases/download/v3.1.2/Gleitzeitkonto-Browser-firefox.xpi";
                     sha256 = "sha256-tf8/HqZdtQCmaLDycUhildSs2Zs3QXi7UShLzoMucco=";
                     meta = {
                         homepage = manifest.homepage_url;
