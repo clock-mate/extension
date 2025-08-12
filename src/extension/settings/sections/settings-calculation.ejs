@@ -17,24 +17,29 @@
         '31.12', description: '', checked: true}) %>
     </div>
     <form>
-        <label
-            for="monthsback"
-            class="dark:bg-clockmate-grey absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-sm font-medium"
-            >Monate</label
-        >
-        <input
-            type="number"
-            name="monthsback"
-            id="monthsback"
-            aria-label="Monate zurück"
-            placeholder="3"
-            min="1"
-            max="12"
-            class="focus:outline-clockmate-blue block w-0.5 rounded-md px-3 py-2 text-sm outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6 md:w-1/2"
-        />
-        <button type="submit">
+        <div class="relative mt-5 mb-1">
+            <label
+                for="monthsback"
+                class="dark:bg-clockmate-grey absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-sm font-medium"
+                >Nicht-genehmigte Zeiten vor X Monaten</label
+            >
+            <input
+                type="number"
+                name="monthsback"
+                id="monthsback"
+                aria-label="Nicht-genehmigte Zeiten vor X Monaten"
+                placeholder="3"
+                min="1"
+                max="12"
+                class="focus:outline-clockmate-blue block w-0.5 rounded-md px-3 py-2 text-sm outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6 md:w-1/2"
+            />
+        </div>
+        <p class="text-sm/6 text-gray-700 dark:text-gray-400">
+            Zeiten die noch nicht-genehmigt sind werden im Zeitnachweis
+            <i>(Fiori&#x1F826;Meine Formulare&#x1F826;Zeitnachweise)</i>
+            nicht richtig angegeben. Es wird daher der Zeitnachweis von vor
+            <bold class="font-bold"><span id="monthsback-text-num">3</span> Monaten</bold> genutzt
+            und die anderen Monate von Clockmate berechnet.
+        </p>
     </form>
-    <div class="relative mt-3 mb-5">
-        
-    </div>
 </div>
