@@ -6,7 +6,7 @@ const ROUND_5_MIN_CHECKBOX_ID = 'round-5-min';
 const HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID = 'half-public-holidays';
 const HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID = 'half-public-holiday-24-dec';
 const HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID = 'half-public-holiday-31-dec';
-const MONTHS_BACK_INPUT_ID = 'monthsback';
+const MONTHS_TO_CALC_MANUALLY_INPUT_ID = 'months-to-calc-manually';
 
 type SettingsDOMElements = {
     [PRIVACY_POLICY_BTN_ID]: HTMLButtonElement;
@@ -14,7 +14,7 @@ type SettingsDOMElements = {
     [HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID]: HTMLInputElement;
     [HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID]: HTMLInputElement;
     [HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID]: HTMLInputElement;
-    [MONTHS_BACK_INPUT_ID]: HTMLInputElement;
+    [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: HTMLInputElement;
 };
 
 (() => {
@@ -41,6 +41,9 @@ function registerEvents(domRefs: SettingsDOMElements) {
     domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].addEventListener('change', () =>
         handleHalfPublicHoliday31DecChange(domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked),
     );
+    domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].addEventListener('change', () =>
+        handleMonthsToCalcManuallyChange(domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value),
+    );
 }
 
 /**
@@ -63,7 +66,7 @@ function getReferencedObjects(): SettingsDOMElements {
         [HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID]: document.getElementById(
             HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID,
         ) as HTMLInputElement,
-        [MONTHS_BACK_INPUT_ID]: document.getElementById(MONTHS_BACK_INPUT_ID) as HTMLInputElement,
+        [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: document.getElementById(MONTHS_TO_CALC_MANUALLY_INPUT_ID) as HTMLInputElement,
     };
 }
 
@@ -84,4 +87,12 @@ function handleHalfPublicHoliday24DecChange(state: boolean) {
 }
 function handleHalfPublicHoliday31DecChange(state: boolean) {
     Settings.setHalfPublicHoliday31DecEnabled(state);
+}
+function handleMonthsToCalcManuallyChange(months: string) {
+    const monthsNumber = Number(months);
+    if (isNaN(monthsNumber) || monthsNumber < 1 || monthsNumber > 24 || !Number.isInteger(monthsNumber)) {
+        // TODO error handling
+        return;
+    }
+    Settings.setMonthsToCalcManually(monthsNumber);
 }

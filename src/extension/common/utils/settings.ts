@@ -14,6 +14,8 @@ export default class Settings {
         dec24: true,
         dec31: true
     };
+    private static readonly  DEFAULT_MONTHS_TO_CALCULATE_MANUALLY = 3;
+
     /* =======================================================================================
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Display Enabled <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
     public static async displayIsEnabled(): Promise<boolean> {
@@ -98,4 +100,18 @@ export default class Settings {
         return await browser.storage.local.set({ halfPublicHolidaysConfig: config });
     }
 
+    /* ====================================================================================
+    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Months back <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    public static async getMonthsToCalcManually(): Promise<number> {
+        try {
+            const result = await browser.storage.local.get({ monthsBack: this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY });
+            return Number(result.monthsBack) || this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY;
+        } catch {
+            return this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY;
+        }
+    }
+
+    public static async setMonthsToCalcManually(months: number) {
+        return await browser.storage.local.set({ monthsBack: months });
+    }
 }
