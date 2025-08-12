@@ -32,6 +32,15 @@ function registerEvents(domRefs: SettingsDOMElements) {
     domRefs[ROUND_5_MIN_CHECKBOX_ID].addEventListener('change', () =>
         handleRound5MinChange(domRefs[ROUND_5_MIN_CHECKBOX_ID].checked),
     );
+    domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].addEventListener('change', () =>
+        handleHalfPublicHolidaysChange(domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked),
+    );
+    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].addEventListener('change', () =>
+        handleHalfPublicHoliday24DecChange(domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].checked),
+    );
+    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].addEventListener('change', () =>
+        handleHalfPublicHoliday31DecChange(domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked),
+    );
 }
 
 /**
@@ -66,4 +75,13 @@ function handlePrivacyPolicyClick() {
 }
 function handleRound5MinChange(state: boolean) {
     Settings.setRound5MinEnabled(state);
+}
+function handleHalfPublicHolidaysChange(state: boolean) {
+    Settings.setHalfPublicHolidaysEnabled(state);
+}
+function handleHalfPublicHoliday24DecChange(state: boolean) {
+    Settings.setHalfPublicHoliday24DecEnabled(state);
+}
+function handleHalfPublicHoliday31DecChange(state: boolean) {
+    Settings.setHalfPublicHoliday31DecEnabled(state);
 }
