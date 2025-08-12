@@ -24,29 +24,6 @@ type SettingsDOMElements = {
 })();
 
 /**
- * The script execution policy of the extension does not allow calling JS
- * methods from the extension page. Just register all events here.
- */
-function registerEvents(domRefs: SettingsDOMElements) {
-    domRefs[PRIVACY_POLICY_BTN_ID].addEventListener('click', handlePrivacyPolicyClick);
-    domRefs[ROUND_5_MIN_CHECKBOX_ID].addEventListener('change', () =>
-        handleRound5MinChange(domRefs[ROUND_5_MIN_CHECKBOX_ID].checked),
-    );
-    domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].addEventListener('change', () =>
-        handleHalfPublicHolidaysChange(domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked),
-    );
-    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].addEventListener('change', () =>
-        handleHalfPublicHoliday24DecChange(domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].checked),
-    );
-    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].addEventListener('change', () =>
-        handleHalfPublicHoliday31DecChange(domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked),
-    );
-    domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].addEventListener('change', () =>
-        handleMonthsToCalcManuallyChange(domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value),
-    );
-}
-
-/**
  * Get references to important DOM elements.
  */
 function getReferencedObjects(): SettingsDOMElements {
@@ -68,6 +45,29 @@ function getReferencedObjects(): SettingsDOMElements {
         ) as HTMLInputElement,
         [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: document.getElementById(MONTHS_TO_CALC_MANUALLY_INPUT_ID) as HTMLInputElement,
     };
+}
+
+/**
+ * The script execution policy of the extension does not allow calling JS
+ * methods from the extension page. Just register all events here.
+ */
+function registerEvents(domRefs: SettingsDOMElements) {
+    domRefs[PRIVACY_POLICY_BTN_ID].addEventListener('click', handlePrivacyPolicyClick);
+    domRefs[ROUND_5_MIN_CHECKBOX_ID].addEventListener('change', () =>
+        handleRound5MinChange(domRefs[ROUND_5_MIN_CHECKBOX_ID].checked),
+    );
+    domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].addEventListener('change', () =>
+        handleHalfPublicHolidaysChange(domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked),
+    );
+    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].addEventListener('change', () =>
+        handleHalfPublicHoliday24DecChange(domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].checked),
+    );
+    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].addEventListener('change', () =>
+        handleHalfPublicHoliday31DecChange(domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked),
+    );
+    domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].addEventListener('change', () =>
+        handleMonthsToCalcManuallyChange(domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value),
+    );
 }
 
 /* ========================================================================
