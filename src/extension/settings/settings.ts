@@ -1,20 +1,61 @@
 import browser from 'webextension-polyfill';
+import Settings from '../common/utils/settings';
 
 const PRIVACY_POLICY_BTN_ID = 'privacy-policy-btn';
+const ROUND_5_MIN_CHECKBOX_ID = 'round-5-min';
+const HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID = 'half-public-holidays';
+const HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID = 'half-public-holiday-24-dec';
+const HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID = 'half-public-holiday-31-dec';
+const MONTHS_BACK_INPUT_ID = 'monthsback';
+
+type SettingsDOMElements = {
+    [PRIVACY_POLICY_BTN_ID]: HTMLButtonElement;
+    [ROUND_5_MIN_CHECKBOX_ID]: HTMLInputElement;
+    [HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID]: HTMLInputElement;
+    [HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID]: HTMLInputElement;
+    [HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID]: HTMLInputElement;
+    [MONTHS_BACK_INPUT_ID]: HTMLInputElement;
+};
 
 (() => {
-    'use sctrict';
-    registerEvents();
+    'use strict';
+    const domRefs = getReferencedObjects();
+    registerEvents(domRefs);
 })();
 
 /**
  * The script execution policy of the extension does not allow calling JS
  * methods from the extension page. Just register all events here.
  */
-function registerEvents() {
-    document
-        .getElementById(PRIVACY_POLICY_BTN_ID)!
-        .addEventListener('click', handlePrivacyPolicyClick);
+function registerEvents(domRefs: SettingsDOMElements) {
+    domRefs[PRIVACY_POLICY_BTN_ID].addEventListener('click', handlePrivacyPolicyClick);
+    domRefs[ROUND_5_MIN_CHECKBOX_ID].addEventListener('change', () =>
+        handleRound5MinChange(domRefs[ROUND_5_MIN_CHECKBOX_ID].checked),
+    );
+}
+
+/**
+ * Get references to important DOM elements.
+ */
+function getReferencedObjects(): SettingsDOMElements {
+    return {
+        [PRIVACY_POLICY_BTN_ID]: document.getElementById(
+            PRIVACY_POLICY_BTN_ID,
+        ) as HTMLButtonElement,
+        [ROUND_5_MIN_CHECKBOX_ID]: document.getElementById(
+            ROUND_5_MIN_CHECKBOX_ID,
+        ) as HTMLInputElement,
+        [HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID]: document.getElementById(
+            HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID,
+        ) as HTMLInputElement,
+        [HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID]: document.getElementById(
+            HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID,
+        ) as HTMLInputElement,
+        [HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID]: document.getElementById(
+            HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID,
+        ) as HTMLInputElement,
+        [MONTHS_BACK_INPUT_ID]: document.getElementById(MONTHS_BACK_INPUT_ID) as HTMLInputElement,
+    };
 }
 
 /* ========================================================================
@@ -22,4 +63,7 @@ function registerEvents() {
 
 function handlePrivacyPolicyClick() {
     browser.tabs.create({ url: 'privacy-policy.html' });
+}
+function handleRound5MinChange(state: boolean) {
+    Settings.setRound5MinEnabled(state);
 }
