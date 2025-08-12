@@ -17,9 +17,10 @@ type SettingsDOMElements = {
     [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: HTMLInputElement;
 };
 
-(() => {
+(async () => {
     'use strict';
     const domRefs = getReferencedObjects();
+    await setInitialValues(domRefs); // await to prevent unnecessary state updates when updating values
     registerEvents(domRefs);
 })();
 
@@ -45,6 +46,22 @@ function getReferencedObjects(): SettingsDOMElements {
         ) as HTMLInputElement,
         [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: document.getElementById(MONTHS_TO_CALC_MANUALLY_INPUT_ID) as HTMLInputElement,
     };
+}
+
+/**
+ * Set the initial values for the settings UI elements.
+ */
+async function setInitialValues(domRefs: SettingsDOMElements) {
+    domRefs[ROUND_5_MIN_CHECKBOX_ID].checked = await Settings.round5MinIsEnabled();
+    domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked =
+        await Settings.halfPublicHolidaysIsEnabled();
+    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].checked =
+        await Settings.halfPublicHoliday24DecIsEnabled();
+    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked =
+        await Settings.halfPublicHoliday31DecIsEnabled();
+    domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value = String(
+        await Settings.getMonthsToCalcManually(),
+    );
 }
 
 /**
