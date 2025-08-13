@@ -46,7 +46,9 @@ function getReferencedObjects(): SettingsDOMElements {
         [HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID]: document.getElementById(
             HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID,
         ) as HTMLInputElement,
-        [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: document.getElementById(MONTHS_TO_CALC_MANUALLY_INPUT_ID) as HTMLInputElement,
+        [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: document.getElementById(
+            MONTHS_TO_CALC_MANUALLY_INPUT_ID,
+        ) as HTMLInputElement,
         [MONTHS_TO_CALC_MANUALLY_TEXT_NUM_ID]: document.getElementById(
             MONTHS_TO_CALC_MANUALLY_TEXT_NUM_ID,
         ) as HTMLSpanElement,
@@ -91,7 +93,10 @@ function registerEvents(domRefs: SettingsDOMElements) {
         handleHalfPublicHoliday31DecChange(domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked),
     );
     domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].addEventListener('change', () =>
-        handleMonthsToCalcManuallyChange(domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value, domRefs[MONTHS_TO_CALC_MANUALLY_TEXT_NUM_ID]),
+        handleMonthsToCalcManuallyChange(
+            domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value,
+            domRefs[MONTHS_TO_CALC_MANUALLY_TEXT_NUM_ID],
+        ),
     );
 }
 
@@ -113,9 +118,17 @@ function handleHalfPublicHoliday24DecChange(state: boolean) {
 function handleHalfPublicHoliday31DecChange(state: boolean) {
     Settings.setHalfPublicHoliday31DecEnabled(state);
 }
-function handleMonthsToCalcManuallyChange(months: string, monthsToCalcManuallyTextNum: HTMLSpanElement) {
+function handleMonthsToCalcManuallyChange(
+    months: string,
+    monthsToCalcManuallyTextNum: HTMLSpanElement,
+) {
     const monthsNumber = Number(months);
-    if (isNaN(monthsNumber) || monthsNumber < 1 || monthsNumber > 24 || !Number.isInteger(monthsNumber)) {
+    if (
+        isNaN(monthsNumber) ||
+        monthsNumber < 1 ||
+        monthsNumber > 24 ||
+        !Number.isInteger(monthsNumber)
+    ) {
         // TODO error handling
         return;
     }

@@ -12,15 +12,17 @@ export default class Settings {
     private static readonly DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG: HalfPublicHolidaysConfig = {
         enabled: true,
         dec24: true,
-        dec31: true
+        dec31: true,
     };
-    private static readonly  DEFAULT_MONTHS_TO_CALCULATE_MANUALLY = 3;
+    private static readonly DEFAULT_MONTHS_TO_CALCULATE_MANUALLY = 3;
 
     /* =======================================================================================
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Display Enabled <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
     public static async displayIsEnabled(): Promise<boolean> {
         try {
-            const result = await browser.storage.local.get({ displayIsEnabled: this.DEFAULT_DISPLAY_IS_ENABLED });
+            const result = await browser.storage.local.get({
+                displayIsEnabled: this.DEFAULT_DISPLAY_IS_ENABLED,
+            });
             if (result.displayIsEnabled == null) {
                 return this.DEFAULT_DISPLAY_IS_ENABLED;
             }
@@ -39,7 +41,9 @@ export default class Settings {
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Round 5 min <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
     public static async round5MinIsEnabled(): Promise<boolean> {
         try {
-            const result = await browser.storage.local.get({ round5MinIsEnabled: this.DEFAULT_ROUND_5_MIN_IS_ENABLED });
+            const result = await browser.storage.local.get({
+                round5MinIsEnabled: this.DEFAULT_ROUND_5_MIN_IS_ENABLED,
+            });
             if (result.round5MinIsEnabled == null) {
                 return this.DEFAULT_ROUND_5_MIN_IS_ENABLED;
             }
@@ -56,12 +60,15 @@ export default class Settings {
 
     /* =======================================================================================
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Public holidays <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-        private static async getHalfPublicHolidaysConfig(): Promise<HalfPublicHolidaysConfig> {
+    private static async getHalfPublicHolidaysConfig(): Promise<HalfPublicHolidaysConfig> {
         try {
             const result = await browser.storage.local.get({
-                halfPublicHolidaysConfig: this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG
+                halfPublicHolidaysConfig: this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG,
             });
-            return result.halfPublicHolidaysConfig as HalfPublicHolidaysConfig || this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG;
+            return (
+                (result.halfPublicHolidaysConfig as HalfPublicHolidaysConfig) ||
+                this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG
+            );
         } catch {
             return this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG;
         }
@@ -104,7 +111,9 @@ export default class Settings {
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Months back <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
     public static async getMonthsToCalcManually(): Promise<number> {
         try {
-            const result = await browser.storage.local.get({ monthsBack: this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY });
+            const result = await browser.storage.local.get({
+                monthsBack: this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY,
+            });
             return Number(result.monthsBack) || this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY;
         } catch {
             return this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY;
