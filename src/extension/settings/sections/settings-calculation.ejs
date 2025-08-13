@@ -32,8 +32,11 @@
                 value="3"
                 min="1"
                 max="24"
-                class="focus:outline-clockmate-blue block min-w-72 rounded-md px-3 py-2 text-sm outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:w-1/2 sm:text-sm/6"
+                class="peer focus:outline-clockmate-blue block min-w-72 rounded-md px-3 py-2 text-sm outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 invalid:outline-rose-700 focus:outline-2 focus:-outline-offset-2 invalid:focus:outline-rose-700 sm:w-1/2 sm:text-sm/6"
             />
+            <p class="mt-1 hidden text-sm text-rose-700 peer-invalid:block">
+                Gebe eine Zahl zwischen 1 und 24 ein.
+            </p>
         </div>
         <p class="text-sm/6 text-gray-700 dark:text-gray-400">
             Zeiten, die noch nicht genehmigt sind, werden im Zeitnachweis
