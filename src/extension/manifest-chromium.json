@@ -35,6 +35,8 @@
     }
   ],
 
+  "options_page": "settings/settings.html",
+
   "permissions": ["storage", "offscreen"],
 
   "host_permissions": ["https://bgp.btcsap.btc-ag.com/*", "https://*.ondemand.com/*"],

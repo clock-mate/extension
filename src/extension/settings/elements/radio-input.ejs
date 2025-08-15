@@ -1,0 +1,22 @@
+<%# Prettier throws errors if ejs is used inside a tag. Therefore duplicate the code here. %>
+<!-- prettier-ignore -->
+<% if (checked) { %>
+<div class="shrink-0">
+    <input
+        type="radio"
+        checked
+        name="<%= name %>"
+        value="<%= value %>>"
+        class="checked:border-clockmate-blue checked:bg-clockmate-blue focus-visible:outline-clockmate-blue relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden focus-visible:outline-2 focus-visible:outline-offset-2 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+    />
+</div>
+<% } else { %>
+<div class="shrink-0">
+    <input
+        type="radio"
+        name="<%= name %>"
+        value="<%= value %>>"
+        class="checked:border-clockmate-blue checked:bg-clockmate-blue focus-visible:outline-clockmate-blue relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden focus-visible:outline-2 focus-visible:outline-offset-2 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
+    />
+</div>
+<% } %>

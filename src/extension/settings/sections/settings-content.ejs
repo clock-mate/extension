@@ -1,0 +1,18 @@
+<div
+    class="dark:bg-clockmate-grey container mx-auto flex max-w-3xl flex-1 flex-col content-center bg-white p-1 align-middle text-black sm:p-2 dark:text-white"
+>
+    <%- include('settings-calculation') %>
+    <div class="border-clockmate-blue my-4 border-b-3"></div>
+
+    <div class="relative">
+        <div
+            class="dark:bg-clockmate-grey/80 absolute inset-0 z-1 flex items-center justify-center bg-white/80"
+        >
+            <div class="rotate-45 text-2xl font-bold sm:text-4xl">BALD VERFÜGBAR</div>
+        </div>
+
+        <%- include('settings-display') %>
+        <div class="border-clockmate-blue my-4 border-b-3"></div>
+        <%- include('settings-notifications') %>
+    </div>
+</div>
