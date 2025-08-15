@@ -17,6 +17,34 @@ Die Erweiterung muss im entsprechenden Browser installiert werden:
 
 *Probleme? Erstelle ein [Issue](https://github.com/clock-mate/extension/issues)*
 
+## Installation via Nix
+
+Das Projekt muss in die `inputs` der `flake.nix` aufgenommen werden, in der sich die `home-manager`-Konfiguration befindet:
+
+```nix
+{
+    inputs = {
+        # ...
+        clock-mate.url = "github:clock-mate/extension";
+        # Optional:
+        # clock-mate.inputs.nixpkgs.follows = "nixpkgs";
+        # clock-mate.inputs.flake-utils.follows = "flake-utils";
+    };
+}
+```
+
+Anschließend kann das Paket zur `extensions`-Liste hinzugefügt werden.
+
+Beispiel `home.nix`:
+```nix
+{inputs, pkgs, ...}: {
+    # ...
+    programs.firefox.profiles.<profile-name>.extensions.packages = [
+        inputs.clock-mate.packages.${pks.system}.default
+    ];
+}
+```
+
 # Deinstallation
 Zum Deinstallieren von Gleitzeitkonto-Browser die Erweiterung einfach entfernen:
 - [Deinstallation Firefox](https://support.mozilla.org/de/kb/addons-deaktivieren-oder-deinstallieren)
