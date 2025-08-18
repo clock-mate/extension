@@ -103,9 +103,9 @@ export default class overtimeCalculator {
             return overtimeMinutes;
         }
         if (halfHolidayConfig.dec24 && day.getDate() == 24 && day.getMonth() == 11) {
-            adjustForHalfHoliday(overtimeMinutes);
+            overtimeMinutes = adjustForHalfHoliday(overtimeMinutes);
         } else if (halfHolidayConfig.dec31 && day.getDate() == 31 && day.getMonth() == 11) {
-            adjustForHalfHoliday(overtimeMinutes);
+            overtimeMinutes = adjustForHalfHoliday(overtimeMinutes);
         }
         return overtimeMinutes;
     }
