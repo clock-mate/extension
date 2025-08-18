@@ -90,7 +90,9 @@ export function checkForOvertime(
         typeof receivedData.overtime !== 'number'
     ) {
         // should not happen
-        console.error('Received an unexpected response from time time statement worker:');
+        console.error(
+            'Received an unexpected response from the time statement or time sheet worker:',
+        );
         console.error(message);
         communication.postWorkerError(command);
         return;
