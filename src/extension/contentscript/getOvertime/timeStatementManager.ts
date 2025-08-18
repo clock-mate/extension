@@ -1,6 +1,6 @@
 import { BackgroundCommand } from '../../common/enums/command';
 import { isEmployeeIdData } from '../../common/types/employeeIdData';
-import config from '../common/config.json';
+import Settings from '../../common/utils/settings';
 import { ERROR_MSGS } from '../common/constants';
 import SimpleManager from '../common/interfaces/simpleManager';
 import { BackgroundComm } from '../communication';
@@ -72,8 +72,10 @@ export default class TimeStatementManager implements SimpleManager {
         try {
             rawTimeStatementData = await this.networkComm.fetchTimeStatement(
                 employeeId,
-                DateManger.calculateTimeStatementStartDate(config.monthsToCalculateManually),
-                DateManger.calcualteTimeStatementEndDate(config.monthsToCalculateManually),
+                DateManger.calculateTimeStatementStartDate(
+                    await Settings.getMonthsToCalcManually(),
+                ),
+                DateManger.calcualteTimeStatementEndDate(await Settings.getMonthsToCalcManually()),
             );
         } catch (e) {
             console.error(e);

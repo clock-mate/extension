@@ -2,7 +2,6 @@
   "_comment": "1s * 120 = 2 minutes",
   "maxPageloadingLoops": 120,
   "pageloadingTimeout": 1000,
-  "monthsToCalculateManually": 3,
   "_comment2": "month is 1-indexed",
   "timesheetEndDate": "2999-12-31"
 }

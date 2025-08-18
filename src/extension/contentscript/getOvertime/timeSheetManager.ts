@@ -1,6 +1,5 @@
 import { BackgroundCommand } from '../../common/enums/command';
 import Settings from '../../common/utils/settings';
-import config from '../common/config.json';
 import { ERROR_MSGS } from '../common/constants';
 import SimpleManager from '../common/interfaces/simpleManager';
 import { BackgroundComm } from '../communication';
@@ -35,7 +34,7 @@ export default class TimeSheetManager implements SimpleManager {
         let timeSheetData;
         try {
             timeSheetData = await this.fetchData.fetchWorkingTimes(
-                DateUtil.calculateTimeSheetStartDate(config.monthsToCalculateManually),
+                DateUtil.calculateTimeSheetStartDate(await Settings.getMonthsToCalcManually()),
                 DateUtil.calculateTimeSheetEndDate(),
             );
         } catch (e) {
