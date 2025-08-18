@@ -107,20 +107,20 @@ export default class Settings {
         return await browser.storage.local.set({ halfPublicHolidaysConfig: config });
     }
 
-    /* ====================================================================================
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Months back <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    /* ======================================================================================
+    >>>>>>>>>>>>>>>>>>>>>>>>>> Months to calculate manually <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
     public static async getMonthsToCalcManually(): Promise<number> {
         try {
             const result = await browser.storage.local.get({
-                monthsBack: this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY,
+                monthsToCalcManually: this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY,
             });
-            return Number(result.monthsBack) || this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY;
+            return Number(result.monthsToCalcManually) || this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY;
         } catch {
             return this.DEFAULT_MONTHS_TO_CALCULATE_MANUALLY;
         }
     }
 
     public static async setMonthsToCalcManually(months: number) {
-        return await browser.storage.local.set({ monthsBack: months });
+        return await browser.storage.local.set({ monthsToCalcManually: months });
     }
 }
