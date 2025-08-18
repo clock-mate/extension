@@ -1,4 +1,5 @@
 import { BackgroundCommand } from '../../common/enums/command';
+import Settings from '../../common/utils/settings';
 import StorageManager from '../../common/utils/storageManager';
 import { ERROR_MSGS } from '../common/constants';
 import Formater from '../common/utils/format';
@@ -26,6 +27,10 @@ export async function sendBackOvertime(communication: Communication) {
             },
         });
         return;
+    }
+
+    if (await Settings.round5MinIsEnabled()) {
+        totalOvertime = Math.round(totalOvertime / 5) * 5;
     }
 
     communication.postCsMessage(BackgroundCommand.GetOvertime, {
