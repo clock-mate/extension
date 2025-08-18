@@ -2,7 +2,7 @@ import * as browser from 'webextension-polyfill';
 import { BackgroundCommand } from '../../common/enums/command';
 import { isBackgroundResponse } from '../../common/types/backgroundResponse';
 import { EmployeeIdData } from '../../common/types/employeeIdData';
-import { ErrorData } from '../../common/types/errorData';
+import { ErrorData, isErrorData } from '../../common/types/errorData';
 import { MessageObject } from '../../common/types/messageObject';
 import { OvertimeData } from '../../common/types/overtimeData';
 
@@ -38,6 +38,8 @@ export default class BackgroundComm {
                 // check if the response is a response for this request
                 if (isBackgroundResponse(response) && response.command === command) {
                     resolve(response.content);
+                } else if (isErrorData(response)) {
+                    resolve(response); // always resolve if error
                 }
             });
             const message: MessageObject = { command: command, content: content };

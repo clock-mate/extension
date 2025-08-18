@@ -23,6 +23,8 @@ function connectedToContentScript(port: browser.Runtime.Port) {
     const communication = new Communication(port);
     communication.portToCs.onMessage.addListener((message) => {
         if (!isMessageObject(message)) {
+            console.error('Received an invalid message from the content script:');
+            console.error(message);
             communication.sendBackUnknownCmdError();
             return;
         }
