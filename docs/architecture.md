@@ -22,6 +22,7 @@ These perform the more computational expensive tasks since they can run in a sep
 ## Exchanged messages
 
 All communication is initiated by the CS. CS and BS only exchange `MessageObjects`. The message objects holds different commands which are forwarded by BS to according WW. WW sends custom object with expected data back. BS sends success message as `BackgroundResponse` optionally with the data.
+
 ```
 Content Script ---- Background Script ---- Web worker
         <-MessageObject->          MessageObject->
@@ -40,10 +41,11 @@ Commands:
         <- BackgroundRespone           <- EmployeeIdData
            (with EmployeeIdData)
 
-     GetOvertime         
+     GetOvertime
         <- BackgroundRespone
-           (with OvertimeData)    
+           (with OvertimeData)
 ```
+
 On Chromium browsers an offscreen page is placed between the BS and WW and just forwards all messages in each direction. Some data has to be manipulated for it to be forwarded, for example the WW does not receive the full MessageObject. See [worker readme](../src/extension/backgroundscript/workers/chromium/README.md).
 
 TODO document error messages communication
