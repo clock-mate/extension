@@ -30,6 +30,7 @@ npm install
 ## Manual
 
 Install the following tools manually:
+
 - [git](https://git-scm.com/)
 - [node.js](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
