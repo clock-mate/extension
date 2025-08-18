@@ -58,7 +58,6 @@ function connectedToContentScript(port: browser.Runtime.Port) {
  * @param message          the message which to check for errors and the overtime
  * @param command          the command to send as a response on the port
  * @param callback         will be called once the overtime was found in the MessageEvent data
- * @TODO reevaluate if this message/communication can't use the message object type
  * @TODO refactor
  */
 export function checkForOvertime(
