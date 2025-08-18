@@ -1,4 +1,5 @@
 import { BackgroundCommand } from '../../common/enums/command';
+import Settings from '../../common/utils/settings';
 import config from '../common/config.json';
 import { ERROR_MSGS } from '../common/constants';
 import SimpleManager from '../common/interfaces/simpleManager';
@@ -45,6 +46,7 @@ export default class TimeSheetManager implements SimpleManager {
         const timeSheetResponse = await this.backgroundComm.sendMsgToBackground(
             BackgroundCommand.ParseTimeSheet,
             timeSheetData,
+            await Settings.getFullSettings(),
         );
 
         Formater.throwIfErrorMessage(timeSheetResponse);

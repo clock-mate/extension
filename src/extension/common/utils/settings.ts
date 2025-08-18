@@ -1,10 +1,5 @@
 import browser from 'webextension-polyfill';
-
-interface HalfPublicHolidaysConfig {
-    enabled: boolean;
-    dec24: boolean;
-    dec31: boolean;
-}
+import { HalfPublicHolidaysConfig, SettingsData } from '../types/settingsData';
 
 export default class Settings {
     private static readonly DEFAULT_DISPLAY_IS_ENABLED = true;
@@ -60,7 +55,7 @@ export default class Settings {
 
     /* =======================================================================================
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Public holidays <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-    private static async getHalfPublicHolidaysConfig(): Promise<HalfPublicHolidaysConfig> {
+    public static async getHalfPublicHolidaysConfig(): Promise<HalfPublicHolidaysConfig> {
         try {
             const result = await browser.storage.local.get({
                 halfPublicHolidaysConfig: this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG,
@@ -122,5 +117,17 @@ export default class Settings {
 
     public static async setMonthsToCalcManually(months: number) {
         return await browser.storage.local.set({ monthsToCalcManually: months });
+    }
+
+    /* =======================================================================================
+    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Full settings <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    public static async getFullSettings(): Promise<SettingsData> {
+        // TODO could be optimized to only make on call to the storage API
+        return {
+            displayIsEnabled: await this.displayIsEnabled(),
+            round5MinIsEnabled: await this.round5MinIsEnabled(),
+            halfPublicHolidaysConfig: await this.getHalfPublicHolidaysConfig(),
+            monthsToCalcManually: await this.getMonthsToCalcManually(),
+        };
     }
 }
