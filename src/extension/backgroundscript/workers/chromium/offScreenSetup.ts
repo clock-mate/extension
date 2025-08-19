@@ -5,7 +5,7 @@ import browser from 'webextension-polyfill';
 declare const chrome: any;
 
 /**
- * Allows easy usage of workers in Firefox and Chromium browsers.
+ * Sets up an offscreen document for Chromium browsers which then can set up web workers.
  */
 export default class OffScreenSetup {
     public static creating: Promise<void> | null; // a global promise to avoid concurrency issues

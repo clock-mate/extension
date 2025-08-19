@@ -129,7 +129,7 @@ function handleMonthsToCalcManuallyChange(
         monthsNumber > 24 ||
         !Number.isInteger(monthsNumber)
     ) {
-        // User feedback is already done with CSS and HTML validation
+        // user feedback is already done with CSS and HTML validation
         return;
     }
     monthsToCalcManuallyTextNum.textContent = String(monthsNumber);

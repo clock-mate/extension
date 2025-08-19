@@ -38,7 +38,7 @@ export default class overtimeCalculator {
 
     /**
      * Calculates the overtime for the given TimeElements on a day. This can be a negative
-     * or positiv number in minutes depending on the `attendanceType`s of the TimeElements.
+     * or positive number in minutes depending on the `attendanceType`s of the TimeElements.
      * Expects normal working days to be from Monday to Friday.
      * @param timeElements      the TimeElements for the day to calcualte
      * @param minutesPerDay     the expected minutes to work per day
@@ -70,7 +70,7 @@ export default class overtimeCalculator {
         }
         overtimeMinutes -= minutesPerDay;
 
-        return this.adjustOvertimeForPublicHoliday(
+        return this.adjustOvertimeForHalfHoliday(
             timeElements[0].startDate,
             overtimeMinutes,
             minutesPerDay,
@@ -79,15 +79,14 @@ export default class overtimeCalculator {
     }
 
     /**
-     * Adjusts the overtime for the day to respect holidays. Which days are holidays
-     * is set in the constructor.
+     * Adjusts the overtime for the day to respect half holidays.
      * @param day                the day to check for a holiday
      * @param overtimeMinutes    the overtime for the day in minutes
      * @param minutesPerDay      the expected minutes to work per day
      * @param halfHolidayConfig  configuration of half public holidays
      * @returns the adjusted overtime for the day in minutes
      */
-    private adjustOvertimeForPublicHoliday(
+    private adjustOvertimeForHalfHoliday(
         day: Date,
         overtimeMinutes: number,
         minutesPerDay: number,

@@ -20,7 +20,7 @@ export default class DateUtil {
     }
 
     /**
-     * Checks whether or not the provided Date objects reference the same day while
+     * Checks whether the provided Date objects reference the same day while
      * ignoring the time.
      * @returns true if both Date objects reference the same day
      */

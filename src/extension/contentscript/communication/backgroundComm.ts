@@ -28,7 +28,7 @@ export default class BackgroundComm {
     ): Promise<OvertimeData | EmployeeIdData | ErrorData | undefined> {
         return new Promise((resolve) => {
             if (this.portToBackground == undefined) {
-                this.portToBackground = browser.runtime.connect(); // buid connection if not already established
+                this.portToBackground = browser.runtime.connect(); // build connection if not already established
 
                 this.portToBackground.onDisconnect.addListener(() => {
                     // delete when connnection gets disconnected

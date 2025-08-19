@@ -46,6 +46,6 @@ Commands:
            (with OvertimeData)
 ```
 
-On Chromium browsers an offscreen page is placed between the BS and WW and just forwards all messages in each direction. Some data has to be manipulated for it to be forwarded, for example the WW does not receive the full MessageObject. See [worker readme](../src/extension/backgroundscript/workers/chromium/README.md).
+On Chromium browsers an offscreen page is placed between the BS and WW and just forwards all messages in each direction. See [worker readme](../src/extension/backgroundscript/workers/chromium/README.md).
 
 TODO document error messages communication

@@ -11,10 +11,10 @@ export default class Formater {
     private static readonly JSON_END_STRING = ']}}\r\n';
 
     /**
-     * Retreives the JSON object inside the API data. Unecessary extra inforamtion
+     * Retrieves the JSON object inside the API data. Unnecessary extra information
      * is removed and the JSON extracted.
      * @param data    the unformatted API data holding the expected JSON
-     * @returns the retreived JSON object
+     * @returns the retrieved JSON object
      * @throws if the data can't be parsed for any reason
      */
     public static getJSONFromAPIData(data: string): object {
