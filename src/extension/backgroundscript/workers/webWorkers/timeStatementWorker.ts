@@ -6,7 +6,11 @@ import Formater from '../utils/format';
 async function saveOvertimeFromPDF(message: MessageEvent) {
     let overtime;
     try {
-        const pdfDocument = await PDFAggregator.compilePDF(message);
+        if (!('content' in message.data) || typeof message.data.content !== 'string') {
+            throw new Error('No message or no content received from the content script');
+        }
+
+        const pdfDocument = await PDFAggregator.compilePDF(message.data.content);
         const overtimeString = await PDFAggregator.getOvertimeFromPDF(pdfDocument);
         overtime = Formater.getNumberFromString(overtimeString);
     } catch (e) {

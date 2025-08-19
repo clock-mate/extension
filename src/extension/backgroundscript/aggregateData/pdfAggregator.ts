@@ -19,12 +19,8 @@ export default class PDFAggregator {
         de: 'Über-/Unterdeckung',
     };
 
-    public static async compilePDF(message: MessageEvent): Promise<pdfjsLib.PDFDocumentProxy> {
-        if (!('content' in message.data) || typeof message.data.content !== 'string') {
-            throw new Error('No message or no content received from the content script');
-        }
-
-        return pdfjsLib.getDocument({ data: atob(message.data.content) }).promise;
+    public static async compilePDF(pdfData: string): Promise<pdfjsLib.PDFDocumentProxy> {
+        return pdfjsLib.getDocument({ data: atob(pdfData) }).promise;
     }
 
     public static async getOvertimeFromPDF(
