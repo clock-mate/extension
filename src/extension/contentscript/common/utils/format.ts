@@ -56,9 +56,7 @@ export default class Formater {
 
     public static createUnsupportedPageData(): StatusedPromise<Promise<ErrorData>> {
         return new StatusedPromise(
-            new Promise<ErrorData>((resolve) => {
-                resolve({ error: { message: ERROR_MSGS.PAGE_NOT_SUPPORTED } });
-            }),
+            Promise.resolve({ error: { message: ERROR_MSGS.PAGE_NOT_SUPPORTED } }),
         );
     }
 }
