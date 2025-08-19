@@ -60,12 +60,16 @@ function getReferencedObjects(): SettingsDOMElements {
  */
 async function setInitialValues(domRefs: SettingsDOMElements) {
     domRefs[ROUND_5_MIN_CHECKBOX_ID].checked = await Settings.round5MinIsEnabled();
-    domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked =
-        await Settings.halfPublicHolidaysIsEnabled();
+
+    const holidayEnabled = await Settings.halfPublicHolidaysIsEnabled();
+    domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked = holidayEnabled;
+    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].disabled = !holidayEnabled;
+    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].disabled = !holidayEnabled;
     domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].checked =
         await Settings.halfPublicHoliday24DecIsEnabled();
     domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked =
         await Settings.halfPublicHoliday31DecIsEnabled();
+
     domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value = String(
         await Settings.getMonthsToCalcManually(),
     );
@@ -84,7 +88,7 @@ function registerEvents(domRefs: SettingsDOMElements) {
         handleRound5MinChange(domRefs[ROUND_5_MIN_CHECKBOX_ID].checked),
     );
     domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].addEventListener('change', () =>
-        handleHalfPublicHolidaysChange(domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked),
+        handleHalfPublicHolidaysChange(domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked, domRefs),
     );
     domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].addEventListener('change', () =>
         handleHalfPublicHoliday24DecChange(domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].checked),
@@ -107,7 +111,9 @@ function handlePrivacyPolicyClick() {
 function handleRound5MinChange(state: boolean) {
     Settings.setRound5MinEnabled(state);
 }
-function handleHalfPublicHolidaysChange(state: boolean) {
+function handleHalfPublicHolidaysChange(state: boolean, domRefs: SettingsDOMElements) {
+    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].disabled = !state;
+    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].disabled = !state;
     Settings.setHalfPublicHolidaysEnabled(state);
 }
 function handleHalfPublicHoliday24DecChange(state: boolean) {
