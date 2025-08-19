@@ -2,7 +2,6 @@ import { ErrorData } from '../common/types/errorData';
 import { OvertimeData } from '../common/types/overtimeData';
 import config from './common/config.json';
 import { DISPLAY_TEXTS } from './common/constants';
-import StatusedPromise from './common/models/statusedPromise';
 import { DisplayFormat } from './common/types/display';
 import Formater from './common/utils/format';
 import Navigation from './common/utils/navigation';
@@ -22,9 +21,9 @@ import { DisplayManager } from './showOvertime/headerBarDisplay';
     const fetchData = new FetchData();
     const overtimeManager = new OvertimeManager(backgroundComm, fetchData);
 
-    let calculatedData: StatusedPromise<Promise<OvertimeData | ErrorData>>;
+    let calculatedData: Promise<OvertimeData | ErrorData>;
     if (FetchURL.pageIsSupported()) {
-        calculatedData = new StatusedPromise(overtimeManager.calculateNewOvertimeData());
+        calculatedData = overtimeManager.calculateNewOvertimeData();
     } else {
         calculatedData = Formater.createUnsupportedPageData();
     }
@@ -49,11 +48,8 @@ import { DisplayManager } from './showOvertime/headerBarDisplay';
 
     // ===== Register actions for promises resolving =====
     // update the display as soon as new data is available
-    calculatedData.promise.then(async () => {
-        Formater.updateDisplayState(
-            displayState,
-            await Formater.getLatestDisplayFormat(calculatedData),
-        );
+    calculatedData.then(async () => {
+        Formater.updateDisplayState(displayState, await Formater.getDisplayFormat(calculatedData));
         view.renderDisplay(displayState);
     });
 

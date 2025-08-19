@@ -2,7 +2,6 @@ import { BackgroundCommand } from '../../common/enums/command';
 import { ErrorData, isErrorData } from '../../common/types/errorData';
 import { isOvertimeObject, OvertimeData } from '../../common/types/overtimeData';
 import { ERROR_MSGS } from '../common/constants';
-import StatusedPromise from '../common/models/statusedPromise';
 import { DisplayFormat } from '../common/types/display';
 import Formater from '../common/utils/format';
 import { BackgroundComm } from '../communication';
@@ -69,13 +68,13 @@ export default class OvertimeManager {
         View.startLoading(); // start loading immediately
 
         // == Start new request ==
-        const calculatedData = new StatusedPromise(this.calculateNewOvertimeData());
+        const calculatedData = this.calculateNewOvertimeData();
 
         // == Register action for promise resolving ==
-        calculatedData.promise.then(async () => {
+        calculatedData.then(async () => {
             Formater.updateDisplayState(
                 displayState,
-                await Formater.getLatestDisplayFormat(calculatedData),
+                await Formater.getDisplayFormat(calculatedData),
             );
             if (this.view === undefined) {
                 console.error(

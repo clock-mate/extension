@@ -1,7 +1,6 @@
 import { ErrorData, isErrorData } from '../../../common/types/errorData';
 import { isOvertimeObject, OvertimeData } from '../../../common/types/overtimeData';
 import { DISPLAY_TEXTS, ERROR_MSGS } from '../constants';
-import StatusedPromise from '../models/statusedPromise';
 import { DisplayFormat } from '../types/display';
 
 export default class Formater {
@@ -24,23 +23,15 @@ export default class Formater {
     }
 
     /**
-     * Determines the latest data which can be shown in the display.
-     * This can be a loading placeholder if no data is available.
+     * Format the data into a non loading `DisplayFormat`.
      * @param calcOvertimeData     the data from a calculate
      */
-    public static async getLatestDisplayFormat(
-        calcOvertimeData: StatusedPromise<Promise<OvertimeData | ErrorData>>,
+    public static async getDisplayFormat(
+        calcOvertimeData: Promise<OvertimeData | ErrorData>,
     ): Promise<DisplayFormat> {
-        if (calcOvertimeData.isResolved) {
-            return {
-                text: this.formatDisplayText(await calcOvertimeData.promise),
-                loading: false,
-            };
-        }
-        // no data to show
         return {
-            text: DISPLAY_TEXTS.PREFIX_OVERTIME + DISPLAY_TEXTS.OVERTIME_LOADING,
-            loading: true,
+            text: this.formatDisplayText(await calcOvertimeData),
+            loading: false,
         };
     }
 
@@ -54,9 +45,7 @@ export default class Formater {
         displayState.loading = newDisplay.loading;
     }
 
-    public static createUnsupportedPageData(): StatusedPromise<Promise<ErrorData>> {
-        return new StatusedPromise(
-            Promise.resolve({ error: { message: ERROR_MSGS.PAGE_NOT_SUPPORTED } }),
-        );
+    public static createUnsupportedPageData(): Promise<ErrorData> {
+        return Promise.resolve({ error: { message: ERROR_MSGS.PAGE_NOT_SUPPORTED } });
     }
 }
