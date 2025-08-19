@@ -25,3 +25,11 @@ export function isMessageObject(messageObject: unknown): messageObject is Messag
             : true)
     );
 }
+
+export function hasStringContent(messageObject: MessageObject): boolean {
+    return 'content' in messageObject && typeof messageObject.content === 'string';
+}
+
+export function hasSettingsData(messageObject: MessageObject): boolean {
+    return 'settings' in messageObject && isSettingsData(messageObject.settings);
+}

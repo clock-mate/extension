@@ -1,3 +1,4 @@
+import { hasStringContent } from '../../../common/types/messageObject';
 import { ERROR_MSGS } from '../../common/constants';
 import EmployeeData from '../../common/models/employeeData';
 import Formater from '../utils/format';
@@ -6,9 +7,10 @@ async function sendBackEmployeeId(message: MessageEvent) {
     let employeeId: string;
 
     try {
-        if (!('content' in message.data) || typeof message.data.content !== 'string') {
+        if (!hasStringContent(message.data)) {
             throw new Error('No message or no content received from the content script');
         }
+
         const jsonObject = Formater.getJSONFromAPIData(message.data.content);
         const employeeData = EmployeeData.fromObject(jsonObject);
         employeeId = employeeData.d.results[0].employeeId;

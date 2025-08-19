@@ -1,4 +1,5 @@
 import { BackgroundCommand } from '../../../common/enums/command';
+import { hasStringContent } from '../../../common/types/messageObject';
 import { PDFAggregator } from '../../aggregateData';
 import { ERROR_MSGS } from '../../common/constants';
 import Formater from '../utils/format';
@@ -6,7 +7,7 @@ import Formater from '../utils/format';
 async function saveOvertimeFromPDF(message: MessageEvent) {
     let overtime;
     try {
-        if (!('content' in message.data) || typeof message.data.content !== 'string') {
+        if (!hasStringContent(message.data)) {
             throw new Error('No message or no content received from the content script');
         }
 

@@ -1,5 +1,6 @@
 import { BackgroundCommand } from '../../../common/enums/command';
-import { isSettingsData, SettingsData } from '../../../common/types/settingsData';
+import { hasSettingsData, hasStringContent } from '../../../common/types/messageObject';
+import { SettingsData } from '../../../common/types/settingsData';
 import { TimeSheetAggregator } from '../../aggregateData';
 import { OvertimeCalculator } from '../../calculateOvertime';
 import { ERROR_MSGS } from '../../common/constants';
@@ -12,10 +13,10 @@ function saveOvertimeFromTimeSheet(message: MessageEvent) {
     let settings: SettingsData;
 
     try {
-        if (!('content' in message.data) || typeof message.data.content !== 'string') {
+        if (!hasStringContent(message.data)) {
             throw new Error('No message or no content received from the content script');
         }
-        if (!('settings' in message.data) || !isSettingsData(message.data.settings)) {
+        if (!hasSettingsData(message.data)) {
             throw new Error('No settings received from the content script');
         }
         settings = message.data.settings;
