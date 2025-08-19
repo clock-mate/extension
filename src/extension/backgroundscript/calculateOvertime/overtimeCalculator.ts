@@ -6,7 +6,6 @@ export default class overtimeCalculator {
     private static readonly FLEXDAY_ATTENDANCE_TYPE = 9003;
     private static readonly HALF_PUBLIC_HOLIDAY_FREE_TIME_FACTOR = 0.5;
 
-    // ===== Overtime calculation =====
     /**
      * Calculates the overtime in minutes. The calculation does expect normal working days to be from Monday
      * to Friday. Working on holidays will only be calculated for holidays accounted for in `HalfPublicHolidaysConfig`.

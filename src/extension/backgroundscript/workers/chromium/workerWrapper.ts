@@ -9,7 +9,7 @@ declare const chrome: any;
  * Wraps an offscreen page with a web worker in a way where it is usable as a normal web worker.
  * Should only be used in a Chromium context. The offscreen page has to be initialized before using
  * this class.
- * 
+ *
  * Not all Worker methods and attributes are fully implemented.
  */
 export default class WorkerWrapper implements Worker {

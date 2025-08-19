@@ -17,9 +17,6 @@ import { DisplayManager } from './showOvertime/headerBarDisplay';
 (async () => {
     'use strict';
 
-    /* ==========================================================================================
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Main Events <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-
     // ===== Initialize communication and fetch data =====
     const backgroundComm = new BackgroundComm();
     const fetchData = new FetchData();

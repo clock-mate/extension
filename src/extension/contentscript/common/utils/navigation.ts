@@ -6,9 +6,6 @@ export default class Navigation {
     private static readonly HEADER_END_ID = 'shell-header-hdr-end';
     private static readonly GLEITZEIT_HASH = '#btccatstime-create';
 
-    // ========== Checking and waiting for correct page ===========
-    // ============================================================
-
     /**
      * Resolves once the DOMContentLoaded event fires or immediately if it is already loaded.
      */

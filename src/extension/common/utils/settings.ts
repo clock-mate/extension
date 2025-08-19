@@ -11,8 +11,7 @@ export default class Settings {
     };
     private static readonly DEFAULT_MONTHS_TO_CALCULATE_MANUALLY = 3;
 
-    /* =======================================================================================
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Display Enabled <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    // ===== Display enabled =====
     public static async displayIsEnabled(): Promise<boolean> {
         try {
             const result = await browser.storage.local.get({
@@ -32,8 +31,7 @@ export default class Settings {
         return await browser.storage.local.set({ displayIsEnabled: state });
     }
 
-    /* =======================================================================================
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Round 5 min <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    // ===== Round 5 min =====
     public static async round5MinIsEnabled(): Promise<boolean> {
         try {
             const result = await browser.storage.local.get({
@@ -53,8 +51,7 @@ export default class Settings {
         return await browser.storage.local.set({ round5MinIsEnabled: state });
     }
 
-    /* =======================================================================================
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Public holidays <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    // ===== Public holidays =====
     public static async getHalfPublicHolidaysConfig(): Promise<HalfPublicHolidaysConfig> {
         try {
             const result = await browser.storage.local.get({
@@ -102,8 +99,7 @@ export default class Settings {
         return await browser.storage.local.set({ halfPublicHolidaysConfig: config });
     }
 
-    /* ======================================================================================
-    >>>>>>>>>>>>>>>>>>>>>>>>>> Months to calculate manually <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    // ===== Months to calculate manually =====
     public static async getMonthsToCalcManually(): Promise<number> {
         try {
             const result = await browser.storage.local.get({
@@ -119,8 +115,7 @@ export default class Settings {
         return await browser.storage.local.set({ monthsToCalcManually: months });
     }
 
-    /* =======================================================================================
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Full settings <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    // ===== Full settings =====
     public static async getFullSettings(): Promise<SettingsData> {
         // TODO could be optimized to only make on call to the storage API
         return {

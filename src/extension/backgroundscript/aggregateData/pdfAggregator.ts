@@ -11,7 +11,7 @@ export default class PDFAggregator {
     /**
      * When the fetched pdf document does not have a value for overtime (e.g. no working times available for fetched period)
      * this is the string of the next entry.
-     * 
+     *
      * This is used to determine if there is no value for overtime.
      */
     private static readonly NEXT_ITEM_STRING = {

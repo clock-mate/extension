@@ -100,9 +100,7 @@ function registerEvents(domRefs: SettingsDOMElements) {
     );
 }
 
-/* ========================================================================
-    >>>>>>>>>>>>>>>>>>>> Event Handlers <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-
+// ===== Event handlers =====
 function handlePrivacyPolicyClick() {
     browser.tabs.create({ url: 'privacy-policy.html' });
 }
