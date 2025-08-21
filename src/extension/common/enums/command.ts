@@ -4,7 +4,7 @@
  */
 export enum BackgroundCommand {
     ParseTimeSheet,
-    CompileTimeSatement,
+    CompileTimeStatement,
     ParseEmployeeId,
     /** From the previously given data calculate the overtime and return it */
     GetOvertime,

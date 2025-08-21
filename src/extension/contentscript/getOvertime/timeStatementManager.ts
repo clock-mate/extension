@@ -78,7 +78,7 @@ export default class TimeStatementManager implements SimpleManager {
                 DateManger.calculateTimeStatementStartDate(
                     await Settings.getMonthsToCalcManually(),
                 ),
-                DateManger.calcualteTimeStatementEndDate(await Settings.getMonthsToCalcManually()),
+                DateManger.calculateTimeStatementEndDate(await Settings.getMonthsToCalcManually()),
             );
         } catch (e) {
             console.error(e);
@@ -89,7 +89,7 @@ export default class TimeStatementManager implements SimpleManager {
         }
 
         const timeStatementResponse = await this.backgroundComm.sendMsgToBackground(
-            BackgroundCommand.CompileTimeSatement,
+            BackgroundCommand.CompileTimeStatement,
             Formater.convertArrayBufferToBase64(rawTimeStatementData),
         );
 

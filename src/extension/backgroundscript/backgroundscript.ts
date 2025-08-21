@@ -35,7 +35,7 @@ function connectedToContentScript(port: browser.Runtime.Port) {
             case BackgroundCommand.ParseEmployeeId:
                 sendBackEmployeeId(communication, message);
                 break;
-            case BackgroundCommand.CompileTimeSatement:
+            case BackgroundCommand.CompileTimeStatement:
                 saveOvertimeFromPDF(communication, message);
                 break;
             case BackgroundCommand.GetOvertime:

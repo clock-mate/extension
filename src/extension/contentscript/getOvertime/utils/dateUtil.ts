@@ -14,7 +14,7 @@ export default class DateUtil {
      * Calculates the end date to use for the time statement. Will be the
      * last day of the month from the given amount of months ago.
      */
-    public static calcualteTimeStatementEndDate(monthsAgo: number): Date {
+    public static calculateTimeStatementEndDate(monthsAgo: number): Date {
         const currentDate = new Date();
         return new Date(currentDate.getFullYear(), currentDate.getMonth() - monthsAgo + 1, 0);
     }

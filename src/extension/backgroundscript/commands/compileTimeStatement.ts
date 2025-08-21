@@ -14,13 +14,13 @@ export async function saveOvertimeFromPDF(communication: Communication, message:
         checkForOvertime(
             communication,
             workerMessage,
-            BackgroundCommand.CompileTimeSatement,
+            BackgroundCommand.CompileTimeStatement,
             (overtime: number) => StorageManager.saveTimeStatementOvertime(overtime),
         );
     };
     timeStatementWorker.onerror = (error: ErrorEvent) => {
         console.error('Worker error:', error.message, error.filename, error.lineno, error.colno);
-        communication.postWorkerError(BackgroundCommand.CompileTimeSatement);
+        communication.postWorkerError(BackgroundCommand.CompileTimeStatement);
     };
     timeStatementWorker.postMessage(message);
 }

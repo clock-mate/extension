@@ -16,7 +16,7 @@ async function saveOvertimeFromPDF(message: MessageEvent) {
         overtime = Formater.getNumberFromString(overtimeString);
     } catch (e) {
         postMessage({
-            command: BackgroundCommand.CompileTimeSatement,
+            command: BackgroundCommand.CompileTimeStatement,
             error: { message: ERROR_MSGS.UNABLE_TO_PARSE_DATA },
             originalError: e,
         });
