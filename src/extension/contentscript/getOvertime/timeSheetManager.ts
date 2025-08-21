@@ -33,13 +33,16 @@ export default class TimeSheetManager implements SimpleManager {
     private async sendTimeSheetData() {
         let timeSheetData;
         try {
-            timeSheetData = await this.fetchData.fetchWorkingTimes(
+            timeSheetData = await this.fetchData.getWorkingTimes(
                 DateUtil.calculateTimeSheetStartDate(await Settings.getMonthsToCalcManually()),
                 DateUtil.calculateTimeSheetEndDate(),
             );
         } catch (e) {
             console.error(e);
             throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
+        }
+        if (timeSheetData === null) {
+            throw new Error(ERROR_MSGS.LOGGED_OUT);
         }
 
         const timeSheetResponse = await this.backgroundComm.sendMsgToBackground(

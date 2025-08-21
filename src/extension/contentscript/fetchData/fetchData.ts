@@ -30,16 +30,38 @@ export default class FetchData {
     }
 
     /**
+     * Retries the given callback with a new CSRF token if the response has a 401 status code.
+     * This is useful since Fiori does sometimes timeout the token but hasn't logged out the user.
+     * @throws if the csrf token can't be fetched
+     */
+    private async retryWithNewTokenIf401(
+        response: Response,
+        callback: () => Promise<Response>,
+    ): Promise<Response> {
+        if (response.ok || response.status !== 401) return response;
+
+        try {
+            await this.fetchCSRFToken();
+
+            return await callback();
+        } catch (error) {
+            // token is invalid, clear it
+            this.csrfToken = undefined;
+            throw error;
+        }
+    }
+
+    /**
      * Contacts the API to get the working times response. The given start- and enddate
      * will be used for the request. The response will be the data returned by the api. This data
      * contains the working times but has to be formatted to be able to use them.
      * @param startDate    the first day to fetch working times for (time is ignored)
      * @param endDate      the last day to fetch working times for, has to be the same or after `startDate` (time is ignored)
-     * @returns an unformatted response with the working times
+     * @returns an unformatted response with the working times or null if logged out
      * @throws if the endDate is not after the startDate
      * @throws if a communication error with api occurs
      */
-    public async fetchWorkingTimes(startDate: Date, endDate: Date): Promise<string> {
+    public async getWorkingTimes(startDate: Date, endDate: Date): Promise<string | null> {
         if (startDate > endDate || startDate.getDate() > endDate.getDate()) {
             throw new Error('End date is not after start date');
         }
@@ -47,6 +69,28 @@ export default class FetchData {
             await this.fetchCSRFToken();
         }
 
+        let result = await this.fetchWorkingTimes(startDate, endDate);
+        result = await this.retryWithNewTokenIf401(result, () =>
+            this.fetchWorkingTimes(startDate, endDate),
+        );
+
+        if (!result.ok) {
+            if (result.status === 401) {
+                return null;
+            }
+            throw new Error(
+                'Unexpected API response while fetching working times! Received status code: ' +
+                    result.status,
+            );
+        }
+
+        return result.text();
+    }
+
+    /**
+     * The actual fetching logic for working times (time sheet). Does no validation of inputs or results.
+     */
+    private async fetchWorkingTimes(startDate: Date, endDate: Date): Promise<Response> {
         const start = Formater.formatDateToYYYYMMDD(startDate);
         const end = Formater.formatDateToYYYYMMDD(endDate);
         const requestBody =
@@ -80,27 +124,41 @@ export default class FetchData {
             }),
         );
 
-        if (!result.ok) {
-            throw new Error(
-                'Unexpected API response while fetching working times! Received status code: ' +
-                    result.status,
-            );
-        }
-        return result.text();
+        return result;
     }
 
     /**
      * Contacts the API to get a response including the employee id.
      * The response will be the data returned by the api. This data
      * contains the employee id but has to be formatted to be able to use it.
-     * @returns an unformatted response with the employee id
+     * @returns an unformatted response with the employee id or null if logged out
      * @throws if a communication error with api occurs
      */
-    public async fetchEmployeeId() {
+    public async getEmployeeId(): Promise<string | null> {
         if (!this.csrfToken) {
             await this.fetchCSRFToken();
         }
 
+        let result = await this.fetchEmployeeId();
+        result = await this.retryWithNewTokenIf401(result, () => this.fetchEmployeeId());
+
+        if (!result.ok) {
+            if (result.status === 401) {
+                return null;
+            }
+            throw new Error(
+                'Unexpected API response while fetching employee id! Received status code: ' +
+                    result.status,
+            );
+        }
+
+        return result.text();
+    }
+
+    /**
+     * The actual fetching logic for employee id. Does no validation of inputs or results.
+     */
+    private async fetchEmployeeId(): Promise<Response> {
         const requestBody =
             '--batch\n' +
             'Content-Type: application/http\n' +
@@ -129,13 +187,7 @@ export default class FetchData {
             }),
         );
 
-        if (!result.ok) {
-            throw new Error(
-                'Unexpected API response while fetching employee id! Received status code: ' +
-                    result.status,
-            );
-        }
-        return result.text();
+        return result;
     }
 
     /**
@@ -144,29 +196,49 @@ export default class FetchData {
      * @param employeeNumber    the number of the employee to fetch the time statement from
      * @param startDate         the first day of the time statement (time is ignored)
      * @param endDate           the last day of the time statement (time is ignored)
-     * @returns the unformatted data of the time statement pdf
+     * @returns the unformatted data of the time statement pdf or null if logged out
      * @throws if the endDate is not after the startDate
      * @throws if a communication error with api occurs
      */
-    public async fetchTimeStatement(
+    public async getTimeStatement(
         employeeNumber: string,
         startDate: Date,
         endDate: Date,
-    ): Promise<ArrayBuffer> {
+    ): Promise<ArrayBuffer | null> {
         if (startDate > endDate || startDate.getDate() > endDate.getDate()) {
             throw new Error('End date is not after start date');
         }
 
-        const result = await fetch(
-            FetchURL.getTimeStatementFetchURL(employeeNumber, startDate, endDate),
+        let result = await this.fetchTimeStatement(employeeNumber, startDate, endDate);
+        result = await this.retryWithNewTokenIf401(result, () =>
+            this.fetchTimeStatement(employeeNumber, startDate, endDate),
         );
 
         if (!result.ok) {
+            if (result.status === 401) {
+                return null;
+            }
             throw new Error(
                 'Unexpected API response while fetching time statement! Received status code: ' +
                     result.status,
             );
         }
+
         return result.arrayBuffer();
+    }
+
+    /**
+     * The actual fetching logic for time statement. Does no validation of inputs or results.
+     */
+    private async fetchTimeStatement(
+        employeeNumber: string,
+        startDate: Date,
+        endDate: Date,
+    ): Promise<Response> {
+        const result = await fetch(
+            FetchURL.getTimeStatementFetchURL(employeeNumber, startDate, endDate),
+        );
+
+        return result;
     }
 }

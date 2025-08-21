@@ -41,10 +41,13 @@ export default class TimeStatementManager implements SimpleManager {
     private async fetchAndParseEmployeeId(): Promise<string> {
         let employeeData;
         try {
-            employeeData = await this.networkComm.fetchEmployeeId();
+            employeeData = await this.networkComm.getEmployeeId();
         } catch (e) {
             console.error(e);
             throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
+        }
+        if (employeeData === null) {
+            throw new Error(ERROR_MSGS.LOGGED_OUT);
         }
 
         const employeeIdResponse = await this.backgroundComm.sendMsgToBackground(
@@ -70,7 +73,7 @@ export default class TimeStatementManager implements SimpleManager {
     private async fetchAndSendTimeStatement(employeeId: string) {
         let rawTimeStatementData;
         try {
-            rawTimeStatementData = await this.networkComm.fetchTimeStatement(
+            rawTimeStatementData = await this.networkComm.getTimeStatement(
                 employeeId,
                 DateManger.calculateTimeStatementStartDate(
                     await Settings.getMonthsToCalcManually(),
@@ -80,6 +83,9 @@ export default class TimeStatementManager implements SimpleManager {
         } catch (e) {
             console.error(e);
             throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
+        }
+        if (rawTimeStatementData === null) {
+            throw new Error(ERROR_MSGS.LOGGED_OUT);
         }
 
         const timeStatementResponse = await this.backgroundComm.sendMsgToBackground(
