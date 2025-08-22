@@ -20,7 +20,7 @@ Die Erweiterung muss im entsprechenden Browser installiert werden:
 
 ## Installation via Nix
 
-Das Projekt muss in die `inputs` der `flake.nix` aufgenommen werden, in der sich die `home-manager`-Konfiguration befindet:
+Wenn du den [Nix Package Manager](https://nixos.org/) benutzt, kannst du diese Anleitung befolgen und ansonsten einfach ignorieren. Das Projekt muss in die `inputs` der `flake.nix` aufgenommen werden, in der sich die `home-manager`-Konfiguration befindet:
 
 ```nix
 {
