@@ -1,4 +1,5 @@
-# Clockmate - Anzeigen der Überstunden per Erweiterung
+# Clockmate
+***Anzeigen der Überstunden per Erweiterung***
 
 Die Browser Erweiterung, die das aktuelle Gleitzeitkonto anzeigt. Man muss nicht mehr umständlich die Überstunden ausrechnen oder aus PDF-Datein ablesen. Es werden einfach im Fiori-Launchpad auf der Seite der Zeiterfassung die aktuellen Überstunden angezeigt.
 <br><br>
@@ -11,7 +12,7 @@ Die Browser Erweiterung, die das aktuelle Gleitzeitkonto anzeigt. Man muss nicht
 
 # Installation
 Die Erweiterung muss im entsprechenden Browser installiert werden:
-- [Installation Firefox](https://github.com/clock-mate/extension/wiki/Firefox-Installation)
+- [Installation Firefox](https://github.com/clock-mate/extension/blob/main/docs/firefox-installation.md)
 - [Installation Chrome](https://chromewebstore.google.com/detail/gleitzeitkonto-browser/pfafglenejhimeinpohlpdobpnmocddj)
 - [Installation Edge](https://microsoftedge.microsoft.com/addons/detail/ionekooopielnnakholllacpgnlkjikm)
 
