@@ -22,6 +22,10 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+p {
+    margin: 0;
+}
+
 .container {
     margin: 1% auto;
     padding-right: 1rem;
@@ -51,6 +55,16 @@ body {
     font-size: 0.9rem;
     color: inherit;
     font-style: italic;
+}
+
+.description {
+    display: flex;
+    font-size: 0.9rem;
+    color: oklch(0.707 0.022 261.325);
+}
+
+.mb-1 {
+    margin-bottom: 0.25rem;
 }
 
 .switch {
