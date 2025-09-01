@@ -1,6 +1,2 @@
 @import 'tailwindcss' source('./');
-
-@theme {
-    --color-clockmate-grey: #222222;
-    --color-clockmate-blue: #00aab4;
-}
+@import '../common/theme.css';

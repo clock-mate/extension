@@ -1,0 +1,16 @@
+@theme {
+    --default-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, var(--font-sans);
+
+    --color-clockmate-grey: #222222;
+    --color-clockmate-blue: #00aab4;
+
+    --color-company-darkblue: #003869;
+    --color-company-lightblue: #5aa6e7;
+    --color-company-yellow: #fbd200;
+    --color-company-grey: #f5f5f5;
+
+    --color-company-blue4: #00508c;
+    --color-company-blue3: #0078be;
+    --color-company-blue2: #9ccaf1;
+    --color-company-blue1: #cee4f8;
+}
