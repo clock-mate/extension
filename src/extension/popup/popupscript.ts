@@ -1,9 +1,12 @@
+import browser from 'webextension-polyfill';
 import Settings from '../common/utils/settings';
 
 const STATUS_TEXT_ID = 'status-text';
+const SETTINGS_BTN_ID = 'settings-button';
 
 async function onReady() {
     initializeEnabledCheck();
+    initializeSettingsOnClick();
 }
 
 async function initializeEnabledCheck() {
@@ -35,6 +38,16 @@ async function initializeEnabledCheck() {
                 statusTextElement.innerText = 'deaktiviert';
             }
         }
+    }
+}
+
+function initializeSettingsOnClick() {
+    const settingsButton = document.getElementById(SETTINGS_BTN_ID);
+    if (settingsButton) {
+        settingsButton.addEventListener('click', async () => {
+            await browser.runtime.openOptionsPage();
+            window.close();
+        });
     }
 }
 
