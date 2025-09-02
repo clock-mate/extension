@@ -1,12 +1,11 @@
 1. In Firefox die neuste Datei herunterladen: [Clockmate-firefox.xpi](https://github.com/clock-mate/extension/releases/latest/download/Clockmate-firefox.xpi)
 2. Das Installieren von Erweiterungen von Github erlauben. "Installation fortsetzen" klicken<br>
-![Von Github Erweiterung installieren erlauben](../assets/firefow-allow-github-extension-install.png)
+   ![Von Github Erweiterung installieren erlauben](../assets/firefow-allow-github-extension-install.png)
 3. Die Erweiterung hinzufügen. "Hinzufügen" klicken<br>
-![Erweiterung hinzufügen](../assets/firefox-install-extension.png)
+   ![Erweiterung hinzufügen](../assets/firefox-install-extension.png)
 4. Installation bestätigen. "Ok" klicken<br>
-![Installation bestätigen](../assets/firefox-install-success.png)
+   ![Installation bestätigen](../assets/firefox-install-success.png)
 5. Fertig! 🥳
-
 
 <details><summary><b>❓ Es kam kein Popup (Download mit anderem Browser durchgeführt)</b></summary>
     <ol>
