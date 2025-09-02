@@ -12,8 +12,7 @@
     "bundleExtension": "npm run bundleExtension:webWorker && npm run bundleExtension:popup && npm run bundleExtension:offscreen && npm run bundleExtension:settings && esbuild src/extension/contentscript/contentscript.ts --bundle --outfile=build/extension/contentscript/clockmate.js && esbuild src/extension/backgroundscript/backgroundscript.ts --bundle --outfile=build/extension/backgroundscript/backgroundscript.js",
     "bundleExtension:contentBackgroundscript-dev": "esbuild src/extension/contentscript/contentscript.ts --bundle --sourcemap --outfile=build/extension/contentscript/clockmate.js && esbuild src/extension/backgroundscript/backgroundscript.ts --bundle --sourcemap --outfile=build/extension/backgroundscript/backgroundscript.js",
     "bundleExtension:webWorker": "esbuild src/extension/backgroundscript/workers/webWorkers/timeStatementWorker.ts --bundle --minify --outfile=build/extension/backgroundscript/webWorker/timeStatementWorker.js && esbuild src/extension/backgroundscript/workers/webWorkers/timeSheetWorker.ts --bundle --outfile=build/extension/backgroundscript/webWorker/timeSheetWorker.js && esbuild src/extension/backgroundscript/workers/webWorkers/employeeIdWorker.ts --bundle --outfile=build/extension/backgroundscript/webWorker/employeeIdWorker.js",
-    "bundleExtension:popup": "esbuild src/extension/popup/popupscript.ts --bundle --outfile=build/extension/popup/popupscript.js && npm run bundleExtension:popup:sass",
-    "bundleExtension:popup:sass": "sass --no-source-map --style=compressed src/extension/popup/clockmate.scss:build/extension/popup/clockmate.css",
+    "bundleExtension:popup": "esbuild src/extension/popup/popupscript.ts --bundle --outfile=build/extension/popup/popupscript.js && npx @tailwindcss/cli --input src/extension/popup/clockmate.scss --output build/extension/popup/clockmate.css --minify",
     "bundleExtension:offscreen": "esbuild src/extension/backgroundscript/workers/chromium/offScreenDocument/offscreen.ts --bundle --outfile=build/extension-chromium/backgroundscript/chromium/offscreen.js",
     "bundleExtension:settings": "ejs src/extension/settings/index.ejs -o build/extension/settings/settings.html && ejs src/extension/settings/privacy-policy.ejs -o build/extension/settings/privacy-policy.html && npx @tailwindcss/cli --input src/extension/settings/settings.css --output build/extension/settings/settings.css --minify && esbuild src/extension/settings/settings.ts --bundle --outfile=build/extension/settings/settings.js",
     "zipExtensions": "node scripts/build-zip-extensions.js"
@@ -45,7 +44,6 @@
     "prettier": "3.4.2",
     "prettier-plugin-ejs": "^1.0.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "sass": "^1.83.4",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0"
   },

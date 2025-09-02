@@ -5,28 +5,83 @@
         <link rel="stylesheet" href="clockmate.css" />
     </head>
 
-    <body>
-        <div class="container" id="popup-content">
-            <h3 class="center">Clockmate</h3>
-            <p class="version-tag">
-                v4.0.0<br /><a
-                    class="sourceCodeLink"
-                    href="https://github.com/clock-mate/extension"
-                    target="_blank"
-                    >SourceCode</a
-                >
-            </p>
+    <body
+        class="dark:bg-clockmate-grey flex w-[400px] flex-col bg-white text-black scheme-light dark:text-white dark:scheme-dark"
+    >
+        <div class="border-clockmate-blue flex w-full items-center justify-center border-b-4">
+            <h1 class="p-2 text-center text-2xl font-bold">Clockmate</h1>
+            <a
+                href="https://github.com/clock-mate/extension"
+                referrerpolicy="no-referrer"
+                target="_blank"
+            >
+                <img
+                    src="/assets/settings/github-invertocat-light.svg"
+                    width="30"
+                    class="absolute top-0 right-0 m-2 block dark:hidden"
+                />
+                <img
+                    src="/assets/settings/github-invertocat-dark.svg"
+                    width="30"
+                    class="absolute top-0 right-0 m-2 hidden dark:block"
+                />
+            </a>
+        </div>
 
-            <row class="align">
-                <h4 class="mb-1">Status der Anzeige</h4>
+        <div class="mt-2 flex flex-col content-center justify-between p-4">
+            <div class="flex flex-row items-center justify-between">
+                <div class="flex flex-col">
+                    <h2 class="text-lg font-semibold">Status der Anzeige</h2>
+                    <p class="text-gray-700 dark:text-gray-400">
+                        Die Anzeige ist&nbsp;<span id="status-text">aktiviert</span>.
+                    </p>
+                </div>
                 <label class="switch">
                     <input checked id="global-switch" type="checkbox" name="on-off-switch" />
                     <div>
                         <span></span>
                     </div>
                 </label>
-            </row>
-            <p class="description">Die Anzeige ist&nbsp;<span id="status-text">aktiviert</span>.</p>
+            </div>
+
+            <div class="mt-10 flex flex-row items-center justify-between">
+                <p class="font-light text-gray-700 italic dark:text-gray-400">v4.0.0</p>
+                <button
+                    type="button"
+                    class="flex cursor-pointer flex-row gap-2 rounded-md p-1 px-1.5 hover:bg-gray-800/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800/10 active:bg-gray-800/20 dark:hover:bg-gray-50/10 dark:focus-visible:outline-gray-50/10 dark:active:bg-gray-50/15"
+                    id="settings-button"
+                    role="button"
+                    aria-label="Einstellungen öffnen"
+                    aria-description="Öffnet die Einstellungen in einem neuen Tab"
+                >
+                    <p class="font-semibold">Einstellungen</p>
+                    <!-- settings icon from https://iconoir.com/ -->
+                    <svg
+                        class="text-black dark:text-white"
+                        width="24px"
+                        height="24px"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        color="#000000"
+                    >
+                        <path
+                            d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        ></path>
+                        <path
+                            d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H10.981L10.3491 4.40113L7.70441 5.51596L6 4L4 6L5.45337 7.78885L4.3725 10.4463L2 11V13L4.40111 13.6555L5.51575 16.2997L4 18L6 20L7.79116 18.5403L10.397 19.6123L11 22H13L13.6045 19.6132L16.2551 18.5155C16.6969 18.8313 18 20 18 20L20 18L18.5159 16.2494L19.6139 13.598L21.9999 12.9772L22 11L19.6224 10.3954Z"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        ></path>
+                    </svg>
+                </button>
+            </div>
         </div>
         <script src="./popupscript.js"></script>
     </body>
