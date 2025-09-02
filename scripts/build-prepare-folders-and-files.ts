@@ -36,6 +36,11 @@ if (!fs.existsSync('./build/extension/popup')) {
         recursive: true,
     });
 }
+if (!fs.existsSync('./build/extension/update')) {
+    fs.mkdirSync('./build/extension/update', {
+        recursive: true,
+    });
+}
 
 // copy necessary files
 fs.copyFileSync(
@@ -56,6 +61,10 @@ fs.copyFileSync(
 
 // copy popup files
 fs.copyFileSync('./src/extension/popup/clockmate.html', './build/extension/popup/clockmate.html');
+
+// copy update files
+fs.copyFileSync('./src/extension/update/update.html', './build/extension/update/update.html');
+fs.copyFileSync('./src/extension/update/update.css', './build/extension/update/update.css');
 
 // copy Chromium specific files only to Chromium output
 fs.copyFileSync(

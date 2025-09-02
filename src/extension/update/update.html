@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="update.css" />
+        <title>Clockmate Update</title>
+    </head>
+    <body
+        class="flex min-h-screen flex-col bg-gray-200 text-black scheme-light dark:bg-black dark:text-white dark:scheme-dark"
+    >
+        <div class="border-clockmate-blue flex w-full items-center justify-between border-b-6">
+            <a href="https://github.com/clock-mate" referrerpolicy="no-referrer" target="_blank">
+                <img src="/assets/clockmate-icon256.png" width="50" class="m-3 hidden sm:block" />
+            </a>
+            <h1 class="p-4 text-center text-3xl font-bold">Clockmate - Update</h1>
+            <a
+                href="https://github.com/clock-mate/extension"
+                referrerpolicy="no-referrer"
+                target="_blank"
+            >
+                <img
+                    src="/assets/settings/github-invertocat-light.svg"
+                    width="50"
+                    class="m-3 hidden sm:block dark:hidden"
+                />
+                <img
+                    src="/assets/settings/github-invertocat-dark.svg"
+                    width="50"
+                    class="m-3 hidden sm:dark:block"
+                />
+            </a>
+        </div>
+
+        <div
+            class="dark:bg-clockmate-grey container mx-auto flex max-w-3xl flex-1 flex-col content-center justify-center bg-white p-1 text-center align-middle text-black sm:p-2 dark:text-white"
+        >
+            <h1 class="mt-5 text-3xl font-bold">
+                <div class="relative inline-block">
+                    <span
+                        class="absolute inset-0 block animate-[fadeOut_2s_ease-in-out_2s_forwards,crumble_2s_ease-in-out_2s_forwards] text-gray-800 dark:text-gray-200"
+                    >
+                        Gleitzeitkonto-Browser
+                    </span>
+
+                    <span
+                        class="text-clockmate-blue absolute inset-0 animate-[popIn_0.5s_ease-out_3.6s_forwards] font-bold opacity-0"
+                    >
+                        Clockmate
+                    </span>
+
+                    <!-- Invisible text to maintain proper container size -->
+                    <span class="invisible animate-[shrinkToFit_0.5s_ease-in-out_3.8s_forwards]">
+                        Gleitzeitkonto-Browser
+                    </span>
+                    <span
+                        class="invisible w-0 animate-[growToFit_0.5s_ease-in-out_3.8s_forwards] text-[0px]"
+                        >Clockmate</span
+                    >
+                </div>
+                wurde aktualisiert. 🎉
+            </h1>
+            <div class="mt-8 text-xl">
+                Gleitzeitkonto-Browser heißt jetzt
+                <div class="inline-block p-0.5 text-2xl">
+                    <bold class="font-bold">Clockmate</bold>
+                </div>
+                und kommt mit neuen Features. Sieh dir die Release Notes auf
+                <a
+                    class="inline-block underline underline-offset-1"
+                    href="https://github.com/clock-mate/extension/releases"
+                    target="_blank"
+                    referrerpolicy="no-referrer"
+                    >Github</a
+                >
+                an für mehr Informationen.
+            </div>
+            <p class="mt-10 text-xl">
+                Die wichtigsten neuen Features findest du in den
+                <a class="underline underline-offset-1" href="/settings/settings.html"
+                    >Einstellungen</a
+                >.
+            </p>
+        </div>
+    </body>
+</html>
+
+<style>
+    @keyframes growToFit {
+        0% {
+            width: 0;
+        }
+        100% {
+            width: auto;
+            font-size: inherit;
+        }
+    }
+    @keyframes shrinkToFit {
+        0% {
+            width: auto;
+        }
+        100% {
+            width: 0;
+            font-size: 0;
+        }
+    }
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+            color: var(--color-gray-800);
+        }
+        50% {
+            opacity: 0.6;
+            color: var(--color-gray-500);
+        }
+        100% {
+            opacity: 0;
+            display: none;
+            color: var(--color-gray-400);
+        }
+    }
+
+    @keyframes crumble {
+        0% {
+            transform: translateY(0) rotate(0deg) scale(1);
+            filter: blur(0px);
+        }
+        70% {
+            transform: translateY(2px) rotate(-1deg) scale(0.98);
+            filter: blur(0.5px);
+        }
+        99% {
+            transform: translateY(10px) rotate(-2deg) scale(0.9);
+            filter: blur(2px);
+        }
+        100% {
+            transform: translateY(10px) rotate(-2deg) scale(0);
+            filter: blur(2px);
+        }
+    }
+
+    @keyframes popIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.25);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @media (prefers-color-scheme: dark) {
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                color: var(--color-gray-200);
+            }
+            50% {
+                opacity: 0.6;
+                color: var(--color-gray-400);
+            }
+            100% {
+                opacity: 0;
+                color: var(--color-gray-500);
+            }
+        }
+    }
+</style>
