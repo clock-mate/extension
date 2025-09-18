@@ -103,13 +103,16 @@ export function checkForOvertime(
 }
 
 function handleUpdateEvent(details: browser.Runtime.OnInstalledDetailsType) {
-    if (details.reason === 'update' && details.previousVersion != null && details.previousVersion < '4.0.0') {
+    if (
+        details.reason === 'update' &&
+        details.previousVersion != null &&
+        details.previousVersion < '4.0.0'
+    ) {
         browser.tabs.create({
-            url: browser.runtime.getURL('update/update.html')
+            url: browser.runtime.getURL('update/update.html'),
         });
     }
 }
-
 
 // listen for connection opening from the content script
 browser.runtime.onConnect.addListener(connectedToContentScript);
