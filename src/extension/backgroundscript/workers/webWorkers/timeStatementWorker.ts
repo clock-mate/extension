@@ -1,6 +1,6 @@
 import { BackgroundCommand } from '../../../common/enums/command';
 import { hasStringContent } from '../../../common/types/messageObject';
-import { PDFAggregator } from '../../aggregateData';
+import PDFAggregator from '../../aggregateData/pdfAggregator';
 import { ERROR_MSGS } from '../../common/constants';
 import Formater from '../utils/format';
 

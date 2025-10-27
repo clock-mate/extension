@@ -1,7 +1,7 @@
 import { BackgroundCommand } from '../../../common/enums/command';
 import { hasSettingsData, hasStringContent } from '../../../common/types/messageObject';
 import { SettingsData } from '../../../common/types/settingsData';
-import { TimeSheetAggregator } from '../../aggregateData';
+import TimeSheetAggregator from '../../aggregateData/timeSheetAggregator';
 import { OvertimeCalculator } from '../../calculateOvertime';
 import { ERROR_MSGS } from '../../common/constants';
 import TimeData from '../../common/models/timeData';
