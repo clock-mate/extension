@@ -1,4 +1,5 @@
-# Gleitzeitkonto-Browser - Anzeigen der Überstunden per Erweiterung
+# Clockmate
+***Anzeigen der Überstunden per Erweiterung***
 
 Die Browser Erweiterung, die das aktuelle Gleitzeitkonto anzeigt. Man muss nicht mehr umständlich die Überstunden ausrechnen oder aus PDF-Datein ablesen. Es werden einfach im Fiori-Launchpad auf der Seite der Zeiterfassung die aktuellen Überstunden angezeigt.
 <br><br>
@@ -11,11 +12,39 @@ Die Browser Erweiterung, die das aktuelle Gleitzeitkonto anzeigt. Man muss nicht
 
 # Installation
 Die Erweiterung muss im entsprechenden Browser installiert werden:
-- [Installation Firefox](https://github.com/NilsPvR/Gleitzeitkonto-Browser/wiki/Firefox-Installation)
+- [Installation Firefox](https://github.com/clock-mate/extension/blob/main/docs/firefox-installation.md)
 - [Installation Chrome](https://chromewebstore.google.com/detail/gleitzeitkonto-browser/pfafglenejhimeinpohlpdobpnmocddj)
 - [Installation Edge](https://microsoftedge.microsoft.com/addons/detail/ionekooopielnnakholllacpgnlkjikm)
 
-*Probleme? Erstelle ein [Issue](https://github.com/NilsPvR/Gleitzeitkonto-Browser/issues)*
+*Probleme? Erstelle ein [Issue](https://github.com/clock-mate/extension/issues)*
+
+## Installation via Nix
+
+Wenn du den [Nix Package Manager](https://nixos.org/) benutzt, kannst du diese Anleitung befolgen und ansonsten einfach ignorieren. Das Projekt muss in die `inputs` der `flake.nix` aufgenommen werden, in der sich die `home-manager`-Konfiguration befindet:
+
+```nix
+{
+    inputs = {
+        # ...
+        clock-mate.url = "github:clock-mate/extension";
+        # Optional:
+        # clock-mate.inputs.nixpkgs.follows = "nixpkgs";
+        # clock-mate.inputs.flake-utils.follows = "flake-utils";
+    };
+}
+```
+
+Anschließend kann das Paket zur `extensions`-Liste hinzugefügt werden.
+
+Beispiel `home.nix`:
+```nix
+{inputs, pkgs, ...}: {
+    # ...
+    programs.firefox.profiles.<profile-name>.extensions.packages = [
+        inputs.clock-mate.packages.${pks.system}.default
+    ];
+}
+```
 
 # Deinstallation
 Zum Deinstallieren von Gleitzeitkonto-Browser die Erweiterung einfach entfernen:
@@ -26,7 +55,7 @@ Zum Deinstallieren von Gleitzeitkonto-Browser die Erweiterung einfach entfernen:
 ## Deinstallation vor V3
 In älteren Versionen musste zusätzlich ein Programm (CompanionApp) und Node.js installiert werden. Zum Deinstallieren folgende Schritte befolgen:
 1. Die Erweiterung aus dem Browser entfernen (siehe oben)
-2. Das [Deinstallations-Skript](https://github.com/NilsPvR/Gleitzeitkonto-Browser/releases/download/v2.0.1/uninstall_Gleitzeitkonto-Browser-GUI.hta) herunterladen und ausführen.<br>
+2. Das [Deinstallations-Skript](https://github.com/clock-mate/extension/releases/download/v2.0.1/uninstall_Gleitzeitkonto-Browser-GUI.hta) herunterladen und ausführen.<br>
 3. (optional) Node.js deinstallieren
 
 # Funktionsweise
@@ -34,4 +63,4 @@ In älteren Versionen musste zusätzlich ein Programm (CompanionApp) und Node.js
 Da die Browser Erweiterung Zugriff auf den Kontext von Fiori hat, kann diese auch Anfragen direkt an den Fiori-Server schicken. Es wird somit eine Anfrage geschickt, um die Arbeitszeiten abzufragen. Aus den Arbeitszeiten werden im Hintergrund die aktuellen Überstunden berechnet. Diese werden dann in der Erweiterung angezeigt.
 
 # Idee
-Das Gleitzeitkonto-Projekt (Browser sowie ehemalig API und Desktop) ist entstanden, da es keine einfache Möglichkeit gab, die Überstunden einzusehen. Dies ist relevant, wenn man in manchen Wochen mehr als die geforderte Wochenstundenzahl arbeitet und in der anderen Woche entsprechend weniger arbeiten möchte.
+Die Projektidee zum Anzeigen eines Gleitzeitkontos (ehemalig Gleitzeitkonto-Browser sowie -API und -Desktop) ist entstanden, da es keine einfache Möglichkeit gab, die Überstunden einzusehen. Dies ist relevant, wenn man in manchen Wochen mehr als die geforderte Wochenstundenzahl arbeitet und in der anderen Woche entsprechend weniger arbeiten möchte.

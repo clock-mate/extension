@@ -1,0 +1,118 @@
+<h2 class="my-4 p-2 text-2xl">Anzeige</h2>
+<div class="ms-5 gap-x-4">
+    <label class="mb-2 text-lg">Anzeigen auf:</label>
+    <div class="group ms-3">
+        <p class="text-sm/6 text-gray-700 dark:text-gray-400">
+            Wähle auf welchen Seiten das Gleitzeitkonto angezeigt werden soll.
+        </p>
+        <row
+            class="group mt-1 flex items-center space-x-2 rounded-sm border-2 border-rose-700 p-2 has-[.page-item]:border-gray-400"
+        >
+            <div
+                class="page-item inline-flex items-center gap-x-2 rounded-sm bg-gray-800/10 px-3 py-2 text-sm font-semibold shadow-xs dark:bg-gray-50/10"
+            >
+                Meine Zeiterfassung
+
+                <button
+                    type="button"
+                    class="rounded-md hover:bg-gray-800/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800/10 active:bg-gray-800/20 dark:hover:bg-gray-50/10 dark:focus-visible:outline-gray-50/10 dark:active:bg-gray-50/15"
+                >
+                    <!-- xmark icon from https://iconoir.com/ -->
+                    <svg
+                        class="text-rose-700"
+                        width="24px"
+                        height="24px"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        color="#000000"
+                    >
+                        <path
+                            d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        ></path>
+                    </svg>
+                </button>
+            </div>
+            <button
+                type="button"
+                class="flex items-center gap-x-2 rounded-xl px-3 py-2 text-sm font-semibold hover:bg-gray-800/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800/10 active:bg-gray-800/15 dark:hover:bg-gray-50/10 dark:focus-visible:outline-gray-50/10 dark:active:bg-gray-50/15"
+            >
+                Seite hinzufügen
+                <!-- plus -->
+                <svg
+                    class="text-clockmate-blue"
+                    width="24px"
+                    height="24px"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    color="#000000"
+                >
+                    <path
+                        d="M6 12H12M18 12H12M12 12V6M12 12V18"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    ></path>
+                </svg>
+            </button>
+        </row>
+        <span class="text-rose-700 italic group-has-[.page-item]:hidden"
+            >Füge eine Seite hinzu, um das Gleitzeitkonto anzuzeigen!</span
+        >
+    </div>
+    <div class="mt-4">
+        <label class="text-lg">Bevorzugte Position:</label>
+        <div class="ms-3 mt-2 space-y-4">
+            <label
+                class="flex items-center space-x-1"
+                aria-label="Oben"
+                aria-description="Das Gleitzeitkonto oben im in der Seiten-Navigation anzeigen"
+            >
+                <%- include('../elements/radio-input', { name: 'overtime-position', value:
+                'overtime-position-top', checked: true }) %>
+                <div class="flex flex-col">
+                    <p class="text-center text-sm/6">Oben in der Seiten-Navigation</p>
+                    <img
+                        class="dark:hidden"
+                        src="/assets/settings/display-top-header-light.png"
+                        alt="Screenshot vom Gleitzeitkonto oben im Header"
+                    />
+                    <img
+                        class="hidden dark:block"
+                        src="/assets/settings/display-top-header-dark.png"
+                        alt="Screenshot vom Gleitzeitkonto oben im Header"
+                    />
+                </div>
+            </label>
+            <label
+                class="flex items-center space-x-1"
+                aria-label="Unten"
+                aria-description="Das Gleitzeitkonto unten im Balken anzeigen"
+            >
+                <%- include('../elements/radio-input', { name: 'overtime-position', value:
+                'overtime-position-bottom', checked: false }) %>
+                <div class="flex flex-col text-center">
+                    <p class="text-sm/6">Unten im Balken</p>
+                    <img
+                        class="w-full dark:hidden"
+                        src="/assets/settings/display-bottom-bar-light.png"
+                        alt="Screenshot vom Gleitzeitkonto unten im Balken"
+                    />
+                    <img
+                        class="hidden w-full dark:block"
+                        src="/assets/settings/display-bottom-bar-dark.png"
+                        alt="Screenshot vom Gleitzeitkonto unten im Balken"
+                    />
+                </div>
+            </label>
+        </div>
+    </div>
+</div>

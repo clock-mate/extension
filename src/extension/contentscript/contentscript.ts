@@ -1,32 +1,29 @@
-import { config, constStrings } from './utils/constants';
-import View from './view/view';
-import Inserted from './view/inserted';
-import BackgroundComm from './communication/backgroundComm';
-import NetworkComm from './communication/networkComm';
-import Navigation from './utils/navigation';
-import Formater from './utils/format';
-import SettingsSync from './utils/settingsSync';
-import StatusedPromise from './model/statusedPromise';
-import { DisplayFormat } from './types/display';
-import OvertimeManager from './utils/overtimeManager';
-import Floating from './view/floating';
 import { ErrorData } from '../common/types/errorData';
 import { OvertimeData } from '../common/types/overtimeData';
+import config from './common/config.json';
+import { DISPLAY_TEXTS } from './common/constants';
+import { DisplayFormat } from './common/types/display';
+import Formater from './common/utils/format';
+import Navigation from './common/utils/navigation';
+import { BackgroundComm } from './communication/';
+import { FetchData } from './fetchData';
+import FetchURL from './fetchData/fetchUrl';
+import { OvertimeManager } from './getOvertime';
+import { SettingsSync } from './settingsSync';
+import { View } from './showOvertime';
+import { DisplayManager } from './showOvertime/headerBarDisplay';
 
 (async () => {
     'use strict';
 
-    /* ==========================================================================================
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Main Events <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-
-    // ===== Start sending all requests =====
+    // ===== Initialize communication and fetch data =====
     const backgroundComm = new BackgroundComm();
-    const networkComm = new NetworkComm();
-    const overtimeManager = new OvertimeManager(backgroundComm, networkComm);
+    const fetchData = new FetchData();
+    const overtimeManager = new OvertimeManager(backgroundComm, fetchData);
 
-    let calculatedData: StatusedPromise<Promise<OvertimeData | ErrorData>>;
-    if (NetworkComm.pageIsSupported()) {
-        calculatedData = new StatusedPromise(overtimeManager.calculateNewOvertimeData());
+    let calculatedData: Promise<OvertimeData | ErrorData>;
+    if (FetchURL.pageIsSupported()) {
+        calculatedData = overtimeManager.calculateNewOvertimeData();
     } else {
         calculatedData = Formater.createUnsupportedPageData();
     }
@@ -35,75 +32,40 @@ import { OvertimeData } from '../common/types/overtimeData';
     await Navigation.continuousMenucheck();
     await Navigation.waitForDOMContentLoaded();
 
-    // ===== Add floating display =====
-    /** Used accross the whole content script to synchronize retrieved and displayed data. */
+    // ===== Add display =====
+    /** Used accross the whole contentscript to synchronize retrieved and displayed data. */
     const displayState: DisplayFormat = {
-        text: constStrings.prefixOvertime + constStrings.overtimeLoading,
+        text: DISPLAY_TEXTS.PREFIX_OVERTIME + DISPLAY_TEXTS.OVERTIME_LOADING,
         loading: true,
     };
-    const floating = new Floating(overtimeManager);
-    const inserted = new Inserted(overtimeManager);
-    const view = new View(floating, inserted);
-    view.renderDisplay(displayState); // render initial floating, loading display
+    const view = new View(overtimeManager, displayState);
+    overtimeManager.view = view;
+    view.renderDisplay(displayState); // render initial, loading display
 
     // ===== Register settings sync =====
-    const settingsSync = new SettingsSync(view);
-    settingsSync.updateDisplayOnDisplayEnabledChange(displayState);
+    const settingsSync = new SettingsSync(view, displayState);
+    settingsSync.updateDisplayOnDisplayEnabledChange();
 
     // ===== Register actions for promises resolving =====
     // update the display as soon as new data is available
-    calculatedData.promise.then(async () => {
-        Formater.updateDisplayState(
-            displayState,
-            await Formater.getLatestDisplayFormat(calculatedData),
-        );
+    calculatedData.then(async () => {
+        Formater.updateDisplayState(displayState, await Formater.getDisplayFormat(calculatedData));
         view.renderDisplay(displayState);
     });
 
+    // ===== Update display when the site changes =====
     try {
         const headerBar = await Navigation.waitForPageLoad(
             config.pageloadingTimeout,
             config.maxPageloadingLoops,
         );
         view.headerBar = headerBar;
-        view.renderDisplay(displayState);
-        updateDisplayOnChange(headerBar, displayState, view);
+
+        const displayManager = new DisplayManager(displayState, headerBar, view);
+        displayManager.initialize();
+        displayManager.performAction();
     } catch (e) {
         View.removeDisplay(); // TODO show error in popup
         console.error(e);
     }
 })();
-
-// ============ Main action taking functions =============
-// =======================================================
-
-// update the display continuously for as long as the script is loaded
-async function updateDisplayOnChange(
-    headerBar: HTMLElement,
-    displayState: DisplayFormat,
-    view: View,
-) {
-    const placeOrRemoveDisplay = async () => {
-        if (Navigation.checkCorrectMenuIsOpen()) {
-            view.renderDisplay(displayState, false);
-        } else if (!Navigation.checkCorrectMenuIsOpen()) {
-            // this will also be removed by Fiori but keep remove just in case this behaviour gets changed
-            View.removeDisplay();
-        }
-    };
-
-    window.addEventListener('hashchange', async () => {
-        await placeOrRemoveDisplay();
-    });
-
-    // check if the HeaderBar is being manipulated -> Fiori does sometimes remove the inserted display
-    const observer = new MutationObserver(async () => {
-        await placeOrRemoveDisplay();
-    });
-    observer.observe(headerBar, {
-        // config
-        attributes: false,
-        childList: true,
-        subtree: true,
-    });
-}

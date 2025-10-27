@@ -5,5 +5,6 @@ const config = {
     endOfLine: 'lf',
 
     overrides: [{ files: '*.json', options: { tabWidth: 2 } }],
+    plugins: ['prettier-plugin-ejs', 'prettier-plugin-tailwindcss'],
 };
 export default config;
