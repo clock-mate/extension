@@ -4,23 +4,28 @@
       "updates": [
         {
           "version": "3.0.0",
-          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v3.0.0/Gleitzeitkonto-Browser.xpi"
+          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v3.0.0/Gleitzeitkonto-Browser.xpi",
+          "sha256": "sha256-+NZR+75WBIbTgE3qtTqb7kPRhFOzQSbL975ts1ofQKQ="
         },
         {
           "version": "3.1.0",
-          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v3.1.0/Gleitzeitkonto-Browser.xpi"
+          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v3.1.0/Gleitzeitkonto-Browser.xpi",
+          "sha256": "sha256-wvXe4BJuIwxPjAQvufcm30UXWjNQpsAZ44fXni5gl+c="
         },
         {
           "version": "3.1.1",
-          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v3.1.1/Gleitzeitkonto-Browser-firefox.xpi"
+          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v3.1.1/Gleitzeitkonto-Browser-firefox.xpi",
+          "sha256": "sha256-WEdb3OCINCmLq3OSsqwkHJw15hRoltyddgr8aA8ejPI="
         },
         {
           "version": "3.1.2",
-          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v3.1.2/Gleitzeitkonto-Browser-firefox.xpi"
+          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v3.1.2/Gleitzeitkonto-Browser-firefox.xpi",
+          "sha256": "sha256-tf8/HqZdtQCmaLDycUhildSs2Zs3QXi7UShLzoMucco="
         },
         {
           "version": "4.0.0",
-          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v4.0.0/clockmate-firefox.xpi"
+          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v4.0.0/clockmate-firefox.xpi",
+          "sha256": "sha256-XzkmuYYtN8oOn3LLSVfmafM4DOI2XERXqlBkeLmgVho="
         }
       ]
     }
