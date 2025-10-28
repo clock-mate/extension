@@ -24,8 +24,8 @@
                 '';
             };
             packages.default = let
-                inherit (pkgs.lib) makeOverridable licenses platforms;
-                inherit (builtins) fromJSON readFile;
+                inherit (pkgs.lib) makeOverridable licenses platforms pipe;
+                inherit (builtins) elemAt fromJSON length readFile;
                 buildFirefoxXpiAddon = makeOverridable ({
                     stdenv ? pkgs.stdenv,
                     fetchurl ? pkgs.fetchurl,
@@ -56,16 +56,21 @@
                         '';
                     });
                 manifest = fromJSON (readFile ./src/extension/manifest.json);
+                addonId = manifest.browser_specific_settings.gecko.id;
+                latestUpdate = pipe ./update/updates.json [
+                    readFile
+                    fromJSON
+                    (u: let inherit (u.addons.${addonId}) updates; in elemAt updates (length updates - 1))
+                ];
             in
-                buildFirefoxXpiAddon rec {
+                buildFirefoxXpiAddon {
+                    inherit addonId;
+                    inherit (latestUpdate) version sha256;
                     pname = manifest.name;
-                    inherit (manifest) version;
-                    addonId = manifest.browser_specific_settings.gecko.id;
-                    url = "https://github.com/clock-mate/extension/releases/download/v3.1.2/Gleitzeitkonto-Browser-firefox.xpi";
-                    sha256 = "sha256-tf8/HqZdtQCmaLDycUhildSs2Zs3QXi7UShLzoMucco=";
+                    url = latestUpdate.update_link;
                     meta = {
-                        homepage = manifest.homepage_url;
                         inherit (manifest) description;
+                        homepage = manifest.homepage_url;
                         license = licenses.mit;
                         mozPermissions = manifest.permissions ++ manifest.host_permissions;
                         platforms = platforms.all;
