@@ -26,6 +26,11 @@
           "version": "4.0.0",
           "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v4.0.0/clockmate-firefox.xpi",
           "sha256": "sha256-XzkmuYYtN8oOn3LLSVfmafM4DOI2XERXqlBkeLmgVho="
+        },
+        {
+          "version": "4.0.1",
+          "update_link": "https://gleitzeitkontobrowser.blob.core.windows.net/$web/v4.0.1/clockmate-firefox.xpi",
+          "sha256": "sha256-6Qu/HLtPdJIZ6jYZ8rYRew6j0bzYrdYWvNRXaULS+1s="
         }
       ]
     }
