@@ -10,8 +10,7 @@ export default class FetchData {
     /**
      * Contacts the API to get the current CSRF token. The token can be used to
      * make future POST requests to the API.
-     * @returns the CSRF token
-     * @throws if the token is not sent by the API
+     * @throws if the token is not sent by the API (except when logged out)
      */
     private async fetchCSRFToken() {
         const csrfResponse = await fetch(
@@ -23,32 +22,35 @@ export default class FetchData {
                 },
             }),
         );
-        const csrfToken = csrfResponse.headers.get('x-csrf-token');
-        if (csrfToken) return (this.csrfToken = csrfToken);
 
-        throw new Error('Unable to fetch CSRF-Token');
+        if (csrfResponse.status === 401) {
+            this.csrfToken = undefined;
+            return;
+        };
+        const csrfToken = csrfResponse.headers.get('x-csrf-token');
+        if (csrfToken == null) throw new Error('Unable to fetch CSRF-Token');
+        
+        this.csrfToken = csrfToken;
     }
 
     /**
      * Retries the given callback with a new CSRF token if the response has a 401 status code.
      * This is useful since Fiori does sometimes timeout the token but hasn't logged out the user.
-     * @throws if the csrf token can't be fetched
+     * @returns the original response or retried response from the callback if new token could be fetched
+     * @throws if callback throws or a communication error with api occurs
      */
     private async retryWithNewTokenIf401(
         response: Response,
         callback: () => Promise<Response>,
     ): Promise<Response> {
         if (response.ok || response.status !== 401) return response;
+        // token is invalid, clear it
+        this.csrfToken = undefined;
 
-        try {
-            await this.fetchCSRFToken();
+        await this.fetchCSRFToken();
+        if (!this.csrfToken) return response;
 
-            return await callback();
-        } catch (error) {
-            // token is invalid, clear it
-            this.csrfToken = undefined;
-            throw error;
-        }
+        return await callback();
     }
 
     /**
@@ -67,6 +69,7 @@ export default class FetchData {
         }
         if (!this.csrfToken) {
             await this.fetchCSRFToken();
+            if (!this.csrfToken) return null; // logged out
         }
 
         let result = await this.fetchWorkingTimes(startDate, endDate);
@@ -114,7 +117,7 @@ export default class FetchData {
                 headers: {
                     Accept: '*/*',
                     'Accept-Encoding': 'gzip, deflate, br, zstd',
-                    'x-csrf-token': this.csrfToken!, // token has been set above or error was thrown
+                    'x-csrf-token': this.csrfToken!, // token has been set above
                     Priority: 'u=4',
                     Pragma: 'no-cache',
                     'Cache-Control': 'no-cache',
@@ -137,6 +140,7 @@ export default class FetchData {
     public async getEmployeeId(): Promise<string | null> {
         if (!this.csrfToken) {
             await this.fetchCSRFToken();
+            if (!this.csrfToken) return null; // logged out
         }
 
         let result = await this.fetchEmployeeId();
@@ -180,7 +184,7 @@ export default class FetchData {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'x-csrf-token': this.csrfToken!, // token has been set above or error was thrown
+                    'x-csrf-token': this.csrfToken!, // token has been set above
                     'Content-Type': 'multipart/mixed;boundary=batch',
                 },
                 body: requestBody,
@@ -207,6 +211,10 @@ export default class FetchData {
     ): Promise<ArrayBuffer | null> {
         if (startDate > endDate || startDate.getDate() > endDate.getDate()) {
             throw new Error('End date is not after start date');
+        }
+        if (!this.csrfToken) {
+            await this.fetchCSRFToken();
+            if (!this.csrfToken) return null; // logged out
         }
 
         let result = await this.fetchTimeStatement(employeeNumber, startDate, endDate);
