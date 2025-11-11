@@ -1,4 +1,5 @@
 import * as pdfjsLib from 'pdfjs-dist';
+import type { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
 
 // path is relative to the worker which calls the pdf manager -> timeStatementWorker
 pdfjsLib.GlobalWorkerOptions.workerSrc = '../pdf.worker.min.mjs';
@@ -41,24 +42,41 @@ export default class PDFAggregator {
                     continue;
                 }
 
-                // the overtime string is not the next element since that is always a space
-                const overtimeItem = textContent.items[i + 2];
-                if (!('str' in overtimeItem) || overtimeItem.str.trim().length == 0) {
-                    throw new Error(
-                        'Overtime is not present at expected item. Found instead: ' + overtimeItem,
-                    );
-                }
-                if (
-                    overtimeItem.str === this.NEXT_ITEM_STRING.de ||
-                    overtimeItem.str === this.NEXT_ITEM_STRING.en
-                ) {
-                    // no overtime available for time period (e.g. new employee) -> assume 0 as overtime
-                    return '0';
-                }
-
-                return overtimeItem.str;
+                return this.extractOvertimeAtPDFItem(textContent.items, i);
             }
         }
         throw new Error(`No matching items found in the PDF on a total of ${amountPages} pages`);
+    }
+
+    private static extractOvertimeAtPDFItem(
+        items: (TextItem | TextMarkedContent)[],
+        index: number,
+    ): string {
+        let overtimeString = '';
+
+        // the overtime string is not the next element since that is always a space
+        let overtimeItem = items[index + 2];
+        // if the overtime is negative a minus sign will be at the overtimeItem instead
+        if ('str' in overtimeItem && overtimeItem.str === '-') {
+            overtimeString += '-';
+            // after the minus sign there is also a space, so we skip that
+            overtimeItem = items[index + 4];
+        }
+
+        if (!('str' in overtimeItem) || overtimeItem.str.trim().length == 0) {
+            throw new Error(
+                'Overtime is not present at expected item. Found instead: ' + overtimeItem,
+            );
+        }
+        if (
+            overtimeItem.str === this.NEXT_ITEM_STRING.de ||
+            overtimeItem.str === this.NEXT_ITEM_STRING.en
+        ) {
+            // no overtime available for time period (e.g. new employee) -> assume 0 as overtime
+            return '0';
+        }
+
+        overtimeString += overtimeItem.str.trim();
+        return overtimeString;
     }
 }

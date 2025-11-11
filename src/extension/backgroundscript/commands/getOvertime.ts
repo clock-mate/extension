@@ -23,7 +23,7 @@ export async function sendBackOvertime(communication: Communication) {
         console.error(e);
         communication.postCsMessage(BackgroundCommand.GetOvertime, {
             error: {
-                message: ERROR_MSGS.UNABLE_TO_PARSE_DATA,
+                message: ERROR_MSGS.INVALID_RESULT,
             },
         });
         return;
