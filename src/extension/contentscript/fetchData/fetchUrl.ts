@@ -7,6 +7,10 @@ export default class FetchURL {
         '/sap/opu/odata/sap/HCM_TIMESHEET_MAN_SRV/TimeDataList' +
         '?$filter=StartDate%20eq%20%27{start}%27%20and%20EndDate%20eq%20%27{end}%27' +
         '&$select=FieldName,FieldValue&$format=json';
+    private static readonly WORK_CALENDAR_URL_PATH =
+        '/sap/opu/odata/sap/HCM_TIMESHEET_MAN_SRV/WorkCalendars' +
+        '?$filter=Pernr%20eq%20%27{pernr}%27%20and%20StartDate%20eq%20%27{start}%27%20and%20EndDate%20eq%20%27{end}%27' +
+        '&$select=Date,TargetHours&$format=json';
     private static readonly EMPLOYEE_NUMBER_URL_PATH =
         '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/ConcurrentEmploymentSet' +
         '?$select=EmployeeId&$top=1&$format=json';
@@ -38,6 +42,8 @@ export default class FetchURL {
 
     /**
      * Determines the URL which should be used to fetch the API for the latest time sheet.
+     * @param startDate the first day of the time sheet (time is ignored)
+     * @param endDate   the last day of the time sheet (time is ignored)
      * @returns the URL to fetch the API
      */
     public static getTimeSheetFetchURL(startDate: Date, endDate: Date): string {
@@ -46,6 +52,24 @@ export default class FetchURL {
         return (
             this.getFetchDomain() +
             this.TIMESHEET_URL_PATH.replace('{start}', start).replace('{end}', end)
+        );
+    }
+
+    /**
+     * Determines the URL which should be used to fetch the API for the planned hours.
+     * @param employeeNumber    the employee number to fetch the planned hours for
+     * @param startDate         the first day of the work calendar (time is ignored)
+     * @param endDate           the last day of the work calendar (time is ignored)
+     * @returns the URL to fetch the API
+     */
+    public static getWorkCalendarFetchURL(employeeNumber: string, startDate: Date, endDate: Date): string {
+        const start = Formater.formatDateToYYYYMMDD(startDate);
+        const end = Formater.formatDateToYYYYMMDD(endDate);
+        return (
+            this.getFetchDomain() +
+            this.WORK_CALENDAR_URL_PATH.replace('{pernr}', employeeNumber)
+                .replace('{start}', start)
+                .replace('{end}', end)
         );
     }
 

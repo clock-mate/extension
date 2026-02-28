@@ -49,6 +49,52 @@ export default class FetchData {
     }
 
     /**
+     * Contacts the WorkCalendars API to get the planned hours per day.
+     * @param employeeNumber    the employee number
+     * @param startDate         the first day of the range (time is ignored)
+     * @param endDate           the last day of the range (time is ignored)
+     * @returns the raw JSON response string or null if logged out
+     * @throws if a communication error with api occurs
+     */
+    public async getPlannedHours(
+        employeeNumber: string,
+        startDate: Date,
+        endDate: Date,
+    ): Promise<string | null> {
+        const result = await this.fetchPlannedHours(employeeNumber, startDate, endDate);
+
+        if (!result.ok) {
+            if (result.status === 401) {
+                return null;
+            }
+            throw new Error(
+                'Unexpected API response while fetching planned hours! Received status code: ' +
+                    result.status,
+            );
+        }
+
+        return result.text();
+    }
+
+    /** 
+     * The actual fetching logic for planned hours. Does no validation of inputs or results.
+     */
+    private async fetchPlannedHours(
+        employeeNumber: string,
+        startDate: Date,
+        endDate: Date,
+    ): Promise<Response> {
+        const result = await fetch(
+            new Request(FetchURL.getWorkCalendarFetchURL(employeeNumber, startDate, endDate), {
+                method: 'GET',
+                credentials: 'include',
+            }),
+        );
+
+        return result;
+    }
+
+    /**
      * Contacts the API to get a response including the employee id.
      * The response will be the data returned by the api. This data
      * contains the employee id but has to be formatted to be able to use it.
