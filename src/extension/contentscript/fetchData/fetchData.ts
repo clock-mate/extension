@@ -26,10 +26,10 @@ export default class FetchData {
         if (csrfResponse.status === 401) {
             this.csrfToken = undefined;
             return;
-        };
+        }
         const csrfToken = csrfResponse.headers.get('x-csrf-token');
         if (csrfToken == null) throw new Error('Unable to fetch CSRF-Token');
-        
+
         this.csrfToken = csrfToken;
     }
 
@@ -138,13 +138,7 @@ export default class FetchData {
      * @throws if a communication error with api occurs
      */
     public async getEmployeeId(): Promise<string | null> {
-        if (!this.csrfToken) {
-            await this.fetchCSRFToken();
-            if (!this.csrfToken) return null; // logged out
-        }
-
-        let result = await this.fetchEmployeeId();
-        result = await this.retryWithNewTokenIf401(result, () => this.fetchEmployeeId());
+        const result = await this.fetchEmployeeId();
 
         if (!result.ok) {
             if (result.status === 401) {
@@ -163,31 +157,10 @@ export default class FetchData {
      * The actual fetching logic for employee id. Does no validation of inputs or results.
      */
     private async fetchEmployeeId(): Promise<Response> {
-        const requestBody =
-            '--batch\n' +
-            'Content-Type: application/http\n' +
-            'Content-Transfer-Encoding: binary\n' +
-            '\n' +
-            'GET ConcurrentEmploymentSet?$filter=ApplicationId%20eq%20%27MYHRFORMS%27 HTTP/1.1\n' +
-            'sap-cancel-on-close: true\n' +
-            'sap-contextid-accept: header\n' +
-            'Accept: application/json\n' +
-            'Accept-Language: de\n' +
-            'DataServiceVersion: 2.0\n' +
-            'MaxDataServiceVersion: 2.0\n' +
-            'X-Requested-With: XMLHttpRequest\n' +
-            '\n\n' +
-            '--batch--';
-
         const result = await fetch(
             new Request(FetchURL.getEmployeeNumberFetchURL(), {
-                method: 'POST',
+                method: 'GET',
                 credentials: 'include',
-                headers: {
-                    'x-csrf-token': this.csrfToken!, // token has been set above
-                    'Content-Type': 'multipart/mixed;boundary=batch',
-                },
-                body: requestBody,
             }),
         );
 

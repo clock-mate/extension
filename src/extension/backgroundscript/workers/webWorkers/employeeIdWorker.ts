@@ -1,7 +1,6 @@
 import { hasStringContent } from '../../../common/types/messageObject';
 import { ERROR_MSGS } from '../../common/constants';
 import EmployeeData from '../../common/models/employeeData';
-import Formater from '../utils/format';
 
 async function sendBackEmployeeId(message: MessageEvent) {
     let employeeId: string;
@@ -11,7 +10,7 @@ async function sendBackEmployeeId(message: MessageEvent) {
             throw new Error('No message or no content received from the content script');
         }
 
-        const jsonObject = Formater.getJSONFromAPIData(message.data.content);
+        const jsonObject = JSON.parse(message.data.content);
         const employeeData = EmployeeData.fromObject(jsonObject);
         employeeId = employeeData.d.results[0].employeeId;
         if (!employeeId || employeeId.trim() === '') {

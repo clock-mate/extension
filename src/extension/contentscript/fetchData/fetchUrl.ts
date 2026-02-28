@@ -6,7 +6,7 @@ export default class FetchURL {
     private static readonly TIMESHEET_URL_PATH =
         '/sap/opu/odata/sap/HCM_TIMESHEET_MAN_SRV/$batch?sap-client=300';
     private static readonly EMPLOYEE_NUMBER_URL_PATH =
-        '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/$batch';
+        '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/ConcurrentEmploymentSet?$select=EmployeeId&$top=1&$format=json';
     private static readonly TIMESTATEMENT_URL_PATH_FORMAT =
         "/sap/opu/odata/sap/HCMFAB_MYFORMS_SRV/FormDisplaySet(EmployeeNumber='{employeeNumber}',FormType='SAP_INT_TIM_STM',ParametersValues='BEGDA%3D{startDate}%40%3BENDDA%3D{endDate}')/$value";
     /** This part of the url indicates if the website is supported */
