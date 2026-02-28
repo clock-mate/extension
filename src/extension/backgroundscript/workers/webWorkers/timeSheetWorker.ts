@@ -5,7 +5,6 @@ import TimeSheetAggregator from '../../aggregateData/timeSheetAggregator';
 import { OvertimeCalculator } from '../../calculateOvertime';
 import { ERROR_MSGS } from '../../common/constants';
 import TimeData from '../../common/models/timeData';
-import Formater from '../utils/format';
 
 function saveOvertimeFromTimeSheet(message: MessageEvent) {
     const timeSheetAggregator = new TimeSheetAggregator();
@@ -21,7 +20,7 @@ function saveOvertimeFromTimeSheet(message: MessageEvent) {
         }
         settings = message.data.settings;
 
-        const jsonObject = Formater.getJSONFromAPIData(message.data.content);
+        const jsonObject = JSON.parse(message.data.content);
         const timeData = TimeData.fromObject(jsonObject);
 
         timeSheetAggregator.timeElements =

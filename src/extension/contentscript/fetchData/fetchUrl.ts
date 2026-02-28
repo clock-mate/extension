@@ -4,9 +4,12 @@ import Formater from './utils/format';
 
 export default class FetchURL {
     private static readonly TIMESHEET_URL_PATH =
-        '/sap/opu/odata/sap/HCM_TIMESHEET_MAN_SRV/$batch?sap-client=300';
+        '/sap/opu/odata/sap/HCM_TIMESHEET_MAN_SRV/TimeDataList' +
+        '?$filter=StartDate%20eq%20%27{start}%27%20and%20EndDate%20eq%20%27{end}%27' +
+        '&$select=FieldName,FieldValue&$format=json';
     private static readonly EMPLOYEE_NUMBER_URL_PATH =
-        '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/ConcurrentEmploymentSet?$select=EmployeeId&$top=1&$format=json';
+        '/sap/opu/odata/sap/HCMFAB_COMMON_SRV/ConcurrentEmploymentSet' +
+        '?$select=EmployeeId&$top=1&$format=json';
     private static readonly TIMESTATEMENT_URL_PATH_FORMAT =
         "/sap/opu/odata/sap/HCMFAB_MYFORMS_SRV/FormDisplaySet(EmployeeNumber='{employeeNumber}',FormType='SAP_INT_TIM_STM',ParametersValues='BEGDA%3D{startDate}%40%3BENDDA%3D{endDate}')/$value";
     /** This part of the url indicates if the website is supported */
@@ -37,8 +40,13 @@ export default class FetchURL {
      * Determines the URL which should be used to fetch the API for the latest time sheet.
      * @returns the URL to fetch the API
      */
-    public static getTimeSheetFetchURL(): string {
-        return this.getFetchDomain() + this.TIMESHEET_URL_PATH;
+    public static getTimeSheetFetchURL(startDate: Date, endDate: Date): string {
+        const start = Formater.formatDateToYYYYMMDD(startDate);
+        const end = Formater.formatDateToYYYYMMDD(endDate);
+        return (
+            this.getFetchDomain() +
+            this.TIMESHEET_URL_PATH.replace('{start}', start).replace('{end}', end)
+        );
     }
 
     public static getEmployeeNumberFetchURL(): string {
@@ -58,11 +66,13 @@ export default class FetchURL {
         startDate: Date,
         endDate: Date,
     ): string {
+        const start = Formater.formatDateToYYYYMMDD(startDate);
+        const end = Formater.formatDateToYYYYMMDD(endDate);
         return (
             this.getFetchDomain() +
             this.TIMESTATEMENT_URL_PATH_FORMAT.replace('{employeeNumber}', employeeNumber)
-                .replace('{startDate}', Formater.formatDateToYYYYMMDD(startDate))
-                .replace('{endDate}', Formater.formatDateToYYYYMMDD(endDate))
+                .replace('{startDate}', start)
+                .replace('{endDate}', end)
         );
     }
 }
