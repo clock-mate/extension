@@ -212,15 +212,8 @@ export default class FetchData {
         if (startDate > endDate || startDate.getDate() > endDate.getDate()) {
             throw new Error('End date is not after start date');
         }
-        if (!this.csrfToken) {
-            await this.fetchCSRFToken();
-            if (!this.csrfToken) return null; // logged out
-        }
 
-        let result = await this.fetchTimeStatement(employeeNumber, startDate, endDate);
-        result = await this.retryWithNewTokenIf401(result, () =>
-            this.fetchTimeStatement(employeeNumber, startDate, endDate),
-        );
+        const result = await this.fetchTimeStatement(employeeNumber, startDate, endDate);
 
         if (!result.ok) {
             if (result.status === 401) {
