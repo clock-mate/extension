@@ -1,5 +1,4 @@
 import { BackgroundCommand } from '../../common/enums/command';
-import { isEmployeeIdData } from '../../common/types/employeeIdData';
 import Settings from '../../common/utils/settings';
 import { ERROR_MSGS } from '../common/constants';
 import SimpleManager from '../common/interfaces/simpleManager';
@@ -14,7 +13,8 @@ import Formater from './utils/format';
 export default class TimeStatementManager implements SimpleManager {
     public constructor(
         public backgroundComm: BackgroundComm,
-        public networkComm: FetchData,
+        public fetchData: FetchData,
+        public employeeId: string,
     ) {}
 
     public initialize() {
@@ -22,46 +22,12 @@ export default class TimeStatementManager implements SimpleManager {
     }
 
     /**
-     * Fetches a new time statement and necessary related data and sends the
-     * time statement to the background script.
+     * Fetches a new time statement and sends the time statement to the background script.
      * @throws with a displayable error message, if a communcation error occurs
      * or the data has an unexpected format
      */
     public async performAction() {
-        const employeeId = await this.fetchAndParseEmployeeId();
-        await this.fetchAndSendTimeStatement(employeeId);
-    }
-
-    /**
-     * Fetches and parses data for the employee id.
-     * @returns the employee id
-     * @throws with a displayable error message, if a communcation error occurs
-     * or the data has an unexpected format
-     */
-    private async fetchAndParseEmployeeId(): Promise<string> {
-        let employeeData;
-        try {
-            employeeData = await this.networkComm.getEmployeeId();
-        } catch (e) {
-            console.error(e);
-            throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
-        }
-        if (employeeData === null) {
-            throw new Error(ERROR_MSGS.LOGGED_OUT);
-        }
-
-        const employeeIdResponse = await this.backgroundComm.sendMsgToBackground(
-            BackgroundCommand.ParseEmployeeId,
-            employeeData,
-        );
-
-        Formater.throwIfErrorMessage(employeeIdResponse);
-        if (!isEmployeeIdData(employeeIdResponse)) {
-            console.error('Received response from background without employee ID');
-            throw new Error(ERROR_MSGS.UNEXPECTED_BACKGROUND_RESPONSE);
-        }
-
-        return employeeIdResponse.employeeId;
+        await this.fetchAndSendTimeStatement(this.employeeId);
     }
 
     /**
@@ -73,7 +39,7 @@ export default class TimeStatementManager implements SimpleManager {
     private async fetchAndSendTimeStatement(employeeId: string) {
         let rawTimeStatementData;
         try {
-            rawTimeStatementData = await this.networkComm.getTimeStatement(
+            rawTimeStatementData = await this.fetchData.getTimeStatement(
                 employeeId,
                 DateManger.calculateTimeStatementStartDate(
                     await Settings.getMonthsToCalcManually(),

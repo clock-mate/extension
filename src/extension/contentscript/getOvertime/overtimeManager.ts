@@ -1,13 +1,15 @@
 import { BackgroundCommand } from '../../common/enums/command';
+import { isEmployeeIdData } from '../../common/types/employeeIdData';
 import { ErrorData, isErrorData } from '../../common/types/errorData';
 import { isOvertimeObject, OvertimeData } from '../../common/types/overtimeData';
 import { ERROR_MSGS } from '../common/constants';
 import { DisplayFormat } from '../common/types/display';
-import Formater from '../common/utils/format';
+import CommonFormater from '../common/utils/format';
 import { BackgroundComm } from '../communication';
 import { FetchData } from '../fetchData';
 import { View } from '../showOvertime';
-import { TimeSheetManager, TimeStatementManager } from './';
+import { PlannedHoursManager, TimeSheetManager, TimeStatementManager } from './';
+import Formater from './utils/format';
 
 export default class OvertimeManager {
     public view: View | undefined;
@@ -20,18 +22,28 @@ export default class OvertimeManager {
     // fetches data and sends requests to background script, returns a displayable text in any case
     public async calculateNewOvertimeData(): Promise<OvertimeData | ErrorData> {
         try {
-            const timeStatement = new TimeStatementManager(
-                this.backgroundComm,
-                this.fetchData,
-            ).performAction();
             const timeSheet = new TimeSheetManager(
                 this.backgroundComm,
                 this.fetchData,
             ).performAction();
 
-            // wait until both requests finished before calculating total overtime
+            // await employeeId since required for timeStatement and plannedHours
+            const employeeId = await this.fetchAndParseEmployeeId();
+            const timeStatement = new TimeStatementManager(
+                this.backgroundComm,
+                this.fetchData,
+                employeeId,
+            ).performAction();
+            const plannedHours = new PlannedHoursManager(
+                this.backgroundComm,
+                this.fetchData,
+                employeeId,
+            ).performAction();
+
+            // wait until all requests finished before calculating total overtime
             await timeStatement;
             await timeSheet;
+            await plannedHours;
         } catch (e) {
             if (typeof e !== 'object' || !e || !('message' in e) || typeof e.message !== 'string') {
                 // should never happen but in case we didn't catch an Error object but something else
@@ -62,6 +74,38 @@ export default class OvertimeManager {
         return overtimeResponse;
     }
 
+    /**
+     * Fetches and parses data for the employee id.
+     * @returns the employee id
+     * @throws with a displayable error message, if a communcation error occurs
+     * or the data has an unexpected format
+     */
+    private async fetchAndParseEmployeeId(): Promise<string> {
+        let employeeData;
+        try {
+            employeeData = await this.fetchData.getEmployeeId();
+        } catch (e) {
+            console.error(e);
+            throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
+        }
+        if (employeeData === null) {
+            throw new Error(ERROR_MSGS.LOGGED_OUT);
+        }
+
+        const employeeIdResponse = await this.backgroundComm.sendMsgToBackground(
+            BackgroundCommand.ParseEmployeeId,
+            employeeData,
+        );
+
+        Formater.throwIfErrorMessage(employeeIdResponse);
+        if (!isEmployeeIdData(employeeIdResponse)) {
+            console.error('Received response from background without employee ID');
+            throw new Error(ERROR_MSGS.UNEXPECTED_BACKGROUND_RESPONSE);
+        }
+
+        return employeeIdResponse.employeeId;
+    }
+
     // called from the reload btn, recalculates the overtime
     public reloadOvertimeData(displayState: DisplayFormat) {
         displayState.loading = true;
@@ -72,9 +116,9 @@ export default class OvertimeManager {
 
         // == Register action for promise resolving ==
         calculatedData.then(async () => {
-            Formater.updateDisplayState(
+            CommonFormater.updateDisplayState(
                 displayState,
-                await Formater.getDisplayFormat(calculatedData),
+                await CommonFormater.getDisplayFormat(calculatedData),
             );
             if (this.view === undefined) {
                 console.error(

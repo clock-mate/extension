@@ -5,6 +5,7 @@ import { isMessageObject } from '../common/types/messageObject';
 import {
     saveOvertimeFromPDF,
     saveOvertimeFromTimeSheet,
+    savePlannedHours,
     sendBackEmployeeId,
     sendBackOvertime,
 } from './commands';
@@ -31,6 +32,9 @@ function connectedToContentScript(port: browser.Runtime.Port) {
         switch (message.command) {
             case BackgroundCommand.ParseTimeSheet:
                 saveOvertimeFromTimeSheet(communication, message);
+                break;
+            case BackgroundCommand.ParsePlannedHours:
+                savePlannedHours(communication, message);
                 break;
             case BackgroundCommand.ParseEmployeeId:
                 sendBackEmployeeId(communication, message);
