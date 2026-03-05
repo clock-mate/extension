@@ -20,6 +20,7 @@ export async function savePlannedHours(communication: Communication, message: ob
             return;
         }
 
+        // Only basic type checking, assume correct data otherwise
         if (
             typeof data !== 'object' ||
             data === null ||
@@ -27,7 +28,8 @@ export async function savePlannedHours(communication: Communication, message: ob
             typeof data.plannedMinutesPerDay !== 'object' ||
             data.plannedMinutesPerDay === null
         ) {
-            console.error('Received an unexpected response from the planned hours worker:', data);
+            console.error('Received an unexpected response from the planned hours worker:');
+            console.error(data);
             communication.postWorkerError(BackgroundCommand.ParsePlannedHours);
             return;
         }

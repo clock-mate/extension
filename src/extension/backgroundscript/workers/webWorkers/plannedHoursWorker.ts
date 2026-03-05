@@ -17,6 +17,13 @@ function parsePlannedHours(message: MessageEvent) {
             plannedMinutesPerDay[result.date] = parseFloat(result.targetHours) * 60;
         }
 
+        if (Object.keys(plannedMinutesPerDay).length === 0) {
+            return postMessage({
+                command: BackgroundCommand.ParsePlannedHours,
+                error: { message: ERROR_MSGS.NO_PLANNED_HOURS_FOUND },
+            });
+        }
+
         postMessage({ plannedMinutesPerDay });
     } catch (e) {
         postMessage({
