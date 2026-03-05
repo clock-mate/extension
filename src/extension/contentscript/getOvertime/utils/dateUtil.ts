@@ -34,4 +34,20 @@ export default class DateUtil {
     public static calculateTimeSheetEndDate(): Date {
         return new Date(config.timesheetEndDate);
     }
+
+    /**
+     * Calculates the start date to use for the work calendar. Will be
+     * the first day of the following month from the given amount of months ago.
+     */
+    public static calculateWorkCalendarStartDate(monthsAgo: number): Date {
+        return this.calculateTimeSheetStartDate(monthsAgo);
+    }
+
+    /**
+     * Calculates the end date to use for the work calendar..
+     */
+    public static calculateWorkCalendarEndDate(): Date {
+        const currentDate = new Date();
+        return new Date(currentDate.getFullYear() + 1, 11, 31);
+    }
 }

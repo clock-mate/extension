@@ -4,7 +4,7 @@ import { isErrorData } from '../common/types/errorData';
 import { isMessageObject } from '../common/types/messageObject';
 import {
     saveOvertimeFromPDF,
-    saveOvertimeFromTimeSheet,
+    saveTimeSheetData,
     savePlannedHours,
     sendBackEmployeeId,
     sendBackOvertime,
@@ -31,7 +31,7 @@ function connectedToContentScript(port: browser.Runtime.Port) {
         }
         switch (message.command) {
             case BackgroundCommand.ParseTimeSheet:
-                saveOvertimeFromTimeSheet(communication, message);
+                saveTimeSheetData(communication, message);
                 break;
             case BackgroundCommand.ParsePlannedHours:
                 savePlannedHours(communication, message);
@@ -95,7 +95,7 @@ export function checkForOvertime(
     ) {
         // should not happen
         console.error(
-            'Received an unexpected response from the time statement or time sheet worker:',
+            'Received an unexpected response from the time statement worker:',
         );
         console.error(message);
         communication.postWorkerError(command);

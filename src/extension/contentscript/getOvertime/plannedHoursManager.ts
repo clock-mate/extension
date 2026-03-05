@@ -41,8 +41,8 @@ export default class PlannedHoursManager implements SimpleManager {
         try {
             plannedHoursData = await this.fetchData.getPlannedHours(
                 employeeId,
-                DateUtil.calculateTimeSheetStartDate(await Settings.getMonthsToCalcManually()),
-                DateUtil.calculateTimeSheetEndDate(),
+                DateUtil.calculateWorkCalendarStartDate(await Settings.getMonthsToCalcManually()),
+                DateUtil.calculateWorkCalendarEndDate(),
             );
         } catch (e) {
             console.error(e);

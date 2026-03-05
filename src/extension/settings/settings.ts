@@ -3,18 +3,12 @@ import Settings from '../common/utils/settings';
 
 const PRIVACY_POLICY_BTN_ID = 'privacy-policy-btn';
 const ROUND_5_MIN_CHECKBOX_ID = 'round-5-min';
-const HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID = 'half-public-holidays';
-const HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID = 'half-public-holiday-24-dec';
-const HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID = 'half-public-holiday-31-dec';
 const MONTHS_TO_CALC_MANUALLY_INPUT_ID = 'months-to-calc-manually';
 const MONTHS_TO_CALC_MANUALLY_TEXT_NUM_ID = 'months-to-calc-manually-text-num';
 
 type SettingsDOMElements = {
     [PRIVACY_POLICY_BTN_ID]: HTMLButtonElement;
     [ROUND_5_MIN_CHECKBOX_ID]: HTMLInputElement;
-    [HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID]: HTMLInputElement;
-    [HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID]: HTMLInputElement;
-    [HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID]: HTMLInputElement;
     [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: HTMLInputElement;
     [MONTHS_TO_CALC_MANUALLY_TEXT_NUM_ID]: HTMLSpanElement;
 };
@@ -37,15 +31,6 @@ function getReferencedObjects(): SettingsDOMElements {
         [ROUND_5_MIN_CHECKBOX_ID]: document.getElementById(
             ROUND_5_MIN_CHECKBOX_ID,
         ) as HTMLInputElement,
-        [HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID]: document.getElementById(
-            HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID,
-        ) as HTMLInputElement,
-        [HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID]: document.getElementById(
-            HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID,
-        ) as HTMLInputElement,
-        [HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID]: document.getElementById(
-            HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID,
-        ) as HTMLInputElement,
         [MONTHS_TO_CALC_MANUALLY_INPUT_ID]: document.getElementById(
             MONTHS_TO_CALC_MANUALLY_INPUT_ID,
         ) as HTMLInputElement,
@@ -60,15 +45,6 @@ function getReferencedObjects(): SettingsDOMElements {
  */
 async function setInitialValues(domRefs: SettingsDOMElements) {
     domRefs[ROUND_5_MIN_CHECKBOX_ID].checked = await Settings.round5MinIsEnabled();
-
-    const holidayEnabled = await Settings.halfPublicHolidaysIsEnabled();
-    domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked = holidayEnabled;
-    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].disabled = !holidayEnabled;
-    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].disabled = !holidayEnabled;
-    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].checked =
-        await Settings.halfPublicHoliday24DecIsEnabled();
-    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked =
-        await Settings.halfPublicHoliday31DecIsEnabled();
 
     domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value = String(
         await Settings.getMonthsToCalcManually(),
@@ -87,15 +63,6 @@ function registerEvents(domRefs: SettingsDOMElements) {
     domRefs[ROUND_5_MIN_CHECKBOX_ID].addEventListener('change', () =>
         handleRound5MinChange(domRefs[ROUND_5_MIN_CHECKBOX_ID].checked),
     );
-    domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].addEventListener('change', () =>
-        handleHalfPublicHolidaysChange(domRefs[HALF_PUBLIC_HOLIDAYS_CHECKBOX_ID].checked, domRefs),
-    );
-    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].addEventListener('change', () =>
-        handleHalfPublicHoliday24DecChange(domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].checked),
-    );
-    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].addEventListener('change', () =>
-        handleHalfPublicHoliday31DecChange(domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].checked),
-    );
     domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].addEventListener('change', () =>
         handleMonthsToCalcManuallyChange(
             domRefs[MONTHS_TO_CALC_MANUALLY_INPUT_ID].value,
@@ -110,17 +77,6 @@ function handlePrivacyPolicyClick() {
 }
 function handleRound5MinChange(state: boolean) {
     Settings.setRound5MinEnabled(state);
-}
-function handleHalfPublicHolidaysChange(state: boolean, domRefs: SettingsDOMElements) {
-    domRefs[HALF_PUBLIC_HOLIDAY_24_DEC_CHECKBOX_ID].disabled = !state;
-    domRefs[HALF_PUBLIC_HOLIDAY_31_DEC_CHECKBOX_ID].disabled = !state;
-    Settings.setHalfPublicHolidaysEnabled(state);
-}
-function handleHalfPublicHoliday24DecChange(state: boolean) {
-    Settings.setHalfPublicHoliday24DecEnabled(state);
-}
-function handleHalfPublicHoliday31DecChange(state: boolean) {
-    Settings.setHalfPublicHoliday31DecEnabled(state);
 }
 function handleMonthsToCalcManuallyChange(
     months: string,

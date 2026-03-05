@@ -1,48 +1,38 @@
 import { BackgroundCommand } from '../../../common/enums/command';
-import { hasSettingsData, hasStringContent } from '../../../common/types/messageObject';
-import { SettingsData } from '../../../common/types/settingsData';
+import { hasStringContent } from '../../../common/types/messageObject';
 import TimeSheetAggregator from '../../aggregateData/timeSheetAggregator';
-import { OvertimeCalculator } from '../../calculateOvertime';
+import OvertimeCalculator from '../../calculateOvertime/overtimeCalculator';
 import { ERROR_MSGS } from '../../common/constants';
 import TimeData from '../../common/models/timeData';
 
-function saveOvertimeFromTimeSheet(message: MessageEvent) {
-    const timeSheetAggregator = new TimeSheetAggregator();
-    const overtimeCalculator = new OvertimeCalculator();
-    let settings: SettingsData;
-
+function parseTimeSheet(message: MessageEvent) {
     try {
         if (!hasStringContent(message.data)) {
             throw new Error('No message or no content received from the content script');
         }
-        if (!hasSettingsData(message.data)) {
-            throw new Error('No settings received from the content script');
-        }
-        settings = message.data.settings;
 
         const jsonObject = JSON.parse(message.data.content);
         const timeData = TimeData.fromObject(jsonObject);
+        const timeSheetAggregator = new TimeSheetAggregator();
+        const timeElements = timeSheetAggregator.parseTimeDataToTimeElements(timeData);
 
-        timeSheetAggregator.timeElements =
-            timeSheetAggregator.parseTimeDataToTimeElements(timeData);
+        const overtimeCalculator = new OvertimeCalculator();
+        const dailySummaries = overtimeCalculator.aggregateDailySummaries(timeElements);
+        if (dailySummaries === null) {
+            return postMessage({
+                command: BackgroundCommand.ParseTimeSheet,
+                error: { message: ERROR_MSGS.UNPLAUSIBLE_CALCULATION },
+            });
+        }
+
+        postMessage({ dailySummaries });
     } catch (e) {
         postMessage({
             command: BackgroundCommand.ParseTimeSheet,
             error: { message: ERROR_MSGS.UNABLE_TO_PARSE_DATA },
             originalError: e,
         });
-        return;
     }
-
-    const overtimeInMinutes = overtimeCalculator.calculateOvertime(
-        timeSheetAggregator.timeElements,
-        settings.halfPublicHolidaysConfig,
-    );
-
-    postMessage({
-        // send overtime to backgroundscript since worker has no access to storage api
-        overtime: overtimeInMinutes,
-    });
 }
 
-onmessage = saveOvertimeFromTimeSheet;
+onmessage = parseTimeSheet;

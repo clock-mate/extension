@@ -1,110 +1,81 @@
-import { HalfPublicHolidaysConfig } from '../../common/types/settingsData';
+import DaySummary from '../common/models/daySummary';
 import TimeElement from '../common/models/timeElement';
 import DateUtil from './utils/dateUtil';
 
-export default class overtimeCalculator {
-    private static readonly FLEXDAY_ATTENDANCE_TYPE = 9003;
-    private static readonly HALF_PUBLIC_HOLIDAY_FREE_TIME_FACTOR = 0.5;
+/** Attendance types that count as absence rather than worked time. */
+const ABSENT_ATTENDANCE_TYPES: number[] = [9001, 9003];
 
+const BILLABLE_CALCULATION_MOTIVE = 1;
+
+const MAX_MINUTES_PER_DAY = 24 * 60;
+
+export default class OvertimeCalculator {
     /**
-     * Calculates the overtime in minutes. The calculation does expect normal working days to be from Monday
-     * to Friday. Working on holidays will only be calculated for holidays accounted for in `HalfPublicHolidaysConfig`.
-     * @param timeElements               all elements to calculate the overtime from, expected to be sorted by date
-     * @param halfHolidayConfig          configuration of half public holidays
-     * @param minutesPerWeek             the expected amount of minutes to work in a week (default: `40 * 60`)
-     * @param previousOvertimeMinutes    will be added to the calculated overtime (default: `0`)
+     * Calculates the overtime in minutes by comparing worked time elements against the planned
+     * minutes per day. Absent entries are excluded from the worked time calculation.
+     * @param daySummaries           map of YYYYMMDD with day summaries for that day
+     * @param plannedMinutesPerDay   map of YYYYMMDD with planned minutes
+     * @param previousOvertimeMinutes  will be added to the calculated overtime (default: `0`)
      * @returns the overtime in minutes
      */
     public calculateOvertime(
-        timeElements: TimeElement[][],
-        halfHolidayConfig: HalfPublicHolidaysConfig,
-        minutesPerWeek = 40 * 60,
+        daySummaries: Record<string, DaySummary>,
+        plannedMinutesPerDay: Record<string, number>,
         previousOvertimeMinutes = 0,
     ): number {
         let overtimeMinutes = 0;
-        const expectedMinutesPerDay = minutesPerWeek / 5;
 
-        timeElements.forEach((dayTimeElements: TimeElement[]) => {
-            overtimeMinutes += this.calculateOvertimePerDay(
-                dayTimeElements,
-                expectedMinutesPerDay,
-                halfHolidayConfig,
-            );
-        });
+        // only use entries with entered time
+        for (const [dateKey, daySummary] of Object.entries(daySummaries)) {
+            const planned = plannedMinutesPerDay[dateKey] ?? 0;
+
+            /**
+             * Fiori will return 0 planned minutes for days which are a fully vacation or overtime day.
+             * In that case the calculation would be negative and we take 0 for actually planned minutes.
+             * For half vacation/overtime days fiori will return the planned minutes of a full work day,
+             * in that case we calculate the remaining planned minutes ourselves.
+             */
+            const actuallyPlannedMinutes = Math.max(0, planned - daySummary.absentTime);
+            const dayOvertime = daySummary.workedTime - actuallyPlannedMinutes;
+
+            overtimeMinutes += dayOvertime;
+        }
 
         return overtimeMinutes + previousOvertimeMinutes;
     }
 
     /**
-     * Calculates the overtime for the given TimeElements on a day. This can be a negative
-     * or positive number in minutes depending on the `attendanceType`s of the TimeElements.
-     * Expects normal working days to be from Monday to Friday.
-     * @param timeElements      the TimeElements for the day to calcualte
-     * @param minutesPerDay     the expected minutes to work per day
-     * @param halfHolidayConfig configuration of half public holidays
-     * @returns the overtime for the day in minutes
+     * Aggregates raw time elements into a per-day summary of worked, absent and billable minutes.
+     * @param timeElements  map of YYYYMMDD with time elements for that day
+     * @returns map of YYYYMMDD with {@link DaySummary} or null if unplausible calculation
      */
-    private calculateOvertimePerDay(
-        timeElements: TimeElement[],
-        minutesPerDay: number,
-        halfHolidayConfig: HalfPublicHolidaysConfig,
-    ): number {
-        let overtimeMinutes = 0;
+    public aggregateDailySummaries(timeElements: Record<string, TimeElement[]>): Record<string, DaySummary> | null {
+        const result: Record<string, DaySummary> = {};
 
-        timeElements.forEach((timeElement) => {
-            const minutes = DateUtil.getMinutesBetween(timeElement.startDate, timeElement.endDate);
-            if (timeElement.attendanceType === overtimeCalculator.FLEXDAY_ATTENDANCE_TYPE) {
-                // flexday entries should be ignored since these are not actual working times
-                return;
+        for (const [dateKey, dayElements] of Object.entries(timeElements)) {
+            let workedTime = 0;
+            let absentTime = 0;
+            let billableTime = 0;
+
+            for (const timeElement of dayElements) {
+                const duration = DateUtil.getMinutesBetween(timeElement.startTime, timeElement.endTime);
+                if (ABSENT_ATTENDANCE_TYPES.includes(timeElement.attendanceType)) {
+                    absentTime += duration;
+                } else {
+                    workedTime += duration;
+                    if (timeElement.calculationMotive === BILLABLE_CALCULATION_MOTIVE) {
+                        billableTime += duration;
+                    }
+                }
             }
 
-            overtimeMinutes += minutes;
-        });
-
-        // subtract the expected minutes per day
-        const weekDay = timeElements[0].startDate.getDay();
-        if (weekDay === 0 || weekDay === 6) {
-            // on Sundays or Saturdays don't subtract the minutes per day
-            return overtimeMinutes;
+            if (workedTime < 0 || absentTime < 0 || (workedTime + absentTime) > MAX_MINUTES_PER_DAY) {
+                // Safety check, should not happen with valid data
+                return null;
+            }
+            result[dateKey] = new DaySummary(workedTime, absentTime, billableTime);
         }
-        overtimeMinutes -= minutesPerDay;
 
-        return this.adjustOvertimeForHalfHoliday(
-            timeElements[0].startDate,
-            overtimeMinutes,
-            minutesPerDay,
-            halfHolidayConfig,
-        );
-    }
-
-    /**
-     * Adjusts the overtime for the day to respect half holidays.
-     * @param day                the day to check for a holiday
-     * @param overtimeMinutes    the overtime for the day in minutes
-     * @param minutesPerDay      the expected minutes to work per day
-     * @param halfHolidayConfig  configuration of half public holidays
-     * @returns the adjusted overtime for the day in minutes
-     */
-    private adjustOvertimeForHalfHoliday(
-        day: Date,
-        overtimeMinutes: number,
-        minutesPerDay: number,
-        halfHolidayConfig: HalfPublicHolidaysConfig,
-    ): number {
-        const adjustForHalfHoliday = (minutes: number) => {
-            return (
-                minutes + overtimeCalculator.HALF_PUBLIC_HOLIDAY_FREE_TIME_FACTOR * minutesPerDay
-            );
-        };
-
-        if (!halfHolidayConfig.enabled) {
-            return overtimeMinutes;
-        }
-        if (halfHolidayConfig.dec24 && day.getDate() == 24 && day.getMonth() == 11) {
-            overtimeMinutes = adjustForHalfHoliday(overtimeMinutes);
-        } else if (halfHolidayConfig.dec31 && day.getDate() == 31 && day.getMonth() == 11) {
-            overtimeMinutes = adjustForHalfHoliday(overtimeMinutes);
-        }
-        return overtimeMinutes;
+        return result;
     }
 }

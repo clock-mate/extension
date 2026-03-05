@@ -3,6 +3,7 @@ import Settings from '../../common/utils/settings';
 import StorageManager from '../../common/utils/storageManager';
 import { ERROR_MSGS } from '../common/constants';
 import Formater from '../common/utils/format';
+import { OvertimeCalculator } from '../calculateOvertime';
 import { Communication } from '../communication';
 
 /**
@@ -12,13 +13,23 @@ import { Communication } from '../communication';
 export async function sendBackOvertime(communication: Communication) {
     let totalOvertime;
     try {
-        const timeSheetOvertime = Number(await StorageManager.getTimeSheetOvertime());
+        const daySummaries = await StorageManager.getDaySummaries();
+        const plannedMinutesPerDay = await StorageManager.getPlannedMinutesPerDay();
         const timeStatementOvertime = Number(await StorageManager.getTimeStatementOvertime());
-        if (Number.isNaN(timeSheetOvertime) || Number.isNaN(timeStatementOvertime)) {
-            throw new Error('Overtime in storage is not a number');
+
+        if (daySummaries === null || plannedMinutesPerDay === null) {
+            throw new Error('Day summaries or planned minutes not found in storage');
+        }
+        if (Number.isNaN(timeStatementOvertime)) {
+            throw new Error('Time statement overtime in storage is not a number');
         }
 
-        totalOvertime = timeSheetOvertime + timeStatementOvertime;
+        const overtimeCalculator = new OvertimeCalculator();
+        totalOvertime = overtimeCalculator.calculateOvertime(
+            daySummaries,
+            plannedMinutesPerDay,
+            timeStatementOvertime,
+        );
     } catch (e) {
         console.error(e);
         communication.postCsMessage(BackgroundCommand.GetOvertime, {

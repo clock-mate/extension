@@ -1,22 +1,27 @@
 import browser from 'webextension-polyfill';
+import DaySummary from '../../backgroundscript/common/models/daySummary';
 
 export default class StorageManager {
-    public static async getTimeSheetOvertime(): Promise<string | unknown> {
+    public static async getDaySummaries(): Promise<Record<string, DaySummary> | null> {
         try {
-            const result = await browser.storage.local.get('timeSheetOvertime');
-            return result.timeSheetOvertime;
-        } catch {
+            const result = await browser.storage.local.get('daySummaries');
+            return (result.daySummaries as Record<string, DaySummary>) ?? null;
+        } catch (e) {
+            console.error(e);
             return null;
         }
     }
 
-    public static async saveTimeSheetOvertime(overtime: number) {
-        await browser.storage.local.set({ timeSheetOvertime: overtime });
+    public static async saveDaySummaries(summaries: Record<string, DaySummary>) {
+        await browser.storage.local.set({ daySummaries: summaries });
+    }
+
     public static async getPlannedMinutesPerDay(): Promise<Record<string, number> | null> {
         try {
             const result = await browser.storage.local.get('plannedMinutesPerDay');
             return (result.plannedMinutesPerDay as Record<string, number>) ?? null;
-        } catch {
+        } catch (e) {
+            console.error(e);
             return null;
         }
     }
@@ -29,7 +34,8 @@ export default class StorageManager {
         try {
             const result = await browser.storage.local.get('timeStatementOvertime');
             return result.timeStatementOvertime;
-        } catch {
+        } catch (e) {
+            console.error(e);
             return null;
         }
     }

@@ -1,14 +1,9 @@
 import browser from 'webextension-polyfill';
-import { HalfPublicHolidaysConfig, SettingsData } from '../types/settingsData';
+import { SettingsData } from '../types/settingsData';
 
 export default class Settings {
     private static readonly DEFAULT_DISPLAY_IS_ENABLED = true;
     private static readonly DEFAULT_ROUND_5_MIN_IS_ENABLED = false;
-    private static readonly DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG: HalfPublicHolidaysConfig = {
-        enabled: true,
-        dec24: true,
-        dec31: true,
-    };
     private static readonly DEFAULT_MONTHS_TO_CALCULATE_MANUALLY = 3;
 
     // ===== Display enabled =====
@@ -51,54 +46,6 @@ export default class Settings {
         return await browser.storage.local.set({ round5MinIsEnabled: state });
     }
 
-    // ===== Public holidays =====
-    public static async getHalfPublicHolidaysConfig(): Promise<HalfPublicHolidaysConfig> {
-        try {
-            const result = await browser.storage.local.get({
-                halfPublicHolidaysConfig: this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG,
-            });
-            return (
-                (result.halfPublicHolidaysConfig as HalfPublicHolidaysConfig) ||
-                this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG
-            );
-        } catch {
-            return this.DEFAULT_HALF_PUBLIC_HOLIDAYS_CONFIG;
-        }
-    }
-
-    public static async halfPublicHolidaysIsEnabled(): Promise<boolean> {
-        const config = await this.getHalfPublicHolidaysConfig();
-        return config.enabled;
-    }
-
-    public static async setHalfPublicHolidaysEnabled(state: boolean) {
-        const config = await this.getHalfPublicHolidaysConfig();
-        config.enabled = state;
-        return await browser.storage.local.set({ halfPublicHolidaysConfig: config });
-    }
-
-    public static async halfPublicHoliday24DecIsEnabled(): Promise<boolean> {
-        const config = await this.getHalfPublicHolidaysConfig();
-        return config.dec24;
-    }
-
-    public static async setHalfPublicHoliday24DecEnabled(state: boolean) {
-        const config = await this.getHalfPublicHolidaysConfig();
-        config.dec24 = state;
-        return await browser.storage.local.set({ halfPublicHolidaysConfig: config });
-    }
-
-    public static async halfPublicHoliday31DecIsEnabled(): Promise<boolean> {
-        const config = await this.getHalfPublicHolidaysConfig();
-        return config.dec31;
-    }
-
-    public static async setHalfPublicHoliday31DecEnabled(state: boolean) {
-        const config = await this.getHalfPublicHolidaysConfig();
-        config.dec31 = state;
-        return await browser.storage.local.set({ halfPublicHolidaysConfig: config });
-    }
-
     // ===== Months to calculate manually =====
     public static async getMonthsToCalcManually(): Promise<number> {
         try {
@@ -121,7 +68,6 @@ export default class Settings {
         return {
             displayIsEnabled: await this.displayIsEnabled(),
             round5MinIsEnabled: await this.round5MinIsEnabled(),
-            halfPublicHolidaysConfig: await this.getHalfPublicHolidaysConfig(),
             monthsToCalcManually: await this.getMonthsToCalcManually(),
         };
     }
