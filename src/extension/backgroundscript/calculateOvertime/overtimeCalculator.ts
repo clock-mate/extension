@@ -3,7 +3,11 @@ import TimeElement from '../common/models/timeElement';
 import DateUtil from './utils/dateUtil';
 
 /** Attendance types that count as absence rather than worked time. */
-const ABSENT_ATTENDANCE_TYPES: number[] = [9001, 9003];
+const ABSENT_ATTENDANCE_TYPES: number[] = [
+    9001, // vaction
+    9005, // absent
+];
+const FLEX_DAY_ATTENDANCE_TYPE = 9003;
 
 const BILLABLE_CALCULATION_MOTIVE = 1;
 
@@ -30,13 +34,11 @@ export default class OvertimeCalculator {
             const planned = plannedMinutesPerDay[dateKey] ?? 0;
 
             /**
-             * Fiori will return 0 planned minutes for days which are a fully vacation or overtime day.
-             * In that case the calculation would be negative and we take 0 for actually planned minutes.
-             * For half vacation/overtime days fiori will return the planned minutes of a full work day,
-             * in that case we calculate the remaining planned minutes ourselves.
+             * Fiori will subtract absent time from the planned time. For overtime calculation this means
+             * we can just ignore absent time since it is already taken care of.
              */
-            const actuallyPlannedMinutes = Math.max(0, planned - daySummary.absentTime);
-            const dayOvertime = daySummary.workedTime - actuallyPlannedMinutes;
+            let dayOvertime = daySummary.workedTime - planned;
+            dayOvertime -= daySummary.flexTime; // Flex time reduces overtime
 
             overtimeMinutes += dayOvertime;
         }
@@ -55,12 +57,15 @@ export default class OvertimeCalculator {
         for (const [dateKey, dayElements] of Object.entries(timeElements)) {
             let workedTime = 0;
             let absentTime = 0;
+            let flexTime = 0;
             let billableTime = 0;
 
             for (const timeElement of dayElements) {
                 const duration = DateUtil.getMinutesBetween(timeElement.startTime, timeElement.endTime);
                 if (ABSENT_ATTENDANCE_TYPES.includes(timeElement.attendanceType)) {
                     absentTime += duration;
+                } else if (timeElement.attendanceType === FLEX_DAY_ATTENDANCE_TYPE) {
+                    flexTime += duration;
                 } else {
                     workedTime += duration;
                     if (timeElement.calculationMotive === BILLABLE_CALCULATION_MOTIVE) {
@@ -69,11 +74,11 @@ export default class OvertimeCalculator {
                 }
             }
 
-            if (workedTime < 0 || absentTime < 0 || (workedTime + absentTime) > MAX_MINUTES_PER_DAY) {
+            if (workedTime < 0 || absentTime < 0 || flexTime < 0 || (workedTime + absentTime + flexTime) > MAX_MINUTES_PER_DAY) {
                 // Safety check, should not happen with valid data
                 return null;
             }
-            result[dateKey] = new DaySummary(workedTime, absentTime, billableTime);
+            result[dateKey] = new DaySummary(workedTime, absentTime, flexTime, billableTime);
         }
 
         return result;
