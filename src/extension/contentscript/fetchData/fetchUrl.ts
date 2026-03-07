@@ -62,7 +62,11 @@ export default class FetchURL {
      * @param endDate           the last day of the work calendar (time is ignored)
      * @returns the URL to fetch the API
      */
-    public static getWorkCalendarFetchURL(employeeNumber: string, startDate: Date, endDate: Date): string {
+    public static getWorkCalendarFetchURL(
+        employeeNumber: string,
+        startDate: Date,
+        endDate: Date,
+    ): string {
         const start = Formater.formatDateToYYYYMMDD(startDate);
         const end = Formater.formatDateToYYYYMMDD(endDate);
         return (

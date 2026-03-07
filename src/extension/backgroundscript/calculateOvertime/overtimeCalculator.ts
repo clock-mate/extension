@@ -51,7 +51,9 @@ export default class OvertimeCalculator {
      * @param timeElements  map of YYYYMMDD with time elements for that day
      * @returns map of YYYYMMDD with {@link DaySummary} or null if unplausible calculation
      */
-    public aggregateDailySummaries(timeElements: Record<string, TimeElement[]>): Record<string, DaySummary> | null {
+    public aggregateDailySummaries(
+        timeElements: Record<string, TimeElement[]>,
+    ): Record<string, DaySummary> | null {
         const result: Record<string, DaySummary> = {};
 
         for (const [dateKey, dayElements] of Object.entries(timeElements)) {
@@ -61,7 +63,10 @@ export default class OvertimeCalculator {
             let billableTime = 0;
 
             for (const timeElement of dayElements) {
-                const duration = DateUtil.getMinutesBetween(timeElement.startTime, timeElement.endTime);
+                const duration = DateUtil.getMinutesBetween(
+                    timeElement.startTime,
+                    timeElement.endTime,
+                );
                 if (ABSENT_ATTENDANCE_TYPES.includes(timeElement.attendanceType)) {
                     absentTime += duration;
                 } else if (timeElement.attendanceType === FLEX_DAY_ATTENDANCE_TYPE) {
@@ -74,7 +79,12 @@ export default class OvertimeCalculator {
                 }
             }
 
-            if (workedTime < 0 || absentTime < 0 || flexTime < 0 || (workedTime + absentTime + flexTime) > MAX_MINUTES_PER_DAY) {
+            if (
+                workedTime < 0 ||
+                absentTime < 0 ||
+                flexTime < 0 ||
+                workedTime + absentTime + flexTime > MAX_MINUTES_PER_DAY
+            ) {
                 // Safety check, should not happen with valid data
                 return null;
             }

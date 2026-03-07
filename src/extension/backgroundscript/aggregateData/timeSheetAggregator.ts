@@ -51,8 +51,19 @@ export default class TimeSheetAggregator {
      * Saves the provided data as a TimeElement in the attribute `timeElements`, grouped
      * by the YYYYMMDD date key.
      */
-    private saveElement(date: string, startTime: string, endTime: string, attendanceType: string, calculationMotive: string) {
-        const currentElement = this.createNewTimeElement(startTime, endTime, attendanceType, calculationMotive);
+    private saveElement(
+        date: string,
+        startTime: string,
+        endTime: string,
+        attendanceType: string,
+        calculationMotive: string,
+    ) {
+        const currentElement = this.createNewTimeElement(
+            startTime,
+            endTime,
+            attendanceType,
+            calculationMotive,
+        );
 
         if (!this.timeElements[date]) {
             this.timeElements[date] = [];
@@ -71,13 +82,13 @@ export default class TimeSheetAggregator {
         startTime: string,
         endTime: string,
         attendanceType: string,
-        calculationMotive: string
+        calculationMotive: string,
     ): TimeElement {
         return new TimeElement(
             startTime,
             endTime,
             Number(attendanceType),
-            Number(calculationMotive)
+            Number(calculationMotive),
         );
     }
 }

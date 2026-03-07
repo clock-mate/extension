@@ -76,7 +76,7 @@ export default class FetchData {
         return result.text();
     }
 
-    /** 
+    /**
      * The actual fetching logic for planned hours. Does no validation of inputs or results.
      */
     private async fetchPlannedHours(

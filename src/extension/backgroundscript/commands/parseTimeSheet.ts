@@ -24,7 +24,7 @@ export async function saveTimeSheetData(communication: Communication, message: o
         // Only basic type checking, assume correct data otherwise
         if (
             typeof data !== 'object' ||
-            data === null || 
+            data === null ||
             !('dailySummaries' in data) ||
             typeof data.dailySummaries !== 'object' ||
             data.dailySummaries === null
@@ -35,9 +35,11 @@ export async function saveTimeSheetData(communication: Communication, message: o
             return;
         }
 
-        StorageManager.saveDaySummaries(data.dailySummaries as Record<string, DaySummary>).then(() => {
-            communication.postCsMessage(BackgroundCommand.ParseTimeSheet);
-        });
+        StorageManager.saveDaySummaries(data.dailySummaries as Record<string, DaySummary>).then(
+            () => {
+                communication.postCsMessage(BackgroundCommand.ParseTimeSheet);
+            },
+        );
     };
     timeSheetWorker.onerror = (error: ErrorEvent) => {
         console.error('Worker error:', error.message, error.filename, error.lineno, error.colno);
