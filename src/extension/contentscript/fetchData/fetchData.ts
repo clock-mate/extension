@@ -1,5 +1,10 @@
 import FetchURL from './fetchUrl';
 
+const CONTENT_TYPE_PDF = 'application/pdf';
+const CONTENT_TYPE_EXAKT_JSON = 'application/json; charset=utf-8';
+const CONTENT_TYPE_JSON = 'application/json';
+const CONTENT_TYPE_HTML = 'text/html';
+
 /**
  * Takes care of any communication via the network. For example fetching data from APIs.
  */
@@ -20,14 +25,20 @@ export default class FetchData {
         }
 
         const result = await this.fetchWorkingTimes(startDate, endDate);
+        const contentType = result.headers.get('Content-Type');
 
         if (!result.ok) {
-            if (result.status === 401) {
-                return null;
-            }
+            if (result.status === 401) return null;
             throw new Error(
                 'Unexpected API response while fetching working times! Received status code: ' +
                     result.status,
+            );
+        }
+        if (contentType !== CONTENT_TYPE_EXAKT_JSON && !contentType?.includes(CONTENT_TYPE_JSON)) {
+            if (contentType === CONTENT_TYPE_HTML) return null;
+            throw new Error(
+                'Unexpected API response while fetching working times! Received content type: ' +
+                    contentType,
             );
         }
 
@@ -62,14 +73,20 @@ export default class FetchData {
         endDate: Date,
     ): Promise<string | null> {
         const result = await this.fetchPlannedHours(employeeNumber, startDate, endDate);
+        const contentType = result.headers.get('Content-Type');
 
         if (!result.ok) {
-            if (result.status === 401) {
-                return null;
-            }
+            if (result.status === 401) return null;
             throw new Error(
                 'Unexpected API response while fetching planned hours! Received status code: ' +
                     result.status,
+            );
+        }
+        if (contentType !== CONTENT_TYPE_EXAKT_JSON && !contentType?.includes(CONTENT_TYPE_JSON)) {
+            if (contentType === CONTENT_TYPE_HTML) return null;
+            throw new Error(
+                'Unexpected API response while fetching planned hours! Received content type: ' +
+                    contentType,
             );
         }
 
@@ -103,14 +120,20 @@ export default class FetchData {
      */
     public async getEmployeeId(): Promise<string | null> {
         const result = await this.fetchEmployeeId();
+        const contentType = result.headers.get('Content-Type');
 
         if (!result.ok) {
-            if (result.status === 401) {
-                return null;
-            }
+            if (result.status === 401) return null;
             throw new Error(
                 'Unexpected API response while fetching employee id! Received status code: ' +
                     result.status,
+            );
+        }
+        if (contentType !== CONTENT_TYPE_EXAKT_JSON && !contentType?.includes(CONTENT_TYPE_JSON)) {
+            if (contentType === CONTENT_TYPE_HTML) return null;
+            throw new Error(
+                'Unexpected API response while fetching employee id! Received content type: ' +
+                    contentType,
             );
         }
 
@@ -151,14 +174,20 @@ export default class FetchData {
         }
 
         const result = await this.fetchTimeStatement(employeeNumber, startDate, endDate);
+        const contentType = result.headers.get('Content-Type');
 
         if (!result.ok) {
-            if (result.status === 401) {
-                return null;
-            }
+            if (result.status === 401) return null;
             throw new Error(
                 'Unexpected API response while fetching time statement! Received status code: ' +
                     result.status,
+            );
+        }
+        if (contentType !== CONTENT_TYPE_PDF && !contentType?.includes(CONTENT_TYPE_PDF)) {
+            if (contentType === CONTENT_TYPE_HTML) return null;
+            throw new Error(
+                'Unexpected API response while fetching time statement! Received content type: ' +
+                    contentType,
             );
         }
 
