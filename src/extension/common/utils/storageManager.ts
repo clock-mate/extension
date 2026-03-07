@@ -43,4 +43,18 @@ export default class StorageManager {
     public static async saveTimeStatementOvertime(overtime: number) {
         await browser.storage.local.set({ timeStatementOvertime: overtime });
     }
+
+    public static async getCachedEmployeeId(): Promise<string | null> {
+        try {
+            const result = await browser.storage.local.get('cachedEmployeeId');
+            return (result.cachedEmployeeId as string) ?? null;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
+
+    public static async saveCachedEmployeeId(id: string) {
+        await browser.storage.local.set({ cachedEmployeeId: id });
+    }
 }

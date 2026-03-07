@@ -15,4 +15,6 @@ export const ERROR_MSGS = {
    LOGGED_OUT: 'Nicht mehr eingeloggt. Bitte Seite neu laden!',
    UNEXPECTED_BACKGROUND_RESPONSE: 'Datenverarbeitung fehlgeschlagen.',
    PAGE_NOT_SUPPORTED: 'Diese Seite wird nicht unterstützt.',
+   /** This error message should never be displayed and is only a fallback. */
+   INVALID_EMPLOYEE_ID_CACHED: 'Neue Mitarbeiter-ID. Bitte Seite neu laden!'
 }

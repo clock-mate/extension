@@ -71,8 +71,9 @@ export default class FetchData {
         employeeNumber: string,
         startDate: Date,
         endDate: Date,
+        signal?: AbortSignal,
     ): Promise<string | null> {
-        const result = await this.fetchPlannedHours(employeeNumber, startDate, endDate);
+        const result = await this.fetchPlannedHours(employeeNumber, startDate, endDate, signal);
         const contentType = result.headers.get('Content-Type');
 
         if (!result.ok) {
@@ -100,12 +101,14 @@ export default class FetchData {
         employeeNumber: string,
         startDate: Date,
         endDate: Date,
+        signal?: AbortSignal,
     ): Promise<Response> {
         const result = await fetch(
             new Request(FetchURL.getWorkCalendarFetchURL(employeeNumber, startDate, endDate), {
                 method: 'GET',
                 credentials: 'include',
             }),
+            { signal },
         );
 
         return result;
@@ -168,12 +171,13 @@ export default class FetchData {
         employeeNumber: string,
         startDate: Date,
         endDate: Date,
+        signal?: AbortSignal,
     ): Promise<ArrayBuffer | null> {
         if (startDate > endDate || startDate.getDate() > endDate.getDate()) {
             throw new Error('End date is not after start date');
         }
 
-        const result = await this.fetchTimeStatement(employeeNumber, startDate, endDate);
+        const result = await this.fetchTimeStatement(employeeNumber, startDate, endDate, signal);
         const contentType = result.headers.get('Content-Type');
 
         if (!result.ok) {
@@ -201,9 +205,11 @@ export default class FetchData {
         employeeNumber: string,
         startDate: Date,
         endDate: Date,
+        signal?: AbortSignal,
     ): Promise<Response> {
         const result = await fetch(
             FetchURL.getTimeStatementFetchURL(employeeNumber, startDate, endDate),
+            { signal },
         );
 
         return result;

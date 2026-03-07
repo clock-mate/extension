@@ -2,6 +2,7 @@ import { BackgroundCommand } from '../../common/enums/command';
 import { isEmployeeIdData } from '../../common/types/employeeIdData';
 import { ErrorData, isErrorData } from '../../common/types/errorData';
 import { isOvertimeObject, OvertimeData } from '../../common/types/overtimeData';
+import StorageManager from '../../common/utils/storageManager';
 import { ERROR_MSGS } from '../common/constants';
 import { DisplayFormat } from '../common/types/display';
 import CommonFormater from '../common/utils/format';
@@ -22,25 +23,72 @@ export default class OvertimeManager {
     // fetches data and sends requests to background script, returns a displayable text in any case
     public async calculateNewOvertimeData(): Promise<OvertimeData | ErrorData> {
         try {
+            const cachedEmployeeId = await StorageManager.getCachedEmployeeId();
+
             const timeSheet = new TimeSheetManager(
                 this.backgroundComm,
                 this.fetchData,
             ).performAction();
 
-            // await employeeId since required for timeStatement and plannedHours
-            const employeeId = await this.fetchAndParseEmployeeId();
-            const timeStatement = new TimeStatementManager(
-                this.backgroundComm,
-                this.fetchData,
-                employeeId,
-            ).performAction();
-            const plannedHours = new PlannedHoursManager(
-                this.backgroundComm,
-                this.fetchData,
-                employeeId,
-            ).performAction();
+            // fire the fresh employee ID request without awaiting yet
+            const freshEmployeeIdPromise = this.fetchAndParseEmployeeId();
 
-            // wait until all requests finished before calculating total overtime
+            let timeStatement: Promise<void>;
+            let plannedHours: Promise<void>;
+
+            if (cachedEmployeeId !== null) {
+                // use cached ID to fire dependent requests immediately
+                const abortController = new AbortController();
+                timeStatement = new TimeStatementManager(
+                    this.backgroundComm,
+                    this.fetchData,
+                    cachedEmployeeId,
+                    abortController.signal,
+                ).performAction();
+                plannedHours = new PlannedHoursManager(
+                    this.backgroundComm,
+                    this.fetchData,
+                    cachedEmployeeId,
+                    abortController.signal,
+                ).performAction();
+
+                const freshEmployeeId = await freshEmployeeIdPromise;
+
+                if (freshEmployeeId !== cachedEmployeeId) {
+                    // ID changed: abort in-flight requests and re-fire with fresh ID
+                    abortController.abort();
+                    await Promise.allSettled([timeStatement, plannedHours]);
+                    timeStatement = new TimeStatementManager(
+                        this.backgroundComm,
+                        this.fetchData,
+                        freshEmployeeId,
+                    ).performAction();
+                    plannedHours = new PlannedHoursManager(
+                        this.backgroundComm,
+                        this.fetchData,
+                        freshEmployeeId,
+                    ).performAction();
+                }
+            } else {
+                // no cache yet: await employee ID then fire dependent requests
+                const freshEmployeeId = await freshEmployeeIdPromise;
+                timeStatement = new TimeStatementManager(
+                    this.backgroundComm,
+                    this.fetchData,
+                    freshEmployeeId,
+                ).performAction();
+                plannedHours = new PlannedHoursManager(
+                    this.backgroundComm,
+                    this.fetchData,
+                    freshEmployeeId,
+                ).performAction();
+            }
+
+            /**
+             * Wait till all requests finished before calculating total overtime.
+             * This late awaiting means that requests (timestatement + plannedhors) with a false cached ID
+             * will not cause an error before a new employee ID is fetched and new requests are fired.
+             */
             await timeStatement;
             await timeSheet;
             await plannedHours;
@@ -103,7 +151,9 @@ export default class OvertimeManager {
             throw new Error(ERROR_MSGS.UNEXPECTED_BACKGROUND_RESPONSE);
         }
 
-        return employeeIdResponse.employeeId;
+        const employeeId = employeeIdResponse.employeeId;
+        await StorageManager.saveCachedEmployeeId(employeeId);
+        return employeeId;
     }
 
     // called from the reload btn, recalculates the overtime

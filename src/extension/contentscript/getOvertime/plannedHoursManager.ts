@@ -15,6 +15,7 @@ export default class PlannedHoursManager implements SimpleManager {
         public backgroundComm: BackgroundComm,
         public fetchData: FetchData,
         public employeeId: string,
+        private signal?: AbortSignal,
     ) {}
 
     public initialize() {
@@ -27,7 +28,7 @@ export default class PlannedHoursManager implements SimpleManager {
      * or the data has an unexpected format
      */
     public async performAction() {
-        await this.fetchAndSendPlannedHours(this.employeeId);
+        await this.fetchAndSendPlannedHours(this.employeeId, this.signal);
     }
 
     /**
@@ -36,15 +37,20 @@ export default class PlannedHoursManager implements SimpleManager {
      * @throws with a displayable error message, if a communication error occurs
      * or the data has an unexpected format
      */
-    private async fetchAndSendPlannedHours(employeeId: string) {
+    private async fetchAndSendPlannedHours(employeeId: string, signal?: AbortSignal) {
         let plannedHoursData;
         try {
             plannedHoursData = await this.fetchData.getPlannedHours(
                 employeeId,
                 DateUtil.calculateWorkCalendarStartDate(await Settings.getMonthsToCalcManually()),
                 DateUtil.calculateWorkCalendarEndDate(),
+                signal,
             );
         } catch (e) {
+            if (e instanceof DOMException && e.name === 'AbortError') {
+                console.warn('Planned hours request was aborted');
+                throw new Error(ERROR_MSGS.INVALID_EMPLOYEE_ID_CACHED)
+            }
             console.error(e);
             throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
         }

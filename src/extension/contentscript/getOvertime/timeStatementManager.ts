@@ -15,6 +15,7 @@ export default class TimeStatementManager implements SimpleManager {
         public backgroundComm: BackgroundComm,
         public fetchData: FetchData,
         public employeeId: string,
+        private signal?: AbortSignal,
     ) {}
 
     public initialize() {
@@ -27,7 +28,7 @@ export default class TimeStatementManager implements SimpleManager {
      * or the data has an unexpected format
      */
     public async performAction() {
-        await this.fetchAndSendTimeStatement(this.employeeId);
+        await this.fetchAndSendTimeStatement(this.employeeId, this.signal);
     }
 
     /**
@@ -36,7 +37,7 @@ export default class TimeStatementManager implements SimpleManager {
      * @throws  with a displayable error message, if a communcation error occurs
      * or the data has an unexpected format
      */
-    private async fetchAndSendTimeStatement(employeeId: string) {
+    private async fetchAndSendTimeStatement(employeeId: string, signal?: AbortSignal) {
         let rawTimeStatementData;
         try {
             rawTimeStatementData = await this.fetchData.getTimeStatement(
@@ -45,8 +46,13 @@ export default class TimeStatementManager implements SimpleManager {
                     await Settings.getMonthsToCalcManually(),
                 ),
                 DateManger.calculateTimeStatementEndDate(await Settings.getMonthsToCalcManually()),
+                signal,
             );
         } catch (e) {
+            if (e instanceof DOMException && e.name === 'AbortError') {
+                console.warn('Time statement request was aborted');
+                throw new Error(ERROR_MSGS.INVALID_EMPLOYEE_ID_CACHED)
+            }
             console.error(e);
             throw new Error(ERROR_MSGS.UNABLE_TO_CONTACT_API);
         }
