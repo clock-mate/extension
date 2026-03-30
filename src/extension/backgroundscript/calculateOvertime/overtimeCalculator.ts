@@ -34,8 +34,8 @@ export default class OvertimeCalculator {
             const planned = plannedMinutesPerDay[dateKey] ?? 0;
 
             /**
-             * Fiori will subtract absent time from the planned time. For overtime calculation this means
-             * we can just ignore absent time since it is already taken care of.
+             * Fiori will subtract absent time and flex time from the planned time. For overtime calculation
+             * this means we can just ignore absent time since it is already taken care of.
              */
             let dayOvertime = daySummary.workedTime - planned;
             dayOvertime -= daySummary.flexTime; // Flex time reduces overtime
