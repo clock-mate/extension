@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Clockmate",
-  "version": "4.0.1",
+  "version": "4.0.2",
 
   "description": "Überstunden direkt in der Fiori-Zeiterfassung einsehen.",
   "homepage_url": "https://github.com/clock-mate/extension",

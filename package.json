@@ -1,6 +1,6 @@
 {
   "name": "clockmate",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Browser Erweiterung für Chromium und Firefox, welche die Überstunden bzw. ein Gleitzeitkonto direkt in der Fiori-Zeiterfassung anzeigt.",
   "browser": "src/extension/contentscript/contentscript",
   "type": "module",
